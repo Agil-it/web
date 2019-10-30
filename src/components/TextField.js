@@ -9,7 +9,7 @@ class C_TextField extends Component {
           <TextField 
             placeholder={this.props.placeholder}
             leftIcon={this.props.icon}
-            style={this.props.style}
+            inputStyle={this.props.style}
             type={this.props.type}
           />
         </div>

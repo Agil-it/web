@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import './index.css';
-import Login from './login/Login';
+import C_Menu from '../src/components/Menu';
 import WebFontLoader from 'webfontloader';
 
 WebFontLoader.load({
@@ -11,8 +11,8 @@ WebFontLoader.load({
 });
 
 ReactDOM.render(
-    <Login
-    />, 
+    <C_Menu
+    />,
     document.getElementById('root')
 );
 

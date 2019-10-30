@@ -2,6 +2,7 @@
 
 @include react-md-everything;
 
+
 body {
     margin: 0;
     font-family: -apple-system, "Roboto", "Segoe UI", "Oxygen",
@@ -9,4 +10,17 @@ body {
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    min-height:100%;
+}
+
+html {
+    min-height:100%;
+}
+
+body{
+    height:100%
+}
+  
+#app div{
+    height:100%
 }

@@ -8,6 +8,7 @@ class C_Button extends Component {
       <Button raised primary
         label={this.props.label}
         style={this.props.style}
+        onClick={this.props.action}
       />
     );
   }
