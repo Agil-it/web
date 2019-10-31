@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import './index.css';
 import C_Menu from '../src/components/Menu';
+import Login from '../src/login/Login'
+import ShowCards from '../src/crud/ShowCards';
 import WebFontLoader from 'webfontloader';
 
 WebFontLoader.load({
@@ -11,7 +13,7 @@ WebFontLoader.load({
 });
 
 ReactDOM.render(
-    <C_Menu
+    <ShowCards
     />,
     document.getElementById('root')
 );
