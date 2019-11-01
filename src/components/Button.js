@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, FontIcon } from 'react-md';
+import '../index.css';
 // import './Button.css';
 
 class C_Button extends Component {

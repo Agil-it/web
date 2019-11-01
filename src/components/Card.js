@@ -1,13 +1,13 @@
 
 import { Card, CardTitle, CardText, Avatar } from 'react-md';
 import React, { Component } from 'react';
+import '../index.css';
 
 class C_Card extends Component {
 
     render() {
       return (
-        <Card style={this.props.style}>
-            
+        <Card style={this.props.style} className={this.props.className} onClick={this.props.onClick}>
             <CardTitle
              title={this.props.title} 
              subtitle={this.props.subtitle} 

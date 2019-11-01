@@ -13,8 +13,8 @@ class C_Menu extends Component {
 
         let menuItens = [
             {
-                name:'Ordem de Manutenção',
-                icon:'build',
+                name:'Monitor',
+                icon:'dvr',
                 route:'orders',
                 key:'home'
             },
@@ -51,11 +51,11 @@ class C_Menu extends Component {
         ]
 
         let menu = menuItens.map((menuItem,key) => 
-            <NavItem eventKey={key} style={{marginTop:70}}>
+            <NavItem eventKey={key} style={{marginTop:60}}>
                 <NavIcon>
                     <FontIcon style={{fontSize:35, marginTop:"10%"}}>{menuItem.icon}</FontIcon>
                 </NavIcon>
-                <NavText style={{fontSize:20, paddingRight:50,float:"right", width:"75%"}}>
+                <NavText style={{fontSize:20,float:"right", width:"75%"}}>
                     {menuItem.name}
                 </NavText>
             </NavItem>
