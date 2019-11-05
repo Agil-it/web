@@ -6,10 +6,13 @@ import '../index.css';
 class C_Button extends Component {
   render() {
     return (
-      <Button raised primary
+      <Button raised
+        primary={this.props.primary}
+        secondary={this.props.secondary}
         label={this.props.label}
         style={this.props.style}
         onClick={this.props.action}
+        disabled={this.props.disabled}
       />
     );
   }

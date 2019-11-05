@@ -15,11 +15,11 @@ WebFontLoader.load({
 
 ReactDOM.render(
     <div>
-       {/* <C_Menu>
+       <C_Menu>
        </C_Menu> 
         <ShowCards
-        /> */}
-        <CreateMachineType/>
+        />
+        {/* <CreateMachineType/> */}
     </div>,
     document.getElementById('root')
 );

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import C_Card from './components/Card';
 import C_Menu from './components/Menu';
 import { FontIcon } from 'react-md';
@@ -17,6 +18,7 @@ class ShowCards extends Component {
 
         return (
             <div>
+                <span id="cardList"></span>
                 <div style={{display:"flex", justifyContent:"center"}}>
                     <C_Card 
                         icon={<FontIcon></FontIcon>}
@@ -24,7 +26,10 @@ class ShowCards extends Component {
                         title={<div style={{fontWeight:"bold"}}>CADASTRO</div>}
                         className={"effectfront"}
                         subtitle={"Usuários"}
-                        onClick={() => <CreateMachineType visible={true}/>}
+                        onClick={() => {
+                                ReactDOM.render(<CreateMachineType visible={true}/>, document.getElementById('cardList'))
+                            }
+                        }
                     />
                     <C_Card 
                         style={{marginLeft:20, backgroundColor:"#79777745",marginTop:"3%", width:"20%", borderRadius:10, cursor:"pointer"}}

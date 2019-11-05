@@ -11,6 +11,9 @@ class C_TextField extends Component {
             leftIcon={this.props.icon}
             inputStyle={this.props.style}
             type={this.props.type}
+            rightIcon={this.props.rightIcon}
+            className={this.props.className}
+            rows={this.props.rows}
           />
         </div>
         
