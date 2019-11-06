@@ -76,15 +76,15 @@ class CreateMachineType extends Component {
                     </section>
                     <div style={{display:"flex", marginTop:"10%"}}>
                         <div style={{ width:"45%"}}>
-                            <C_Button style={{width:150}} 
+                            <C_Button  
                                 secondary={true} 
                                 label={"Deletar"}
                                 disabled={true}
                             />
                         </div>
                         <div>
-                            <C_Button style={{width:150}} secondary={true}label={"Limpar"}/>
-                            <C_Button style={{marginLeft:20, width:150}} primary={true} label={"Salvar"}/>
+                            <C_Button secondary={true}label={"Limpar"}/>
+                            <C_Button style={{marginLeft:20}} primary={true} label={"Salvar"}/>
                         </div>
                     </div>
                 </DialogContainer>
