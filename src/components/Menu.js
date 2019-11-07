@@ -66,7 +66,7 @@ class C_Menu extends Component {
         <BrowserRouter>
             <Route render={({ location, history }) => (
                 <React.Fragment>
-                    <SideNav>   
+                    <SideNav style={{position:"fixed"}}>   
                         <SideNav.Toggle />
                         <SideNav.Nav defaultSelected="monitor">
                             {menu}

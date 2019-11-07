@@ -7,7 +7,11 @@ class C_Card extends Component {
 
     render() {
       return (
-        <Card style={this.props.style} className={this.props.className} onClick={this.props.onClick}>
+        <Card 
+          style={this.props.style}
+          className={this.props.className} 
+          onClick={this.props.onClick}
+          onMouseLeave={this.props.onMouseLeave}>
             <CardTitle
              title={this.props.title} 
              subtitle={this.props.subtitle} 

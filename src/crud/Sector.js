@@ -17,27 +17,32 @@ class CreateSector extends Component {
   super(props);
 
   this.state = {
-   visible: this.props.visible
+    visible: this.props.visible,
+    sector : []
   };
 
   this.hideModal = this.hideModal.bind(this);
+  this.clearFields = this.clearFields.bind(this);
+  this.onChange = this.onChange.bind(this);
  }
 
  componentDidMount() {
-  console.log("Chamou", this.state.visible);
-  this.setState({ visible: true });
+    this.setState({ visible: true });
  }
 
- // show = (e) => {
- //     this.setState({ visible: true});
- // };
-
  hideModal() {
-  this.setState({ visible: false });
- };
+    this.setState({ visible: false });
+ }
+
+ clearFields(e){
+    console.log("event",e);
+ }
+
+ onChange(e){
+    console.log("event",e);
+ }
 
  render() {
-  // const { visible } = this.state;
   return (
    <div style={{ border: "none" }}>
     <DialogContainer
@@ -63,7 +68,8 @@ class CreateSector extends Component {
        type="search"
        placeholder="Código do Setor"
        rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
-       block paddedBlock
+       name="SectorId"
+       onChange={(e) => this.onChange(e)}
       /><br></br>
       <C_TextField
        style={{ fontSize: 17 }}
@@ -83,7 +89,11 @@ class CreateSector extends Component {
        />
       </div>
       <div>
-       <C_Button secondary={true} label={"Limpar"} />
+       <C_Button 
+        action={(e) => this.clearFields(e)} 
+        secondary={true} 
+        label={"Limpar"} 
+        />
        <C_Button style={{ marginLeft: 20 }} primary={true} label={"Salvar"} />
       </div>
      </div>

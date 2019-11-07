@@ -33,7 +33,7 @@ class ShowCards extends Component {
             <div>
                 <span id="cardList"></span>
                 <div style={{marginTop:"2%", width:"50%"}}>
-                    <h1 style={{color:"black", textAlign:"center"}}>Geral</h1>
+                    <h1 style={{color:"#A40003", fontWeight:"bold", textAlign:"center"}}>Geral</h1>
                     <hr/>
                 </div>
                 <div style={{ display: "flex", justifyContent: "center" }}>
@@ -42,35 +42,11 @@ class ShowCards extends Component {
                         style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
                         title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
                         className={"effectfront"}
-                        subtitle={"Usuários"}
-                        onClick={() => alert('teste')}
-                    />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Tipo de Máquina"}
+                        subtitle={"Centro de Trabalho"}
                         onClick={() => {
-                            ReactDOM.render(<CreateMachineType visible={true} />, document.getElementById('cardList'))
+                            ReactDOM.render(<CreateWorkCenter visible={true} />, document.getElementById('cardList'))
                         }}
                     />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Componente de Máquina"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateMachineComponents visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                </div>
-                <div style={{ marginTop: "4%", width: "50%" }}>
-                    <h1 style={{ color: "black", textAlign: "center" }}>Equipamento</h1>
-                    <hr />
-                </div>
-                <div style={{ display: "flex", justifyContent: "center" }}>
                     <C_Card
                         icon={<FontIcon>open_in_new</FontIcon>}
                         style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
@@ -86,6 +62,16 @@ class ShowCards extends Component {
                         style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
                         title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
                         className={"effectfront"}
+                        subtitle={"Usuários"}
+                        onClick={() => alert('teste')}
+                    />
+                </div>
+                <div style={{display:"flex", justifyContent:"center"}}> 
+                    <C_Card
+                        icon={<FontIcon>open_in_new</FontIcon>}
+                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+                        className={"effectfront"}
                         subtitle={"Local de Instalação"}
                         onClick={() => {
                             ReactDOM.render(<CreateInstallationArea visible={true} />, document.getElementById('cardList'))
@@ -96,9 +82,44 @@ class ShowCards extends Component {
                         style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
                         title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
                         className={"effectfront"}
+                        subtitle={"Parametrização Segurança"}
+                        onClick={() => alert('teste')}
+                    />
+                    <div style={{ marginLeft: 20, marginTop: "3%", width: "20%"}}></div>
+                </div>
+                <div style={{ marginTop: "4%", width: "50%" }}>
+                    <h1 style={{color:"#A40003", fontWeight:"bold", textAlign:"center" }}>Equipamento</h1>
+                    <hr />
+                </div>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    <C_Card
+                        icon={<FontIcon>open_in_new</FontIcon>}
+                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+                        className={"effectfront"}
+                        subtitle={"Tipo de Máquina"}
+                        onClick={() => {
+                            ReactDOM.render(<CreateMachineType visible={true} />, document.getElementById('cardList'))
+                        }}
+                    />
+                    <C_Card
+                        icon={<FontIcon>open_in_new</FontIcon>}
+                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+                        className={"effectfront"}
                         subtitle={"Unidade de Medida"}
                         onClick={() => {
                             ReactDOM.render(<CreateUnitMeasurement visible={true} />, document.getElementById('cardList'))
+                        }}
+                    />
+                    <C_Card
+                        icon={<FontIcon>open_in_new</FontIcon>}
+                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+                        className={"effectfront"}
+                        subtitle={"Componente de Máquina"}
+                        onClick={() => {
+                            ReactDOM.render(<CreateMachineComponents visible={true} />, document.getElementById('cardList'))
                         }}
                     />
                 </div>
@@ -136,6 +157,10 @@ class ShowCards extends Component {
                             ReactDOM.render(<CreateSuperiorMachine visible={true} />, document.getElementById('cardList'))
                         }}
                     />
+                </div>
+                <div style={{ marginTop: "4%", width: "50%" }}>
+                    <h1 style={{color:"#A40003", fontWeight:"bold", textAlign:"center"}}>Ordem de Manutenção</h1>
+                    <hr />
                 </div>
                 <div style={{ display: "flex", justifyContent: "center" }}>
                     <C_Card
@@ -210,27 +235,11 @@ class ShowCards extends Component {
                         style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
                         title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
                         className={"effectfront"}
-                        subtitle={"Centro de Trabalho"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateWorkCenter visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Parametrização Segurança"}
-                        onClick={() => alert('teste')}
-                    />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
                         subtitle={"Ordem de Manutenção"}
                         onClick={() => alert('teste')}
                     />
+                    <div style={{ marginLeft: 20, marginTop: "3%", width: "20%"}}></div>
+                    <div style={{ marginLeft: 20, marginTop: "3%", width: "20%"}}></div>
                 </div>
             </div>
 

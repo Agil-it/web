@@ -52,7 +52,7 @@ class CreateWorkCenter extends Component {
      <Toolbar
       // fixed
       colored
-      title="Cadastrar Setor"
+      title="Cadastrar Centro de Trabalho"
       // nav={<FontIcon icon onClick={this.hide}>close</FontIcon>}
       actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
      />
