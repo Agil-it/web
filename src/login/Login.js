@@ -12,9 +12,12 @@ class Login extends Component {
        
     }
 
-    checkUser = this.checkUser.bind(this);
+    onLogin = this.onLogin.bind(this);
 
-    checkUser(){
+    onLogin(callback){
+
+        let jwt="teste"
+        this.props.onSuccess(jwt)
     }
 
    
@@ -59,9 +62,10 @@ class Login extends Component {
                     
                     <div style={{marginTop:40, display:"flex", justifyContent:"center"}}>
                         <C_Button 
+                            primary={true}
                             style={{fontSize:20, width:"40%", height:50}}
                             label={"ENTRAR"}
-                            action={() => this.checkUser()}
+                            action={() => this.onLogin()}
                         />
                     </div>
                 </div>

@@ -5,9 +5,22 @@ import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import { Route, BrowserRouter  } from 'react-router-dom'
 import C_Button from './Button';
+import cookie from 'react-cookies';
 
 class C_Menu extends Component {
 
+    constructor() {
+        super();
+        this.onLogout = this.onLogout.bind(this);
+
+    }
+
+    onLogout() {
+        cookie.remove('token', {
+            httpOnly: true,
+            sameSite: 'strict'
+        })
+    }
 
     render() {
 
@@ -47,11 +60,12 @@ class C_Menu extends Component {
                 icon:'reply',
                 route:'',
                 key:'logout',
+                action: this.onLogout
             }
         ]
 
         let menu = menuItens.map((menuItem,key) => 
-            <NavItem eventKey={key} style={{marginTop:60}}>
+            <NavItem eventKey={key} style={{ marginTop: 40 }} onClick={typeof menuItem.action == "function"? menuItem.action() : null}>
                 <NavIcon>
                     <FontIcon style={{fontSize:35, marginTop:"10%"}}>{menuItem.icon}</FontIcon>
                 </NavIcon>

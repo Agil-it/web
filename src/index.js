@@ -1,11 +1,8 @@
 import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import './index.css';
-import C_Menu from './components/Menu';
-import Login from './login/Login'
-import ShowCards from './ShowCards';
 import WebFontLoader from 'webfontloader';
-import CreateMachineType from './crud/MachineType';
+import App from './app'
 
 WebFontLoader.load({
     google: {
@@ -14,13 +11,7 @@ WebFontLoader.load({
 });
 
 ReactDOM.render(
-    <div>
-       <C_Menu>
-       </C_Menu> 
-        <ShowCards
-        />
-        {/* <CreateMachineType/> */}
-    </div>,
+    <App/>,
     document.getElementById('root')
 );
 

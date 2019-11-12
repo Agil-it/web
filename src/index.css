@@ -1211,7 +1211,6 @@ a.md-btn {
       width: 40px; } }
 
 .md-card {
-  margin-bottom: 12px;
   display: block; }
   .md-card--raise {
     transition-duration: 0.3s;
@@ -3665,9 +3664,7 @@ svg.md-icon {
 
 body {
   margin: 0;
-  font-family: -apple-system, "Roboto", "Segoe UI", "Oxygen",
- "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
- sans-serif;
+  font-family: -apple-system, "Roboto", "Segoe UI", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100%; }
