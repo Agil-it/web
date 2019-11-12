@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import C_Menu from './components/Menu';
 import Login from './login/Login';
+import Cookies from 'universal-cookie';
 
 class App extends Component {
   constructor() {
     super()
 
-    //this.state = { token: cookie.load('token') }
-    this.state = { token: false }
+    this.cookies = new Cookies();
+
+    this.state = { token: this.cookies.get('token') }
 
     this.onLogin = this.onLogin.bind(this)
     this.onLogout = this.onLogout.bind(this)
@@ -16,17 +18,11 @@ class App extends Component {
 
   onLogin(token) {
     this.setState({ token })
-    // cookie.save('token', token, {
-    //   httpOnly: true,
-    //   sameSite: 'strict'
-    // })
+    this.cookies.set('token', token, { path: '/' })
   }
 
   onLogout() {
-    // cookie.remove('token', {
-    //   httpOnly: true,
-    //   sameSite: 'strict'
-    // })
+    this.cookies.remove('token')
     this.setState({ token: false })
   }
 
