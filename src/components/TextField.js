@@ -31,6 +31,7 @@ class C_TextField extends Component {
           className={this.props.className}
           rows={this.props.rows}
           onChange={this.onChange}
+          disabled={this.props.disabled}
         />
       </div>
       

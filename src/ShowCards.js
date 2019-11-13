@@ -18,6 +18,8 @@ import CreateClassification from './crud/Classification';
 import CreateMachine from './crud/Machine';
 import CreateSuperiorMachine from './crud/SuperiorMachine';
 import CreateWorkCenter from './crud/WorkCenter';
+import CreateSafetyParameter from './crud/SafetyParameter';
+import CreateUser from './crud/User';
 
 // import './Login.css';
 
@@ -63,7 +65,9 @@ class ShowCards extends Component {
                         title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
                         className={"effectfront"}
                         subtitle={"Usuários"}
-                        onClick={() => alert('teste')}
+                        onClick={() => {
+                            ReactDOM.render(<CreateUser visible={true} />, document.getElementById('cardList'))
+                        }}
                     />
                 </div>
                 <div style={{display:"flex", justifyContent:"center"}}> 
@@ -83,7 +87,9 @@ class ShowCards extends Component {
                         title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
                         className={"effectfront"}
                         subtitle={"Parametrização Segurança"}
-                        onClick={() => alert('teste')}
+                        onClick={() => {
+                            ReactDOM.render(<CreateSafetyParameter visible={true} />, document.getElementById('cardList'))
+                        }}
                     />
                     <div style={{ marginLeft: 20, marginTop: "3%", width: "20%"}}></div>
                 </div>
