@@ -104,8 +104,8 @@ class CreateUser extends Component {
                     id="simple-full-page-dialog"
                     visible={this.state.visible}
                     // fullPage
-                    width="80%"
-                    height="80%"
+                    width="60%"
+                    height="100%"
                     // onHide={false}
                     aria-labelledby="simple-full-page-dialog-title"
                 >
@@ -117,74 +117,97 @@ class CreateUser extends Component {
                         actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
                     />
                     <section className="md-toolbar-relative">
-                        <div>
+                        <div style={{display:"flex", justifyContent:"left"}}>
                             <C_TextField
                                 style={{ fontSize: 17 }}
-                                className="md-cell md-cell--5"
                                 name="userId"
                                 type="search"
                                 placeholder="Código do Usuário"
                                 rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
-                                block paddedBlock
                                 required={true}
                                 onChange={this.onChange}
-                            /><br></br>
+                                css={{ width: 350 }}
+                            />
                             <C_TextField
                                 style={{ fontSize: 17 }}
                                 name="username"
-                                className="md-cell md-cell--5"  
                                 placeholder="Nome do Usuário"
-                                block paddedBlock
+                                onChange={this.onChange}
+                                css={{ width: 350, marginLeft:30 }}
+                            />
+                        </div><br></br>
+                        <div style={{ display: "flex", justifyContent: "left" }}>
+                            <C_SelectField
+                                name="userRole"
+                                type="text"
+                                label={<div style={{ fontSize: 17 }}>Perfil de Usuário</div>}
+                                list={this.state.profiles}
+                                required={false}
+                                onChange={this.onChange}
+                                value={this.state.selectedProfile}
+                                style={{ width: 350 }}
+                            />
+                            {this.state.user.userRole == "SECTOR_LEADER" ?
+                                <C_TextField
+                                    style={{ fontSize: 17 }}
+                                    name="sectorName"
+                                    type="search"
+                                    placeholder="Setor"
+                                    rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                                    block paddedBlock
+                                    required={true}
+                                    onChange={this.onChange}
+                                    css={{ width: 350, marginLeft: 30, marginTop:20 }}
+                                />
+                                : (this.state.user.userRole == "TECHNICAL" ?
+                                    <C_TextField
+                                        style={{ fontSize: 17 }}
+                                        name="workCenter"
+                                        type="search"
+                                        placeholder="Centro de Trabalho"
+                                        rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                                        block paddedBlock
+                                        required={true}
+                                        onChange={this.onChange}
+                                        css={{ width: 350, marginLeft: 30, marginTop: 20 }}
+                                    /> : undefined )
+                                }
+                        </div><br></br>
+                        <div style={{display:"flex"}}>
+                            <div style={{width:"50%"}}>
+                                <C_Button 
+                                    style={{height:50}} 
+                                    primary={true} 
+                                    label={"Gerar senha"} 
+                                    icon={<FontIcon>lock</FontIcon>}
+                                />
+                            </div>
+                            <C_CheckBox
+                                name="isFirstLogin"
+                                label={<div style={{ fontSize: 17, color:"#616161d9" }}>Alterar Senha no Primeiro Acesso</div>}
+                                type="checkbox"
+                                style={{}}  
                                 onChange={this.onChange}
                             />
-                        </div>
-                         <C_SelectField
-                            name="userRole"
-                            type="text"
-                            className="md-cell md-cell--12"
-                            label={<div style={{ fontSize: 17 }}>Perfil de Usuário</div>}
-                            list={this.state.profiles}
-                            required={false}
-                            onChange={this.onChange}
-                            value={this.state.selectedProfile}
-                        /><br></br>
-                        {this.state.user.userRole == "SECTOR_LEADER" ?
+                        </div><br/><br/>
+                        <div style={{ display: "flex", justifyContent: "left" }}>
                             <C_TextField
                                 style={{ fontSize: 17 }}
-                                name="sectorName"
-                                type="search"
-                                placeholder="Setor"
-                                rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
-                                block paddedBlock
+                                name="email"
+                                placeholder="Email"
                                 required={true}
                                 onChange={this.onChange}
+                                css={{ width: 350 }}
                             />
-                        : undefined }
-                        <C_CheckBox
-                            name="useInAll"
-                            label={<div style={{ fontSize: 15, color:"#616161d9" }}>Usar em todas as Ordens de Manutenção</div>}
-                            type="checkbox"
-                            style={{}}  
-                            onChange={this.onChange}
-                        /><br></br>
-                        <C_SelectField
-                            name="registerType"
-                            type="text"
-                            className="md-cell md-cell--12"
-                            label={<div style={{ fontSize: 17 }}>Tipo de Registro</div>}
-                            list={this.state.types}
-                            required={false}
-                            onChange={this.onChange}
-                        /><br></br>
-                        <C_TextField
-                            style={{ fontSize: 17 }}
-                            name="register"
-                            type="search"
-                            placeholder="Registro"
-                            rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
-                            block paddedBlock
-                            onChange={this.onChange}
-                        /><br></br>
+                            <C_TextField
+                                style={{ fontSize: 17 }}
+                                name="username"
+                                type="password"
+                                placeholder="Password"
+                                onChange={this.onChange}
+                                css={{ width: 350, marginLeft: 30 }}
+                            />
+                        </div><br></br>
                     </section>
                     <div style={{ display: "flex", marginTop: "10%" }}>
                         <div style={{ width: "45%" }}>

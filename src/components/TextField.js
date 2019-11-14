@@ -23,6 +23,7 @@ class C_TextField extends Component {
       <div>
         <TextField 
           id={this.props.name}
+          label={this.props.label}
           placeholder={this.props.placeholder}
           leftIcon={this.props.icon}
           inputStyle={this.props.style}
@@ -32,6 +33,7 @@ class C_TextField extends Component {
           rows={this.props.rows}
           onChange={this.onChange}
           disabled={this.props.disabled}
+          style={this.props.css}
         />
       </div>
       

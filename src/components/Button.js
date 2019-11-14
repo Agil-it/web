@@ -13,6 +13,7 @@ class C_Button extends Component {
         style={this.props.style}
         onClick={this.props.action}
         disabled={this.props.disabled}
+        iconEl={this.props.icon}
       />
     );
   }

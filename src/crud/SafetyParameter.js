@@ -85,7 +85,7 @@ class CreateSafetyParameter extends Component {
                     visible={this.state.visible}
                     // fullPage
                     width="40%"
-                    height="80%"
+                    height="100%"
                     // onHide={false}
                     aria-labelledby="simple-full-page-dialog-title"
                 >
