@@ -22,7 +22,7 @@ class CreateSector extends Component {
    visible: this.props.visible,
    sector : {
       id: undefined,
-      Description: ''
+      description: ''
    }
   };
 
@@ -49,21 +49,18 @@ class CreateSector extends Component {
   let sectorProvider = new SectorProvider();
   let response = await sectorProvider.create(sector)
   console.log("TCL: CreateSector -> save -> response", response)
-
-   let { data } = response;
-   console.log("TCL: CreateSector -> save -> data", data)
    
-   if (data === undefined) {
+   if (response === undefined) {
      alert('Ocorreu um erro! se persistir fazer entrar em contato com o departamento de TI.')
      return
    }
   
-   if (!data.success) {
-     alert(`Não deu sucesso. Mensagem: ${data.error}`)
+   if (!response.success) {
+     alert(`Não deu sucesso. Mensagem: ${response.error}`)
     return
   }
 
-  console.log("TCL: CreateSector -> save -> message", data.message)
+  console.log("TCL: CreateSector -> save -> message", response.message)
   alert('deu certo!')
  }
 
@@ -110,7 +107,7 @@ class CreateSector extends Component {
        onChange={this.onChange}
       /><br></br>
       <C_TextField
-       name="Description"
+       name="description"
        style={{ fontSize: 17 }}
        id="description"
        type="text"

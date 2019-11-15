@@ -28,14 +28,12 @@ class Login extends Component {
 
     let response = await authProvider.login(username, password);
 
-    console.log(response)
-
-    let { data } = response;
-
-    if (!data.success) {
-      alert(data.error)
+    if (!response.success) {
+      alert(response.error)
       return
     }
+
+    this.props.onSuccess()
   }
 
   onChange(e){

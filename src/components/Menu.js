@@ -7,6 +7,7 @@ import { Route, BrowserRouter } from 'react-router-dom'
 import styled from 'styled-components';
 import Dashboard from '../Dashboard'
 import ShowCards from '../ShowCards'
+import Logout from '../login/Logout'
 
 const Main = styled.main`
   position: relative;
@@ -40,16 +41,13 @@ class C_Menu extends Component {
 
   renderSelectedItem() {
     const { selected } = this.state;
-    
-    if (selected == 'logout') {
-      this.props.onLogout();
-      return;
-    }
 
     if (selected == 'home') {
       return (<Dashboard/>)
     } else if(selected == 'create') {
       return (<ShowCards/>)
+    } else if(selected == 'logout') {
+      return (<Logout logout={this.props.onLogout} />)
     } else {
       return(<p>Item {selected} not found 🤔</p>)
     }

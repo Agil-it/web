@@ -9,20 +9,25 @@ class App extends Component {
 
     this.cookies = new Cookies();
     this.onLogout = this.onLogout.bind(this)
+    this.onLogin = this.onLogin.bind(this)
 
+    this.state = { token: this.cookies.get('token') || false}
   }
 
   onLogout() {
     this.cookies.remove('token')
+    this.setState({ token: false })
+  }
+
+  onLogin() {
+    this.setState({ token: this.cookies.get('token') })
   }
 
   render() {
-    const token = this.cookies.get('token')
-
-    console.log(token)
+    const { token } = this.state
 
     if (!token) {
-      return <Login />
+      return <Login onSuccess={this.onLogin} />
     }
 
     return <C_Menu onLogout={this.onLogout}/>
