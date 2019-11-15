@@ -11,6 +11,8 @@ import C_TextField from '../components/TextField';
 import C_Button from '../components/Button';
 import C_SelectField from '../components/SelectField';
 import C_CheckBox from '../components/CheckBox';
+import C_Calendar from '../components/Calendar';
+import C_RadioGroup from '../components/RadioGroup';
 
 class CreateUser extends Component {
 
@@ -20,6 +22,16 @@ class CreateUser extends Component {
         this.state = {
             selectedProfile: undefined,
             visible: this.props.visible,
+
+            genders :[{
+                label: 'Feminino',
+                value: 'female',
+            }, 
+            {
+                label: 'Masculino',
+                value: 'male',
+            }],
+
             types: [{
                 label: 'Componente',
                 value: 'A',
@@ -174,9 +186,9 @@ class CreateUser extends Component {
                                 }
                         </div><br></br>
                         <div style={{display:"flex"}}>
-                            <div style={{width:"50%"}}>
+                            <div style={{width:"50%", marginLeft:20}}>
                                 <C_Button 
-                                    style={{height:50}} 
+                                    style={{height:50, width:"50%", display:"flex", justifyContent:"center", fontSize:15}} 
                                     primary={true} 
                                     label={"Gerar senha"} 
                                     icon={<FontIcon>lock</FontIcon>}
@@ -208,8 +220,34 @@ class CreateUser extends Component {
                                 css={{ width: 350, marginLeft: 30 }}
                             />
                         </div><br></br>
+                        <div style={{ display: "flex", justifyContent: "left" }}>
+                            <C_Calendar
+                                name="birthDate"
+                                label={<div style={{ fontSize: 17 }}>Data de Nascimento</div>}
+                                onChange={this.onChange}
+                                allDay
+                                cancelLabel={"Cancelar"}
+                                css={{ width: 350}}    
+                            />
+                            <C_TextField
+                                style={{ fontSize: 17 }}
+                                name="contact"
+                                placeholder="Contato"
+                                required={true}
+                                onChange={this.onChange}
+                                css={{ width: 350, marginLeft: 30, marginTop:16 }}
+                            />
+                        </div><br></br>
+                        <C_RadioGroup
+                            name="gender"
+                            label={<div style={{ fontSize: 17, color:"#616161d9" }}>Gênero</div>}
+                            type="radio"
+                            style={{}}  
+                            onChange={this.onChange}
+                            list={this.state.genders}
+                        />
                     </section>
-                    <div style={{ display: "flex", marginTop: "10%" }}>
+                    <div style={{ display: "flex" }}>
                         <div style={{ width: "45%" }}>
                             <C_Button style={{}}
                                 secondary={true}
