@@ -8,22 +8,35 @@ import {
 } from 'react-md';
 
 import C_TextField from '../components/TextField';
+import C_SelectField from '../components/SelectField';
 import C_CrudButtons from '../components/CrudButtons';
 import { HandlerProvider } from '../providers/handler';
-import { WorkCenterProvider } from '../providers/WorkCenter';
+import { OrderLayoutProvider } from '../providers/OrderLayout';
 
 
-class CreateWorkCenter extends Component {
+class CreateOrderLayout extends Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
       visible: true,
-      fields: {}
+      fields: {},
+      layouts: [{
+        label: 'Corretiva / Preventiva',
+        value: 'default',
+      },
+      {
+        label: 'Rota',
+        value: 'route',
+      },
+      {
+        label: 'Lista',
+        value: 'list',
+      }]
     };
 
-    this.provider = new HandlerProvider(new WorkCenterProvider(), "centro de trabalho")
+    this.provider = new HandlerProvider(new OrderLayoutProvider(), "tipo de ordem de manutenção")
 
     this.hideModal = this.hideModal.bind(this);
     this.clearFields = this.clearFields.bind(this);
@@ -48,13 +61,13 @@ class CreateWorkCenter extends Component {
   }
 
   delete() {
-    let workCenter = this.state.fields;
-    this.provider.delete(workCenter.id, this.clean)
+    let orderLayout = this.state.fields;
+    this.provider.delete(orderLayout.id, this.clean)
   }
 
   save() {
-    let workCenter = this.state.fields;
-    this.provider.save(workCenter, this.clean)
+    let orderLayout = this.state.fields;
+    this.provider.save(orderLayout, this.clean)
   }
 
   onChange(e) {
@@ -83,7 +96,7 @@ class CreateWorkCenter extends Component {
         <Toolbar
           // fixed
           colored
-          title="Cadastrar Centro de Trabalho"
+          title="Cadastrar Layout de Ordem de Manutenção"
           // nav={<FontIcon icon onClick={this.hide}>close</FontIcon>}
           actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
         />
@@ -96,9 +109,21 @@ class CreateWorkCenter extends Component {
               value={this.state.fields.id}
               onChange={this.onChange}
               type="search"
-              placeholder="Código do Centro de Trabalho"
+              label="Tipo de Ordem"
+              placeholder="Tipo de Ordem"
               rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
               block paddedBlock
+            /><br></br>
+            <C_SelectField
+              id="orderLayout"
+              name="orderLayout"
+              value={this.state.fields.orderLayout}
+              onChange={this.onChange}
+              type="text"
+              label="Layout da Ordem"
+              list={this.state.layouts}
+              required={true}
+              style={{ width: "100%" }}
             /><br></br>
             <C_TextField
               style={{ fontSize: 17 }}
@@ -107,6 +132,7 @@ class CreateWorkCenter extends Component {
               value={this.state.fields.description}
               onChange={this.onChange}
               type="text"
+              label="Descrição"
               placeholder="Descrição"
               block paddedBlock
               rows={2}
@@ -124,4 +150,4 @@ class CreateWorkCenter extends Component {
   }
 }
 
-export default CreateWorkCenter;
+export default CreateOrderLayout;

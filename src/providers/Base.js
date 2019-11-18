@@ -39,7 +39,7 @@ export class BaseProvider {
       // Retorno do request do axios
       console.log('!data.success')
       console.log(data)
-      throw new Error(data.error)
+      throw new Error(data.error.message? data.error.message : data.error)
     }
 
     if (data.data.success == false) {

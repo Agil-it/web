@@ -1,4 +1,3 @@
-
 import { Card, CardTitle, CardText, Avatar } from 'react-md';
 import React, { Component } from 'react';
 import '../index.css';

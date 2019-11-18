@@ -34,6 +34,7 @@ class C_TextField extends Component {
           onChange={this.onChange}
           disabled={this.props.disabled}
           style={this.props.css}
+          value={this.props.value}
         />
       </div>
       

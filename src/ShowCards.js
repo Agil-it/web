@@ -20,237 +20,288 @@ import CreateSuperiorMachine from './crud/SuperiorMachine';
 import CreateWorkCenter from './crud/WorkCenter';
 import CreateSafetyParameter from './crud/SafetyParameter';
 import CreateUser from './crud/User';
+import CreateOrderLayout from './crud/OrderLayout'
 
 // import './Login.css';
 
 class ShowCards extends Component {
 
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
+    
+    this.unountModal = this.unountModal.bind(this);
+  }
+
+  renderComponent(component) {
+
+    if (component === "work center") {
+      return ReactDOM.render(<CreateWorkCenter onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "sector") {
+      return ReactDOM.render(<CreateSector onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if(component === "user") {
+      ReactDOM.render(<CreateUser onClose={this.unountModal}/>, this.getDOMToRender())
+    
+    } else if (component === "installation area") {
+      return ReactDOM.render(<CreateInstallationArea onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "safety parameter") {
+      return ReactDOM.render(<CreateSafetyParameter onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "machine type") {
+      return ReactDOM.render(<CreateMachineType onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "unit measurement") {
+      return ReactDOM.render(<CreateUnitMeasurement onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "machine components") {
+      return ReactDOM.render(<CreateMachineComponents onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "parts") {
+      return ReactDOM.render(<CreateParts onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "machine") {
+      return ReactDOM.render(<CreateMachine onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "superior machine") {
+      return ReactDOM.render(<CreateSuperiorMachine onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "classification") {
+      return ReactDOM.render(<CreateClassification onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "defect cause") {
+      return ReactDOM.render(<CreateDefectCause onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "defect diagnostic") {
+      return ReactDOM.render(<CreateDefectDiagnostic onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "order type") {
+      return ReactDOM.render(<CreateOrderType onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "default note") {
+      return ReactDOM.render(<CreateDefaultNote onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "default operation") {
+      return ReactDOM.render(<CreateDefaultOperation onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "order layout") {
+      return ReactDOM.render(<CreateOrderLayout onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else if (component === "maintenance order") {
+      alert('Página em construção 📏🔨⛏')
+      //return ReactDOM.render(<CreateMaintenanceOrder onClose={this.unountModal}/>, this.getDOMToRender())
+
+    } else {
+      console.log("TCL: ShowCards -> renderComponent -> else -> component", component)
+      this.unountModal()
     }
+    
+  }
 
-    render() {
+  unountModal() {
+    ReactDOM.unmountComponentAtNode(this.getDOMToRender());
+  }
 
-        return (
-            <div>
-                <span id="cardList"></span>
-                <div style={{marginTop:"2%", width:"50%"}}>
-                    <h1 style={{color:"#A40003", fontWeight:"bold", textAlign:"center"}}>Geral</h1>
-                    <hr/>
-                </div>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Centro de Trabalho"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateWorkCenter visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Setor"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateSector visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Usuários"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateUser visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                </div>
-                <div style={{display:"flex", justifyContent:"center"}}> 
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Local de Instalação"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateInstallationArea visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Parametrização Segurança"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateSafetyParameter visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                    <div style={{ marginLeft: 20, marginTop: "3%", width: "20%"}}></div>
-                </div>
-                <div style={{ marginTop: "4%", width: "50%" }}>
-                    <h1 style={{color:"#A40003", fontWeight:"bold", textAlign:"center" }}>Equipamento</h1>
-                    <hr />
-                </div>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Tipo de Máquina"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateMachineType visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Unidade de Medida"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateUnitMeasurement visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Componente de Máquina"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateMachineComponents visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                </div>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        avatarStyle={{ backgroundColor: "" }}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Peças"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateParts visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        avatarStyle={{ backgroundColor: "" }}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Equipamento"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateMachine visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        avatarStyle={{ backgroundColor: "" }}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Equipamento Superior"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateSuperiorMachine visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                </div>
-                <div style={{ marginTop: "4%", width: "50%" }}>
-                    <h1 style={{color:"#A40003", fontWeight:"bold", textAlign:"center"}}>Ordem de Manutenção</h1>
-                    <hr />
-                </div>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Classificação da Ordem"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateClassification visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Causa do Defeito"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateDefectCause visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Sintoma do Defeito"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateDefectDiagnostic visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                </div>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        avatarStyle={{ backgroundColor: "" }}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Tipo de Ordem"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateOrderType visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        avatarStyle={{ backgroundColor: "" }}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Observação Padrão"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateDefaultNote visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        avatarStyle={{ backgroundColor: "" }}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Operação Padrão"}
-                        onClick={() => {
-                            ReactDOM.render(<CreateDefaultOperation visible={true} />, document.getElementById('cardList'))
-                        }}
-                    />
-                </div>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                    <C_Card
-                        icon={<FontIcon>open_in_new</FontIcon>}
-                        style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-                        title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-                        className={"effectfront"}
-                        subtitle={"Ordem de Manutenção"}
-                        onClick={() => alert('teste')}
-                    />
-                    <div style={{ marginLeft: 20, marginTop: "3%", width: "20%"}}></div>
-                    <div style={{ marginLeft: 20, marginTop: "3%", width: "20%"}}></div>
-                </div>
-            </div>
+  getDOMToRender() {
+    return document.getElementById('cardList')
+  }
 
-        );
-    }
+  render() {
+
+    return (
+      <div style={{paddingBottom: "5%"}}>
+        <span id="cardList"></span>
+        <div style={{ marginTop: "2%", width: "50%" }}>
+          <h1 style={{ color: "#A40003", fontWeight: "bold", textAlign: "center" }}>Geral</h1>
+          <hr />
+        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Centro de Trabalho"}
+            onClick={() => this.renderComponent("work center")}
+          />
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Setor"}
+            onClick={() => this.renderComponent("sector")}
+          />
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Usuários"}
+            onClick={() => this.renderComponent("user")}
+          />
+        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Local de Instalação"}
+            onClick={() => this.renderComponent("installation area")}
+          />
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Parametrização Segurança"}
+            onClick={() => this.renderComponent("safety parameter")}
+          />
+          <div style={{ marginLeft: 20, marginTop: "3%", width: "20%" }}></div>
+        </div>
+        <div style={{ marginTop: "4%", width: "50%" }}>
+          <h1 style={{ color: "#A40003", fontWeight: "bold", textAlign: "center" }}>Equipamento</h1>
+          <hr />
+        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Tipo de Máquina"}
+            onClick={() => this.renderComponent("machine type")}
+          />
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Unidade de Medida"}
+            onClick={() => this.renderComponent("unit measurement")}
+          />
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Componente de Máquina"}
+            onClick={() => this.renderComponent("machine components")}
+          />
+        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            avatarStyle={{ backgroundColor: "" }}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Peças"}
+            onClick={() => this.renderComponent("parts")}
+          />
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            avatarStyle={{ backgroundColor: "" }}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Equipamento"}
+            onClick={() => this.renderComponent("machine")}
+          />
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            avatarStyle={{ backgroundColor: "" }}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Equipamento Superior"}
+            onClick={() => this.renderComponent("superior machine")}
+          />
+        </div>
+        <div style={{ marginTop: "4%", width: "50%" }}>
+          <h1 style={{ color: "#A40003", fontWeight: "bold", textAlign: "center" }}>Ordem de Manutenção</h1>
+          <hr />
+        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Classificação da Ordem"}
+            onClick={() => this.renderComponent("classification")}
+          />
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Causa do Defeito"}
+            onClick={() => this.renderComponent("defect cause")}
+          />
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Sintoma do Defeito"}
+            onClick={() => this.renderComponent("defect diagnostic")}
+          />
+        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            avatarStyle={{ backgroundColor: "" }}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Tipo de Ordem"}
+            onClick={() => this.renderComponent("order type")}
+          />
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            avatarStyle={{ backgroundColor: "" }}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Observação Padrão"}
+            onClick={() => this.renderComponent("default note")}
+          />
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            avatarStyle={{ backgroundColor: "" }}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Operação Padrão"}
+            onClick={() => this.renderComponent("default operation")}
+          />
+        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Layout de Ordem de Manutenção"}
+            onClick={() => this.renderComponent("order layout")}
+          />
+          <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
+            subtitle={"Ordem de Manutenção"}
+            onClick={() => this.renderComponent("maintenance order")}
+          />
+          <div style={{ marginLeft: 20, marginTop: "3%", width: "20%" }}></div>
+        </div>
+      </div>
+
+    );
+  }
 }
 
 export default ShowCards;

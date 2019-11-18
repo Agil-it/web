@@ -1,104 +1,141 @@
 import React, { Component } from 'react';
 import {
- Button,
- DialogContainer,
- Divider,
- Toolbar,
- FontIcon,
+  Button,
+  DialogContainer,
+  Divider,
+  Toolbar,
+  FontIcon,
 } from 'react-md';
 
 import C_TextField from '../components/TextField';
-import C_Button from '../components/Button';
+import C_CrudButtons from '../components/CrudButtons';
+import { HandlerProvider } from '../providers/handler';
+import { MachineProvider } from '../providers/Machine';
 
 
 class CreateMachine extends Component {
 
- constructor(props) {
-  super(props);
+  constructor(props) {
+    super(props);
 
-  this.state = {
-   visible: this.props.visible
-  };
+    this.state = {
+      visible: true,
+      fields: {}
+    };
 
-  this.hideModal = this.hideModal.bind(this);
- }
+    this.provider = new HandlerProvider(new MachineProvider(), "equipamento")
 
- componentDidMount() {
-  console.log("Chamou", this.state.visible);
-  this.setState({ visible: true });
- }
+    this.hideModal = this.hideModal.bind(this);
+    this.clearFields = this.clearFields.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.save = this.save.bind(this);
+    this.clean = this.clean.bind(this);
+    this.delete = this.delete.bind(this);
+  }
 
- // show = (e) => {
- //     this.setState({ visible: true});
- // };
+  hideModal() {
+    this.setState({ visible: false })
+    this.props.onClose()
+  }
 
- hideModal() {
-  this.setState({ visible: false });
- };
+  clean() {
+    this.setState({ fields: {} })
+    this.clearFields()
+  }
 
- render() {
-  // const { visible } = this.state;
-  return (
-   <div style={{ border: "none" }}>
-    <DialogContainer
-     id="simple-full-page-dialog"
-     visible={this.state.visible}
-     // fullPage
-     width="40%"
-     height="80%"
-     // onHide={false}
-     aria-labelledby="simple-full-page-dialog-title"
-    >
-     <Toolbar
-      // fixed
-      colored
-      title="Cadastrar Equipamento"
-      // nav={<FontIcon icon onClick={this.hide}>close</FontIcon>}
-      actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
-     />
-     <section className="md-toolbar-relative">
-      <C_TextField
-       style={{ fontSize: 17 }}
-       id="type"
-       type="search"
-       placeholder="Código do Equipamento"
-       rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
-       block paddedBlock
-      /><br></br>
-      <C_TextField
-       style={{ fontSize: 17 }}
-       id="type"
-       type="search"
-       placeholder="Tipo de Máquina"
-       rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
-       block paddedBlock
-      /><br></br>
-      <C_TextField
-       style={{ fontSize: 17 }}
-       id="description"
-       type="text"
-       placeholder="Descrição do Equipamento"
-       block paddedBlock
-       rows={2}
-      />
-     </section>
-     <div style={{ display: "flex", marginTop: "10%" }}>
-      <div style={{ width: "45%" }}>
-       <C_Button style={{}}
-        secondary={true}
-        label={"Deletar"}
-        disabled={true}
-       />
-      </div>
-      <div>
-       <C_Button style={{}} secondary={true} label={"Limpar"} />
-       <C_Button style={{ marginLeft: 20, }} primary={true} label={"Salvar"} />
-      </div>
-     </div>
-    </DialogContainer>
-   </div>
-  );
- }
+  clearFields() {
+    this.form.reset()
+  }
+
+  delete() {
+    let machine = this.state.fields;
+    this.provider.delete(machine.id,this.clean)
+  }
+
+  save() {
+    let machine = this.state.fields;
+    this.provider.save(machine,this.clean)
+  }
+
+  onChange(e) {
+    let fields = this.state.fields;
+
+    fields[e.target.name] = e.target.value;
+    this.setState({ fields })
+  }
+
+  formPreventDefault(event) {
+    event.preventDefault()
+  }
+
+  render() {
+    // const { visible } = this.state;
+    return (
+      <DialogContainer
+        id="simple-full-page-dialog"
+        visible={this.state.visible}
+        // fullPage
+        width="40%"
+        height="80%"
+        // onHide={false}
+        aria-labelledby="simple-full-page-dialog-title"
+      >
+        <Toolbar
+          // fixed
+          colored
+          title="Cadastrar Equipamento"
+          // nav={<FontIcon icon onClick={this.hide}>close</FontIcon>}
+          actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
+        />
+        <section className="md-toolbar-relative">
+          <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
+            <C_TextField
+              style={{ fontSize: 17 }}
+              id="id"
+              name="id"
+              value={this.state.fields.id}
+              onChange={this.onChange}
+              type="search"
+              label="Código do Equipamento"
+              placeholder="Código do Equipamento"
+              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              block paddedBlock
+            /><br></br>
+            <C_TextField
+              style={{ fontSize: 17 }}
+              id="machineType"
+              name="machineType"
+              value={this.state.fields.machineType}
+              onChange={this.onChange}
+              type="search"
+              label="Tipo de Máquina"
+              placeholder="Tipo de Máquina"
+              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              block paddedBlock
+            /><br></br>
+            <C_TextField
+              style={{ fontSize: 17 }}
+              id="description"
+              name="description"
+              value={this.state.fields.description}
+              onChange={this.onChange}
+              type="text"
+              label="Descrição do Equipamento"
+              placeholder="Descrição do Equipamento"
+              block paddedBlock
+              rows={2}
+            />
+          </form>
+        </section>
+        <C_CrudButtons
+          onSave={this.save}
+          onClean={this.clean}
+          onDelete={this.delete}
+          crudLevel={!!this.state.fields.id}
+        />
+      </DialogContainer>
+    );
+  }
 }
 
 export default CreateMachine;
