@@ -29,77 +29,77 @@ class ShowCards extends Component {
   constructor(props) {
     super(props);
     
-    this.unountModal = this.unountModal.bind(this);
+    this.unmountModal = this.unmountModal.bind(this);
   }
 
   renderComponent(component) {
 
     if (component === "work center") {
-      return ReactDOM.render(<CreateWorkCenter onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateWorkCenter onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "sector") {
-      return ReactDOM.render(<CreateSector onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateSector onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if(component === "user") {
-      ReactDOM.render(<CreateUser onClose={this.unountModal}/>, this.getDOMToRender())
+      ReactDOM.render(<CreateUser onClose={this.unmountModal}/>, this.getDOMToRender())
     
     } else if (component === "installation area") {
-      return ReactDOM.render(<CreateInstallationArea onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateInstallationArea onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "safety parameter") {
-      return ReactDOM.render(<CreateSafetyParameter onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateSafetyParameter onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "machine type") {
-      return ReactDOM.render(<CreateMachineType onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateMachineType onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "unit measurement") {
-      return ReactDOM.render(<CreateUnitMeasurement onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateUnitMeasurement onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "machine components") {
-      return ReactDOM.render(<CreateMachineComponents onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateMachineComponents onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "parts") {
-      return ReactDOM.render(<CreateParts onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateParts onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "machine") {
-      return ReactDOM.render(<CreateMachine onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateMachine onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "superior machine") {
-      return ReactDOM.render(<CreateSuperiorMachine onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateSuperiorMachine onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "classification") {
-      return ReactDOM.render(<CreateClassification onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateClassification onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "defect cause") {
-      return ReactDOM.render(<CreateDefectCause onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateDefectCause onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "defect diagnostic") {
-      return ReactDOM.render(<CreateDefectDiagnostic onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateDefectDiagnostic onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "order type") {
-      return ReactDOM.render(<CreateOrderType onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateOrderType onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "default note") {
-      return ReactDOM.render(<CreateDefaultNote onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateDefaultNote onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "default operation") {
-      return ReactDOM.render(<CreateDefaultOperation onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateDefaultOperation onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "order layout") {
-      return ReactDOM.render(<CreateOrderLayout onClose={this.unountModal}/>, this.getDOMToRender())
+      return ReactDOM.render(<CreateOrderLayout onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "maintenance order") {
       alert('Página em construção 📏🔨⛏')
-      //return ReactDOM.render(<CreateMaintenanceOrder onClose={this.unountModal}/>, this.getDOMToRender())
+      //return ReactDOM.render(<CreateMaintenanceOrder onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else {
       console.log("TCL: ShowCards -> renderComponent -> else -> component", component)
-      this.unountModal()
+      this.unmountModal()
     }
     
   }
 
-  unountModal() {
+  unmountModal() {
     ReactDOM.unmountComponentAtNode(this.getDOMToRender());
   }
 

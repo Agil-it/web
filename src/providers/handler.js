@@ -28,9 +28,11 @@ export class HandlerProvider {
     //MessageModal.confirmation(title, "Confirma a ação?",this.execute(callback, action, successCallBack))
 
     if (alreadyRegistered) {
-      MessageModal.confirmation(title, "Confirma a ação?", async () => {this.execute(this.provider.update(id,object), action, successCallBack)})
+      //MessageModal.confirmation(title, "Confirma a ação?", async () => {this.execute(this.provider.update(id,object), action, successCallBack)})
+      this.execute(this.provider.update(id,object), action, successCallBack)
     } else {
-      MessageModal.confirmation(title, "Confirma a ação?", async () => {this.execute(this.provider.create(object), action, successCallBack)})
+      this.execute(this.provider.create(object))
+      //MessageModal.confirmation(title, "Confirma a ação?", async () => {this.execute(this.provider.create(object), action, successCallBack)})
     }
   }
 

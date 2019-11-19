@@ -22,7 +22,8 @@ class CreateWorkCenter extends Component {
 
     this.state = {
       visible: true,
-      fields: {}
+      fields: {},
+      listName: []
     };
 
     this.provider = new HandlerProvider(new WorkCenterProvider(), "centro de trabalho")
@@ -34,7 +35,9 @@ class CreateWorkCenter extends Component {
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
-    this.onAutocomplete = this.onAutocomplete.bind(this)
+    this.onAutocomplete = this.onAutocomplete.bind(this);
+    this.onChangeAutoComplete = this.onChangeAutoComplete.bind(this);
+    this.onBlur = this.onBlur.bind(this);
   }
 
   async loadList() {
@@ -42,16 +45,10 @@ class CreateWorkCenter extends Component {
     let response = await this.provider.getList();
     if (response.success) {
       this.list = response.data
-      this.listName = response.data.map((item => item.description))
+      let listName = response.data.map((item => item.description))
+
+      this.setState({ listName })
     }
-    console.log("TCL: CreateWorkCenter -> constructor -> this.list", this.list)
-  }
-
-  onAutocomplete(data, filterText, dataLabel) {
-
-    let workCenter = this.state.fields;
-    console.log("TCL: CreateWorkCenter -> onAutocomplete -> workCenter", workCenter)
-    
   }
 
   hideModal() {
@@ -60,11 +57,16 @@ class CreateWorkCenter extends Component {
   }
 
   clean() {
-    var fields = this.state.fields;
+    let fields = this.state.fields;
+    let autocomplete = this.state.autocomplete
 
     ObjectHelper.clearFields(fields);
+    autocomplete = ""
 
     this.setState({ fields });
+    this.setState({ autocomplete });
+
+    this.loadList()
 
   }
 
@@ -87,6 +89,33 @@ class CreateWorkCenter extends Component {
 
   formPreventDefault(event) {
     event.preventDefault()
+  }
+
+  onAutocomplete(suggestion, suggestionIndex, matches) {
+    let autocomplete = matches[suggestionIndex].primaryText
+    this.setState({ autocomplete })
+  }
+
+  onChangeAutoComplete(autocomplete, event) {
+    this.setState({ autocomplete })
+  }
+
+  onBlur() {
+    let autocomplete = this.state.autocomplete
+    let item = this.list.find(element => element.description === autocomplete)
+
+    if( item === undefined) {
+      autocomplete = ""
+      this.setState({ autocomplete })
+      return
+    }
+
+    let fields = {
+      id: item.id,
+      description: item.description
+    }
+
+    this.setState({ fields })
   }
 
   render() {
@@ -114,12 +143,14 @@ class CreateWorkCenter extends Component {
               style={{ fontSize: 17 }}
               id="id"
               name="id"
-              onChange={this.onChange}
+              value={this.state.autocomplete}
               placeholder="Código do Centro de Trabalho"
               rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
               block paddedBlock
-              list={this.listName}
-              filter={this.onAutocomplete}
+              list={this.state.listName}
+              onAutocomplete={this.onAutocomplete}
+              onChange={this.onChangeAutoComplete}
+              onBlur={this.onBlur}
             /><br></br>
             <C_TextField
               style={{ fontSize: 17 }}
