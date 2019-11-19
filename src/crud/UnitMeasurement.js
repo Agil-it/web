@@ -9,9 +9,9 @@ import {
 
 import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
-import { HandlerProvider } from '../providers/handler';
+import { HandlerProvider } from '../providers/Handler';
 import { UnitMeasurementProvider } from '../providers/UnitMeasurement';
-
+import { ObjectHelper } from '../helpers/Object';
 
 class CreateUnitMeasurement extends Component {
 
@@ -26,7 +26,6 @@ class CreateUnitMeasurement extends Component {
     this.provider = new HandlerProvider(new UnitMeasurementProvider(), "unidade de medida")
 
     this.hideModal = this.hideModal.bind(this);
-    this.clearFields = this.clearFields.bind(this);
     this.onChange = this.onChange.bind(this);
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
@@ -39,12 +38,11 @@ class CreateUnitMeasurement extends Component {
   }
 
   clean() {
-    this.setState({ fields: {} })
-    this.clearFields()
-  }
+    var fields = this.state.fields;
 
-  clearFields() {
-    this.form.reset()
+    ObjectHelper.clearFields(fields);
+
+    this.setState({ fields });
   }
 
   delete() {

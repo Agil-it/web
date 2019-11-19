@@ -15,7 +15,7 @@ export class HandlerProvider {
   }
 
   save(object, successCallBack) {
-    let id = object.id
+    let id = Number(object.id)
     let alreadyRegistered = (typeof id == "number" && id > 0)
     //let callback = alreadyRegistered? this.provider.update(id,object) : this.provider.create(object)
 
@@ -48,6 +48,16 @@ export class HandlerProvider {
 
     let title = `Deletar ${StringHelper.FirstLetterUpperCase(this.entityName)}?`
     MessageModal.confirmation(title, "Confirma a ação?", async() => {this.execute(this.provider.delete(id), "deletar", successCallBack)})
+  }
+
+  async getList(){
+
+    try {
+      let response = await this.provider.getList();
+      return response;
+    } catch (error) {
+      return [];
+    }
   }
 
   async execute(functionToExecute, action, successCallBack) {

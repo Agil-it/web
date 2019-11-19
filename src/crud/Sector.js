@@ -9,9 +9,9 @@ import {
 
 import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
-import { HandlerProvider } from '../providers/handler';
+import { HandlerProvider } from '../providers/Handler';
 import { SectorProvider } from '../providers/Sector';
-
+import { ObjectHelper } from '../helpers/Object';
 
 class CreateSector extends Component {
 
@@ -26,7 +26,6 @@ class CreateSector extends Component {
     this.provider = new HandlerProvider(new SectorProvider(), "setor")
 
     this.hideModal = this.hideModal.bind(this);
-    this.clearFields = this.clearFields.bind(this);
     this.onChange = this.onChange.bind(this);
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
@@ -40,12 +39,11 @@ class CreateSector extends Component {
   }
 
   clean() {
-    this.setState({ fields: {} })
-    this.clearFields()
-  }
+    var fields = this.state.fields;
 
-  clearFields() {
-    this.form.reset()
+    ObjectHelper.clearFields(fields);
+
+    this.setState({ fields });
   }
 
   delete() {
@@ -94,7 +92,7 @@ class CreateSector extends Component {
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
             <C_TextField
               style={{ fontSize: 17 }}
-              id="SectorId"
+              id="id"
               type="search"
               label="Código do Setor"
               placeholder="Código do Setor"

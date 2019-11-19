@@ -9,8 +9,10 @@ import {
 
 import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
-import { HandlerProvider } from '../providers/handler';
+import { HandlerProvider } from '../providers/Handler';
 import { WorkCenterProvider } from '../providers/WorkCenter';
+import { ObjectHelper } from '../helpers/Object';
+import C_AutoComplete from '../components/AutoComplete';
 
 
 class CreateWorkCenter extends Component {
@@ -25,12 +27,31 @@ class CreateWorkCenter extends Component {
 
     this.provider = new HandlerProvider(new WorkCenterProvider(), "centro de trabalho")
 
+    this.loadList()
+
     this.hideModal = this.hideModal.bind(this);
-    this.clearFields = this.clearFields.bind(this);
     this.onChange = this.onChange.bind(this);
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
+    this.onAutocomplete = this.onAutocomplete.bind(this)
+  }
+
+  async loadList() {
+    this.list = []
+    let response = await this.provider.getList();
+    if (response.success) {
+      this.list = response.data
+      this.listName = response.data.map((item => item.description))
+    }
+    console.log("TCL: CreateWorkCenter -> constructor -> this.list", this.list)
+  }
+
+  onAutocomplete(data, filterText, dataLabel) {
+
+    let workCenter = this.state.fields;
+    console.log("TCL: CreateWorkCenter -> onAutocomplete -> workCenter", workCenter)
+    
   }
 
   hideModal() {
@@ -39,12 +60,12 @@ class CreateWorkCenter extends Component {
   }
 
   clean() {
-    this.setState({ fields: {} })
-    this.clearFields()
-  }
+    var fields = this.state.fields;
 
-  clearFields() {
-    this.form.reset()
+    ObjectHelper.clearFields(fields);
+
+    this.setState({ fields });
+
   }
 
   delete() {
@@ -89,16 +110,16 @@ class CreateWorkCenter extends Component {
         />
         <section className="md-toolbar-relative">
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
-            <C_TextField
+            <C_AutoComplete
               style={{ fontSize: 17 }}
               id="id"
               name="id"
-              value={this.state.fields.id}
               onChange={this.onChange}
-              type="search"
               placeholder="Código do Centro de Trabalho"
               rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
               block paddedBlock
+              list={this.listName}
+              filter={this.onAutocomplete}
             /><br></br>
             <C_TextField
               style={{ fontSize: 17 }}

@@ -11,8 +11,9 @@ import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
 import C_SelectField from '../components/SelectField';
 import C_CheckBox from '../components/CheckBox';
-import { HandlerProvider } from '../providers/handler';
+import { HandlerProvider } from '../providers/Handler';
 import { SafetyParameterProvider } from '../providers/SafetyParameter';
+import { ObjectHelper } from '../helpers/Object';
 
 
 class CreateSafetyParameter extends Component {
@@ -48,7 +49,6 @@ class CreateSafetyParameter extends Component {
     this.provider = new HandlerProvider(new SafetyParameterProvider(), "parametro de segurança")
 
     this.hideModal = this.hideModal.bind(this);
-    this.clearFields = this.clearFields.bind(this);
     this.onChange = this.onChange.bind(this);
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
@@ -61,12 +61,10 @@ class CreateSafetyParameter extends Component {
   }
 
   clean() {
-    this.setState({ fields: {} })
-    this.clearFields()
-  }
+    var fields = this.state.fields;
+    ObjectHelper.clearFields(fields);
 
-  clearFields() {
-    this.form.reset()
+    this.setState({ fields });
   }
 
   delete() {

@@ -14,8 +14,9 @@ import C_SelectField from '../components/SelectField';
 import C_CheckBox from '../components/CheckBox';
 import C_Calendar from '../components/Calendar';
 import C_RadioGroup from '../components/RadioGroup';
-import { HandlerProvider } from '../providers/handler';
+import { HandlerProvider } from '../providers/Handler';
 import { UserProvider } from '../providers/User';
+import { ObjectHelper } from '../helpers/Object';
 
 
 class CreateUser extends Component {
@@ -88,7 +89,6 @@ class CreateUser extends Component {
     this.provider = new HandlerProvider(new UserProvider(), "usuário")
 
     this.hideModal = this.hideModal.bind(this);
-    this.clearFields = this.clearFields.bind(this);
     this.onChange = this.onChange.bind(this);
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
@@ -101,12 +101,10 @@ class CreateUser extends Component {
   }
 
   clean() {
-    this.setState({ fields: {} })
-    this.clearFields()
-  }
+    var fields = this.state.fields;
 
-  clearFields() {
-    this.form.reset()
+    ObjectHelper.clearFields(fields);
+    this.setState({ fields });
   }
 
   delete() {
@@ -116,6 +114,7 @@ class CreateUser extends Component {
 
   save() {
     let user = this.state.fields;
+    console.log("TCL: CreateUser -> save -> user", user)
     this.provider.save(user, this.clean)
   }
 
@@ -258,6 +257,7 @@ class CreateUser extends Component {
             </div><br></br>
             <div style={{ display: "flex", justifyContent: "left" }}>
               <C_Calendar
+                id="birthDate"
                 name="birthDate"
                 value={this.state.fields.birthDate}
                 onChange={this.onChange}

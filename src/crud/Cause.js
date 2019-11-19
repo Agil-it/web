@@ -9,9 +9,9 @@ import {
 
 import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
-import { HandlerProvider } from '../providers/handler';
+import { HandlerProvider } from '../providers/Handler';
 import { CauseProvider } from '../providers/Cause';
-
+import { ObjectHelper } from '../helpers/Object';
 
 class CreateDefectCause extends Component {
 
@@ -26,7 +26,6 @@ class CreateDefectCause extends Component {
     this.provider = new HandlerProvider(new CauseProvider(), "causa do defeito")
 
     this.hideModal = this.hideModal.bind(this);
-    this.clearFields = this.clearFields.bind(this);
     this.onChange = this.onChange.bind(this);
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
@@ -37,24 +36,23 @@ class CreateDefectCause extends Component {
     this.setState({ visible: false })
     this.props.onClose()
   }
-
+  
   clean() {
-    this.setState({ fields: {} })
-    this.clearFields()
-  }
+    var fields = this.state.fields;
 
-  clearFields() {
-    this.form.reset()
+    ObjectHelper.clearFields(fields);
+
+    this.setState({ fields });
   }
 
   delete() {
     let classification = this.state.fields;
-    this.provider.delete(classification.id,this.clean())
+    this.provider.delete(classification.id,this.clean)
   }
 
   save() {
     let classification = this.state.fields;
-    this.provider.save(classification,this.clean())
+    this.provider.save(classification,this.clean)
   }
 
   onChange(e) {
