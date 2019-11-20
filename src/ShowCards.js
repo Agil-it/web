@@ -21,6 +21,7 @@ import CreateWorkCenter from './crud/WorkCenter';
 import CreateSafetyParameter from './crud/SafetyParameter';
 import CreateUser from './crud/User';
 import CreateOrderLayout from './crud/OrderLayout'
+import CreateMaintenanceOrder from './crud/MaintenanceOrder';
 
 // import './Login.css';
 
@@ -89,8 +90,8 @@ class ShowCards extends Component {
       return ReactDOM.render(<CreateOrderLayout onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "maintenance order") {
-      alert('Página em construção 📏🔨⛏')
-      //return ReactDOM.render(<CreateMaintenanceOrder onClose={this.unmountModal}/>, this.getDOMToRender())
+
+      return ReactDOM.render(<CreateMaintenanceOrder onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else {
       console.log("TCL: ShowCards -> renderComponent -> else -> component", component)

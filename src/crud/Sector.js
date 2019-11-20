@@ -74,18 +74,17 @@ class CreateSector extends Component {
       <DialogContainer
         id="simple-full-page-dialog"
         visible={this.state.visible}
-        // fullPage
         width="40%"
-        height="80%"
-        //onHide={this.hideModal}
+        height="50%"
+        dialogStyle={{borderRadius:5}}
         onHide={this.hideModal}
         aria-labelledby="simple-full-page-dialog-title"
       >
         <Toolbar
-          // fixed
+          fixed
           colored
           title="Cadastrar Setor"
-          // nav={<FontIcon icon onClick={this.hide}>close</FontIcon>}
+          style={{borderRadius:5}}
           actions={<FontIcon style={{ cursor: "pointer" }} onClick={this.hideModal}>close</FontIcon>}
         />
         <section className="md-toolbar-relative">

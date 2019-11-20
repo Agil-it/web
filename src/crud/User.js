@@ -134,17 +134,16 @@ class CreateUser extends Component {
       <DialogContainer
         id="simple-full-page-dialog"
         visible={this.state.visible}
-        // fullPage
         width="60%"
         height="100%"
-        // onHide={false}
+        dialogStyle={{borderRadius:5}}
         aria-labelledby="simple-full-page-dialog-title"
       >
         <Toolbar
-          // fixed
+          fixed
           colored
           title="Cadastrar Usuários"
-          // nav={<FontIcon icon onClick={this.hide}>close</FontIcon>}
+          style={{borderRadius:5}}
           actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
         />
         <section className="md-toolbar-relative">

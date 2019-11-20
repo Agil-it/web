@@ -124,17 +124,16 @@ class CreateWorkCenter extends Component {
       <DialogContainer
         id="simple-full-page-dialog"
         visible={this.state.visible}
-        // fullPage
         width="40%"
-        height="80%"
-        // onHide={false}
+        height="50%"
+        dialogStyle={{borderRadius:5}}
         aria-labelledby="simple-full-page-dialog-title"
       >
         <Toolbar
-          // fixed
+          fixed
           colored
           title="Cadastrar Centro de Trabalho"
-          // nav={<FontIcon icon onClick={this.hide}>close</FontIcon>}
+          style={{borderRadius:5}}
           actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
         />
         <section className="md-toolbar-relative">
@@ -144,6 +143,7 @@ class CreateWorkCenter extends Component {
               id="id"
               name="id"
               value={this.state.autocomplete}
+              label={"Código do Centro de Trabalho"}
               placeholder="Código do Centro de Trabalho"
               rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
               block paddedBlock
