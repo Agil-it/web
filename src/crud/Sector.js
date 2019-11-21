@@ -75,7 +75,7 @@ class CreateSector extends Component {
         id="simple-full-page-dialog"
         visible={this.state.visible}
         width="40%"
-        height="50%"
+        height="60%"
         dialogStyle={{borderRadius:5}}
         onHide={this.hideModal}
         aria-labelledby="simple-full-page-dialog-title"
@@ -90,7 +90,6 @@ class CreateSector extends Component {
         <section className="md-toolbar-relative">
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
             <C_TextField
-              style={{ fontSize: 17 }}
               id="id"
               type="search"
               label="Código do Setor"
@@ -101,7 +100,6 @@ class CreateSector extends Component {
             /><br></br>
             <C_TextField
               name="description"
-              style={{ fontSize: 17 }}
               id="description"
               type="text"
               label="Descrição"

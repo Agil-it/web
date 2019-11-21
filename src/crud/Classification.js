@@ -74,7 +74,7 @@ class CreateClassification extends Component {
         id="simple-full-page-dialog"
         visible={this.state.visible}
         width="40%"
-        height="50%"
+        height="60%"
         dialogStyle={{borderRadius:5}}
         aria-labelledby="simple-full-page-dialog-title"
       >
@@ -88,7 +88,6 @@ class CreateClassification extends Component {
         <section className="md-toolbar-relative">
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
             <C_TextField
-              style={{ fontSize: 17 }}
               id="type"
               name="id"
               value={this.state.fields.id}
@@ -100,7 +99,6 @@ class CreateClassification extends Component {
               block paddedBlock
             /><br></br>
             <C_TextField
-              style={{ fontSize: 17 }}
               id="description"
               name="description"
               value={this.state.fields.description}

@@ -49,14 +49,17 @@ class CreateMaintenanceOrder extends Component {
         installationArea: undefined,
         maintenanceOrderType: undefined,
         classification: undefined,
-        forceChangePassword: false,
         maintenanceType: undefined,
-        email: "",
-        contact: undefined,
-        birthDate: undefined,
-        gender: undefined,
-        workCenter: undefined,
-        employeeBadge: undefined
+        priority: undefined,
+        superiorMachine: undefined,
+        machine: undefined,
+        workCenter:undefined,
+        defectComponent: undefined,
+        defectCause: undefined,
+        descriptionCause:"",
+        defectDiagnostic: undefined,
+        descriptionDiagnostic:"",
+
       },
 
       maintenanceType: [{
@@ -68,7 +71,7 @@ class CreateMaintenanceOrder extends Component {
         value: 'route',
       },
       {
-        label: 'List',
+        label: 'Lista',
         value: 'list',
       }]
     };
@@ -137,7 +140,6 @@ class CreateMaintenanceOrder extends Component {
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
             <div style={{ display: "flex", justifyContent: "left" }}>
               <C_TextField
-                style={{ fontSize: 17 }}
                 id="id"
                 name="id"
                 value={this.state.fields.id}
@@ -150,7 +152,6 @@ class CreateMaintenanceOrder extends Component {
                 css={{ width: 350 }}
               />
               <C_TextField
-                style={{ fontSize: 17 }}
                 id="installationArea"
                 name="installationArea"
                 value={this.state.fields.installationArea}
@@ -165,7 +166,6 @@ class CreateMaintenanceOrder extends Component {
             </div><br></br>
             <div style={{ display: "flex", justifyContent: "left" }}>
                 <C_TextField
-                    style={{ fontSize: 17 }}
                     id="maintenanceOrderType"
                     name="maintenanceOrderType"
                     value={this.state.fields.maintenanceOrderType}
@@ -178,7 +178,6 @@ class CreateMaintenanceOrder extends Component {
                     css={{ width: 350 }}
                 />
                <C_TextField
-                    style={{ fontSize: 17 }}
                     id="classification"
                     name="classification"
                     value={this.state.fields.classification}
@@ -192,85 +191,128 @@ class CreateMaintenanceOrder extends Component {
                 />
             </div><br></br>
             <div style={{ display: "flex" }}>
-              <div style={{ width: "50%", marginLeft: 20 }}>
-                <C_Button
-                  style={{ height: 50, width: "50%", display: "flex", justifyContent: "center", fontSize: 15 }}
-                  primary={true}
-                  label={"Gerar senha"}
-                  icon={<FontIcon>lock</FontIcon>}
-                />
-              </div>
-              <C_CheckBox
-                name="forceChangePassword"
-                value={this.state.fields.forceChangePassword}
+              <C_SelectField
+                name="maintenanceType"
+                id="maintenanceType"
+                value={this.state.fields.maintenanceType}
                 onChange={this.onChange}
-                label={<div style={{ fontSize: 17, color: "#616161d9" }}>Alterar Senha no Primeiro Acesso</div>}
-                type="checkbox"
-                style={{}}
+                type="text"
+                label={"Tipo da Manutenção"}
+                placeholder={"Selecione"}
+                list={this.state.maintenanceType}
+                required={true}
+                style={{ width: 350 }}
+              />
+              <C_SelectField
+                id="priority"
+                name="priority"
+                value={this.state.fields.priority}
+                onChange={this.onChange}
+                type="text"
+                label={"Prioridade"}
+                placeholder={"Selecione"}
+                list={this.state.priority}
+                required={true}
+                style={{ width: 350, marginLeft: 30 }}
               />
             </div><br /><br />
             <div style={{ display: "flex", justifyContent: "left" }}>
               <C_TextField
-                style={{ fontSize: 17 }}
-                name="email"
-                value={this.state.fields.email}
+                id="superiorMachine"
+                name="superiorMachine"
+                value={this.state.fields.superiorMachine}
                 onChange={this.onChange}
-                label="Email"
-                placeholder="Email"
+                type="search"
+                label="Equipamento Superior"
+                placeholder="Equipamento Superior"
+                rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
                 required={true}
                 css={{ width: 350 }}
               />
               <C_TextField
-                style={{ fontSize: 17 }}
-                name="password"
-                value={this.state.fields.password}
+                id="machine"
+                name="machine"
+                value={this.state.fields.machine}
                 onChange={this.onChange}
-                type="password"
-                label="Password"
-                placeholder="Password"
+                type="search"
+                label="Equipamento"
+                placeholder="Equipamento"
+                rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                required={true}
                 css={{ width: 350, marginLeft: 30 }}
               />
             </div><br></br>
             <div style={{ display: "flex", justifyContent: "left" }}>
-              <C_Calendar
-                id="birthDate"
-                name="birthDate"
-                value={this.state.fields.birthDate}
+              <C_TextField
+                id="workCenter"
+                name="workCenter"
+                value={this.state.fields.workCenter}
                 onChange={this.onChange}
-                label={<div style={{ fontSize: 17 }}>Data de Nascimento</div>}
-                allDay
-                cancelLabel={"Cancelar"}
+                type="search"
+                label="Centro de Trabalho"
+                placeholder="Centro de Trabalho"
+                rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                required={true}
                 css={{ width: 350 }}
               />
               <C_TextField
-                style={{ fontSize: 17 }}
-                name="contact"
-                value={this.state.fields.contact}
+                id="defectComponent"
+                name="defectComponent"
+                value={this.state.fields.defectComponent}
                 onChange={this.onChange}
-                label="Telefone de Contato"
-                placeholder="Telefone de Contato"
+                type="search"
+                label="Componente Defeituoso"
+                placeholder="Componente Defeituoso"
+                rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
                 required={true}
-                onChange={this.onChange}
-                css={{ width: 350, marginLeft: 30, marginTop: 16 }}
+                css={{ width: 350, marginLeft: 30 }}
               />
             </div><br></br>
             <div style={{ display: "flex", justifyContent: "left" }}>
-              <C_RadioGroup
-                name="gender"
-                value={this.state.fields.gender}
+              <C_TextField
+                id="defectCause"
+                name="defectCause"
+                value={this.state.fields.defectCause}
                 onChange={this.onChange}
-                label={<div style={{ fontSize: 17, color: "#616161d9" }}>Gênero</div>}
-                type="radio"
-                style={{ width: 350 }}
-                list={this.state.priority}
+                type="search"
+                label="Causa do Defeito"
+                placeholder="Causa do Defeito"
+                rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                required={true}
+                css={{ width: 350 }}
               />
               <C_TextField
-                style={{ fontSize: 17 }}
-                name="employeeBadge"
-                value={this.state.fields.geemployeeBadgeder}
+                id="descriptionCause"
+                name="descriptionCause"
+                value={this.state.fields.descriptionCause}
                 onChange={this.onChange}
-                label="Crachá do Usuário"
-                placeholder="Crachá do Usuário"
+                label="Descrição da Causa"
+                placeholder="Descrição da Causa"
+                required={true}
+                css={{ width: 350, marginLeft: 30 }}
+              />
+            </div>
+            <div style={{ display: "flex", justifyContent: "left" }}>
+              <C_TextField
+                id="defectDiagnostic"
+                name="defectDiagnostic"
+                value={this.state.fields.defectDiagnostic}
+                onChange={this.onChange}
+                type="search"
+                label="Sintoma do Defeito"
+                placeholder="Sintoma do Defeito"
+                rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                required={true}
+                css={{ width: 350 }}
+              />
+              <C_TextField
+                id="descriptionDiagnostic"
+                name="descriptionDiagnostic"
+                value={this.state.fields.descriptionDiagnostic}
+                onChange={this.onChange}
+                label="Descrição do Sintoma"
+                placeholder="Descrição do Sintoma"
+                required={true}
                 css={{ width: 350, marginLeft: 30 }}
               />
             </div>

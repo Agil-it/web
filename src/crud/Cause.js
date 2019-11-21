@@ -73,7 +73,7 @@ class CreateDefectCause extends Component {
         id="simple-full-page-dialog"
         visible={this.state.visible}
         width="40%"
-        height="60%"
+        height="70%"
         dialogStyle={{borderRadius:5}}
         aria-labelledby="simple-full-page-dialog-title"
       >
@@ -87,7 +87,6 @@ class CreateDefectCause extends Component {
         <section className="md-toolbar-relative">
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
             <C_TextField
-              style={{ fontSize: 17 }}
               id="CauseId"
               name="id"
               value={this.state.fields.id}
@@ -99,7 +98,6 @@ class CreateDefectCause extends Component {
               block paddedBlock
             /><br></br>
             <C_TextField
-              style={{ fontSize: 17 }}
               id="type"
               name="machineType"
               value={this.state.fields.machineType}
@@ -110,7 +108,6 @@ class CreateDefectCause extends Component {
               block paddedBlock
             /><br></br>
             <C_TextField
-              style={{ fontSize: 17 }}
               id="description"
               name="description"
               value={this.state.fields.description}
