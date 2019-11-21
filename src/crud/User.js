@@ -134,24 +134,22 @@ class CreateUser extends Component {
       <DialogContainer
         id="simple-full-page-dialog"
         visible={this.state.visible}
-        // fullPage
         width="60%"
         height="100%"
-        // onHide={false}
+        dialogStyle={{borderRadius:5}}
         aria-labelledby="simple-full-page-dialog-title"
       >
         <Toolbar
-          // fixed
+          fixed
           colored
           title="Cadastrar Usuários"
-          // nav={<FontIcon icon onClick={this.hide}>close</FontIcon>}
+          style={{borderRadius:5}}
           actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
         />
         <section className="md-toolbar-relative">
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
             <div style={{ display: "flex", justifyContent: "left" }}>
               <C_TextField
-                style={{ fontSize: 17 }}
                 id="id"
                 name="id"
                 value={this.state.fields.id}
@@ -164,7 +162,6 @@ class CreateUser extends Component {
                 css={{ width: 350 }}
               />
               <C_TextField
-                style={{ fontSize: 17 }}
                 name="name"
                 value={this.state.fields.name}
                 onChange={this.onChange}
@@ -179,14 +176,14 @@ class CreateUser extends Component {
                 value={this.state.fields.role}
                 onChange={this.onChange}
                 type="text"
-                label={<div style={{ fontSize: 17 }}>Perfil de Usuário</div>}
+                label={"Perfil de Usuário"}
+                placeholder="Selecione"
                 list={this.state.profiles}
                 required={false}
                 style={{ width: 350 }}
               />
               {this.state.fields.role == "sector_leader" ?
                 <C_TextField
-                  style={{ fontSize: 17 }}
                   name="sector"
                   value={this.state.fields.sector}
                   onChange={this.onChange}
@@ -200,7 +197,6 @@ class CreateUser extends Component {
                 />
                 : (this.state.fields.role == "maintainer" ?
                   <C_TextField
-                    style={{ fontSize: 17 }}
                     name="workCenter"
                     value={this.state.fields.workCenter}
                     onChange={this.onChange}
@@ -235,7 +231,6 @@ class CreateUser extends Component {
             </div><br /><br />
             <div style={{ display: "flex", justifyContent: "left" }}>
               <C_TextField
-                style={{ fontSize: 17 }}
                 name="email"
                 value={this.state.fields.email}
                 onChange={this.onChange}
@@ -245,7 +240,6 @@ class CreateUser extends Component {
                 css={{ width: 350 }}
               />
               <C_TextField
-                style={{ fontSize: 17 }}
                 name="password"
                 value={this.state.fields.password}
                 onChange={this.onChange}
@@ -261,13 +255,12 @@ class CreateUser extends Component {
                 name="birthDate"
                 value={this.state.fields.birthDate}
                 onChange={this.onChange}
-                label={<div style={{ fontSize: 17 }}>Data de Nascimento</div>}
+                label={"Data de Nascimento"}
                 allDay
                 cancelLabel={"Cancelar"}
                 css={{ width: 350 }}
               />
               <C_TextField
-                style={{ fontSize: 17 }}
                 name="contact"
                 value={this.state.fields.contact}
                 onChange={this.onChange}
@@ -289,7 +282,6 @@ class CreateUser extends Component {
                 list={this.state.genders}
               />
               <C_TextField
-                style={{ fontSize: 17 }}
                 name="employeeBadge"
                 value={this.state.fields.geemployeeBadgeder}
                 onChange={this.onChange}

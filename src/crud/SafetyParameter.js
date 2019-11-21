@@ -94,23 +94,21 @@ class CreateSafetyParameter extends Component {
       <DialogContainer
         id="simple-full-page-dialog"
         visible={this.state.visible}
-        // fullPage
         width="40%"
         height="100%"
-        // onHide={false}
+        dialogStyle={{borderRadius:5}}
         aria-labelledby="simple-full-page-dialog-title"
       >
         <Toolbar
-          // fixed
+          fixed
           colored
           title="Cadastrar Parametrização de Segurança"
-          // nav={<FontIcon icon onClick={this.hide}>close</FontIcon>}
+          style={{borderRadius:5}}
           actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
         />
         <section className="md-toolbar-relative">
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
             <C_TextField
-              style={{ fontSize: 17 }}
               id="id"
               name="id"
               value={this.state.fields.id}
@@ -122,7 +120,7 @@ class CreateSafetyParameter extends Component {
               block paddedBlock
               required={true}
               onChange={this.onChange}
-            /><br></br>
+            /><br/>
             <C_CheckBox
               id="useAlways"
               name="useAlways"
@@ -132,21 +130,20 @@ class CreateSafetyParameter extends Component {
               type="checkbox"
               style={{}}
               onChange={this.onChange}
-            /><br></br>
+            />
             <C_SelectField
               id="entityClass"
               name="entityClass"
               value={this.state.fields.entityClass}
               type="text"
               className="md-cell md-cell--12"
-              label={<div style={{ fontSize: 17 }}>Tipo de Registro</div>}
+              label={"Tipo de Registro"}
               list={this.state.types}
               required={false}
               disabled={this.state.fields.useAlways}
               onChange={this.onChange}
             /><br></br>
             <C_TextField
-              style={{ fontSize: 17 }}
               id="entityId"
               name="entityId"
               value={this.state.fields.entityId}
@@ -159,7 +156,6 @@ class CreateSafetyParameter extends Component {
               onChange={this.onChange}
             /><br></br>
             <C_TextField
-              style={{ fontSize: 17 }}
               id="description"
               name="description"
               value={this.state.fields.description}
