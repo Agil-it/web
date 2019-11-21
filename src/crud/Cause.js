@@ -11,7 +11,9 @@ import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
 import { HandlerProvider } from '../providers/Handler';
 import { CauseProvider } from '../providers/Cause';
+import { MachineTypeProvider } from '../providers/MachineType';
 import { ObjectHelper } from '../helpers/Object';
+import C_AutoComplete from '../components/AutoComplete';
 
 class CreateDefectCause extends Component {
 
@@ -20,42 +22,83 @@ class CreateDefectCause extends Component {
 
     this.state = {
       visible: true,
-      fields: {}
+      autocomplete: '',
+      machineType: '',
+      fields: {},
+      list: [],
+      machineTypeList: []
     };
 
     this.provider = new HandlerProvider(new CauseProvider(), "causa do defeito")
+    this.machineTypeProvider = new HandlerProvider(new MachineTypeProvider(), "Tipo de Máquina")
 
     this.hideModal = this.hideModal.bind(this);
     this.onChange = this.onChange.bind(this);
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
+    this.loadList = this.loadList.bind(this);
+    this.loadListMachineType = this.loadListMachineType.bind(this);
+    this.autocompleteSelect = this.autocompleteSelect.bind(this);
+    this.autocompleteId = this.autocompleteId.bind(this);
+    this.autocompleteMachineType = this.autocompleteMachineType.bind(this);
+  }
+
+  async loadList() {
+    let list = []
+    let response = await this.provider.getList();
+    if (response.success) {
+      list = response.data
+    }
+    this.setState({ list })
+  }
+
+  async loadListMachineType() {
+    let machineTypeList = []
+    let response = await this.machineTypeProvider.getList();
+    if (response.success) {
+      machineTypeList = response.data
+    }
+    this.setState({ machineTypeList })
   }
 
   hideModal() {
     this.setState({ visible: false })
     this.props.onClose()
   }
-  
+
   clean() {
     var fields = this.state.fields;
+    let autocomplete = ''
+    let machineType = ''
 
     ObjectHelper.clearFields(fields);
 
-    this.setState({ fields });
+    this.setState({ fields, autocomplete, machineType });
+    this.loadList()
+    this.loadListMachineType()
   }
 
   delete() {
-    let classification = this.state.fields;
-    this.provider.delete(classification.id,this.clean)
+    let cause = this.state.fields;
+    this.provider.delete(cause.id, this.clean)
   }
 
   save() {
-    let classification = this.state.fields;
-    this.provider.save(classification,this.clean)
+    let cause = this.state.fields;
+    this.provider.save(cause, this.clean)
   }
 
-  onChange(e) {
+  onChange(e, name) {
+
+    if (name === "id") {
+      this.setState({ autocomplete: e })
+      return
+    } else if (name === "machineType") {
+      this.setState({ machineType: e })
+      return
+    }
+
     let fields = this.state.fields;
 
     fields[e.target.name] = e.target.value;
@@ -64,6 +107,51 @@ class CreateDefectCause extends Component {
 
   formPreventDefault(event) {
     event.preventDefault()
+  }
+
+  autocompleteSelect(id, inputName) {
+
+    if (inputName === "id"){
+      this.autocompleteId(id)
+    } else if (inputName === "machineType") {
+      this.autocompleteMachineType(id)
+    }
+
+    return
+  }
+
+  autocompleteId(id) {
+
+    if (id === undefined) {
+      this.clean()
+      return
+    }
+
+    let item = this.state.list.find(element => element.id === id)
+
+    let fields = {
+      id: item.id,
+      description: item.description,
+      machineType: item.machineTypeId
+    }
+
+    let machineType=item.machineTypeId
+    this.setState({ fields, machineType })
+    return
+  }
+
+  autocompleteMachineType(id) {
+    
+    if (id === undefined) {
+      this.setState({ machineType: '' })
+      return
+    }
+
+    let fields = this.state.fields
+    fields.machineType = id
+
+    this.setState({ fields })
+    return
   }
 
   render() {
@@ -87,28 +175,31 @@ class CreateDefectCause extends Component {
         />
         <section className="md-toolbar-relative">
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
-            <C_TextField
+            <C_AutoComplete
               style={{ fontSize: 17 }}
-              id="CauseId"
+              id="id"
               name="id"
-              value={this.state.fields.id}
-              onChange={this.onChange}
-              type="search"
-              theme="underline"
-              label="Causa do Defeito"
+              value={this.state.autocomplete}
+              label={"Causa do Defeito"}
+              placeholder="Causa do Defeito"
               rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
               block paddedBlock
+              list={this.state.list}
+              dataSelected={this.autocompleteSelect}
+              onChange={this.onChange}
             /><br></br>
-            <C_TextField
+            <C_AutoComplete
               style={{ fontSize: 17 }}
-              id="type"
+              id="machineType"
               name="machineType"
-              value={this.state.fields.machineType}
-              onChange={this.onChange}
-              type="search"
-              label="Tipo de Máquina"
+              value={this.state.machineType}
+              label={"Tipo de Máquina"}
+              placeholder="Tipo de Máquina"
               rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
               block paddedBlock
+              list={this.state.machineTypeList}
+              dataSelected={this.autocompleteSelect}
+              onChange={this.onChange}
             /><br></br>
             <C_TextField
               style={{ fontSize: 17 }}

@@ -6,7 +6,6 @@ export class ObjectHelper {
         delete obj[key];
       } else {
         obj[key] = "";
-        console.log("TCL: ObjectHelper -> clearFields ->  obj[key]",  obj[key])
       }
     }
   }

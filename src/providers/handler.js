@@ -17,13 +17,12 @@ export class HandlerProvider {
   save(object, successCallBack) {
     let id = Number(object.id)
     let alreadyRegistered = (typeof id == "number" && id > 0)
-    //let callback = alreadyRegistered? this.provider.update(id,object) : this.provider.create(object)
-
+    if (!alreadyRegistered) {
+      delete object.id
+    }
 
     let action = alreadyRegistered? "atualizar" : "cadastrar"
     let title = StringHelper.FirstLetterUpperCase(`${action} ${this.entityName}?`)
-
-    console.log('save in handler')
 
     //MessageModal.confirmation(title, "Confirma a ação?",this.execute(callback, action, successCallBack))
 
@@ -31,7 +30,7 @@ export class HandlerProvider {
       //MessageModal.confirmation(title, "Confirma a ação?", async () => {this.execute(this.provider.update(id,object), action, successCallBack)})
       this.execute(this.provider.update(id,object), action, successCallBack)
     } else {
-      this.execute(this.provider.create(object))
+      this.execute(this.provider.create(object), action, successCallBack)
       //MessageModal.confirmation(title, "Confirma a ação?", async () => {this.execute(this.provider.create(object), action, successCallBack)})
     }
   }

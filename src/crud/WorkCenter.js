@@ -23,7 +23,8 @@ class CreateWorkCenter extends Component {
     this.state = {
       visible: true,
       fields: {},
-      listName: []
+      autocomplete: '',
+      list: []
     };
 
     this.provider = new HandlerProvider(new WorkCenterProvider(), "centro de trabalho")
@@ -35,20 +36,16 @@ class CreateWorkCenter extends Component {
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
-    this.onAutocomplete = this.onAutocomplete.bind(this);
-    this.onChangeAutoComplete = this.onChangeAutoComplete.bind(this);
-    this.onBlur = this.onBlur.bind(this);
+    this.autocompleteSelect = this.autocompleteSelect.bind(this);
   }
 
   async loadList() {
-    this.list = []
+    let list = []
     let response = await this.provider.getList();
     if (response.success) {
-      this.list = response.data
-      let listName = response.data.map((item => item.description))
-
-      this.setState({ listName })
+      list = response.data
     }
+    this.setState({ list })
   }
 
   hideModal() {
@@ -58,16 +55,12 @@ class CreateWorkCenter extends Component {
 
   clean() {
     let fields = this.state.fields;
-    let autocomplete = this.state.autocomplete
+    let autocomplete = ''
 
     ObjectHelper.clearFields(fields);
-    autocomplete = ""
-
-    this.setState({ fields });
-    this.setState({ autocomplete });
-
+    
+    this.setState({ fields, autocomplete });
     this.loadList()
-
   }
 
   delete() {
@@ -80,7 +73,13 @@ class CreateWorkCenter extends Component {
     this.provider.save(workCenter, this.clean)
   }
 
-  onChange(e) {
+  onChange(e, name) {
+
+    if (name === "id") {
+      this.setState({ autocomplete: e})
+      return
+    }
+
     let fields = this.state.fields;
 
     fields[e.target.name] = e.target.value;
@@ -91,24 +90,14 @@ class CreateWorkCenter extends Component {
     event.preventDefault()
   }
 
-  onAutocomplete(suggestion, suggestionIndex, matches) {
-    let autocomplete = matches[suggestionIndex].primaryText
-    this.setState({ autocomplete })
-  }
+  autocompleteSelect(id, name) {
 
-  onChangeAutoComplete(autocomplete, event) {
-    this.setState({ autocomplete })
-  }
-
-  onBlur() {
-    let autocomplete = this.state.autocomplete
-    let item = this.list.find(element => element.description === autocomplete)
-
-    if( item === undefined) {
-      autocomplete = ""
-      this.setState({ autocomplete })
+    if (id === undefined) {
+      this.clean()
       return
     }
+
+    let item = this.state.list.find(element => element.id === id)
 
     let fields = {
       id: item.id,
@@ -119,7 +108,7 @@ class CreateWorkCenter extends Component {
   }
 
   render() {
-    // const { visible } = this.state;
+    
     return (
       <DialogContainer
         id="simple-full-page-dialog"
@@ -144,13 +133,13 @@ class CreateWorkCenter extends Component {
               id="id"
               name="id"
               value={this.state.autocomplete}
+              label={"Código do Centro de Trabalho"}
               placeholder="Código do Centro de Trabalho"
               rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
               block paddedBlock
-              list={this.state.listName}
-              onAutocomplete={this.onAutocomplete}
-              onChange={this.onChangeAutoComplete}
-              onBlur={this.onBlur}
+              list={this.state.list}
+              dataSelected={this.autocompleteSelect}
+              onChange={this.onChange}
             /><br></br>
             <C_TextField
               style={{ fontSize: 17 }}
@@ -159,6 +148,7 @@ class CreateWorkCenter extends Component {
               value={this.state.fields.description}
               onChange={this.onChange}
               type="text"
+              label="Descrição"
               placeholder="Descrição"
               block paddedBlock
               rows={2}
