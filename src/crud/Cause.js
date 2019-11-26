@@ -23,12 +23,12 @@ class CreateDefectCause extends Component {
     this.state = {
       visible: true,
       autocomplete: '',
-      machineType: '',
+      machineType: '', 
       fields: {},
       list: [],
       machineTypeList: []
     };
-
+    
     this.provider = new HandlerProvider(new CauseProvider(), "causa do defeito")
     this.machineTypeProvider = new HandlerProvider(new MachineTypeProvider(), "Tipo de Máquina")
 
