@@ -24,6 +24,7 @@ class C_AutoComplete extends Component {
 
     if (JSON.stringify(list) !== JSON.stringify(this.state.list)) {
       console.log(this.props.list)
+      console.log(this.props.list)
       this.setState({ list })
     }
 
@@ -37,9 +38,6 @@ class C_AutoComplete extends Component {
   };
 
   onAutocomplete(suggestion, suggestionIndex, matches) {
-    console.log("TCL: onAutocomplete -> matches", matches)
-    console.log("TCL: onAutocomplete -> suggestionIndex", suggestionIndex)
-    console.log("TCL: onAutocomplete -> suggestion", suggestion)
     let matched=matches[suggestionIndex]
     let value = matched? matched.primaryText : ""
     this.setState({ value })
