@@ -32,12 +32,13 @@ class CreateDefectCause extends Component {
     this.provider = new HandlerProvider(new CauseProvider(), "causa do defeito")
     this.machineTypeProvider = new HandlerProvider(new MachineTypeProvider(), "Tipo de Máquina")
 
+    this.loadList();
+
     this.hideModal = this.hideModal.bind(this);
     this.onChange = this.onChange.bind(this);
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
-    this.loadList = this.loadList.bind(this);
     this.loadListMachineType = this.loadListMachineType.bind(this);
     this.autocompleteSelect = this.autocompleteSelect.bind(this);
     this.autocompleteId = this.autocompleteId.bind(this);
@@ -49,6 +50,7 @@ class CreateDefectCause extends Component {
     let response = await this.provider.getList();
     if (response.success) {
       list = response.data
+      console.log("TCL: CreateDefectCause -> loadList -> list", list)
     }
     this.setState({ list })
   }
@@ -128,6 +130,7 @@ class CreateDefectCause extends Component {
     }
 
     let item = this.state.list.find(element => element.id === id)
+    console.log("TCL: CreateDefectCause -> autocompleteId -> item", item)
 
     let fields = {
       id: item.id,

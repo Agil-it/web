@@ -12,6 +12,7 @@ import C_CrudButtons from '../components/CrudButtons';
 import { HandlerProvider } from '../providers/Handler';
 import { UnitMeasurementProvider } from '../providers/UnitMeasurement';
 import { ObjectHelper } from '../helpers/Object';
+import C_AutoComplete from '../components/AutoComplete';
 
 class CreateUnitMeasurement extends Component {
 
@@ -20,16 +21,30 @@ class CreateUnitMeasurement extends Component {
 
     this.state = {
       visible: true,
-      fields: {}
+      fields: {},
+      autocomplete: '',
+      list: []
     };
 
     this.provider = new HandlerProvider(new UnitMeasurementProvider(), "unidade de medida")
+    this.loadList()
 
     this.hideModal = this.hideModal.bind(this);
     this.onChange = this.onChange.bind(this);
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
+    this.autocompleteSelect = this.autocompleteSelect.bind(this);
+    
+  }
+
+  async loadList() {
+    let list = []
+    let response = await this.provider.getList();
+    if (response.success) {
+      list = response.data
+    }
+    this.setState({ list })
   }
 
   hideModal() {
@@ -38,11 +53,13 @@ class CreateUnitMeasurement extends Component {
   }
 
   clean() {
-    var fields = this.state.fields;
+    let fields = this.state.fields;
+    let autocomplete = ''
 
     ObjectHelper.clearFields(fields);
 
-    this.setState({ fields });
+    this.setState({ fields, autocomplete });
+    this.loadList()
   }
 
   delete() {
@@ -55,7 +72,12 @@ class CreateUnitMeasurement extends Component {
     this.provider.save(unitMeasurement, this.clean)
   }
 
-  onChange(e) {
+  onChange(e, name) {
+    if (name === "id") {
+      this.setState({ autocomplete: e })
+      return
+    }
+
     let fields = this.state.fields;
 
     fields[e.target.name] = e.target.value;
@@ -65,6 +87,24 @@ class CreateUnitMeasurement extends Component {
   formPreventDefault(event) {
     event.preventDefault()
   }
+
+  autocompleteSelect(id, name) {
+
+    if (id === undefined) {
+      this.clean()
+      return
+    }
+
+    let item = this.state.list.find(element => element.id === id)
+
+    let fields = {
+      id: item.id,
+      description: item.description
+    }
+
+    this.setState({ fields })
+  }
+
 
   render() {
     // const { visible } = this.state;
@@ -86,16 +126,17 @@ class CreateUnitMeasurement extends Component {
         />
         <section className="md-toolbar-relative">
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
-            <C_TextField
+            <C_AutoComplete
               id="id"
               name="id"
-              value={this.state.fields.id}
-              onChange={this.onChange}
-              type="search"
-              label="Unidade de Medida"
+              value={this.state.autocomplete}
+              label={"Unidade de Medida"}
               placeholder="Unidade de Medida"
               rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
               block paddedBlock
+              list={this.state.list}
+              dataSelected={this.autocompleteSelect}
+              onChange={this.onChange}
             /><br></br>
             <C_TextField
               id="description"
