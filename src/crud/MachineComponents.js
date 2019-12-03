@@ -135,10 +135,10 @@ class CreateMachineComponents extends Component {
     let fields = {
       id: item.id,
       description: item.description,
-      machineType: item.machineTypeId
+      machineType: item.machineType.id
     }
 
-    let machineType = item.machineTypeId
+    let machineType = item.machineType.description
     this.setState({ fields, machineType })
     return
   }

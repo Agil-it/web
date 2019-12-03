@@ -22,11 +22,8 @@ class C_AutoComplete extends Component {
   componentDidUpdate() {
     let list = this.props.list.map((item => item.description ))
 
-    if (JSON.stringify(list) !== JSON.stringify(this.state.list)) {
-      console.log(this.props.list)
-      console.log(this.props.list)
+    if (JSON.stringify(list) !== JSON.stringify(this.state.list)) 
       this.setState({ list })
-    }
 
     this.indexer = new Fuse(list.map((data) => ({ primaryText: data })), {
       keys: [{ name: 'primaryText', weight: 1 }],

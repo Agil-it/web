@@ -11,6 +11,7 @@ import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
 import { HandlerProvider } from '../providers/Handler';
 import { InstallationAreaProvider } from '../providers/InstallationArea';
+import { SectorProvider } from '../providers/Sector';
 import { ObjectHelper } from '../helpers/Object';
 import C_AutoComplete from '../components/AutoComplete';
 
@@ -22,12 +23,15 @@ class CreateInstallationArea extends Component {
 
     this.state = {
       visible: true,
-      fields: {},
       autocomplete: '',
-      list: []
+      sector: '',
+      fields: {},
+      list: [],
+      sectorList: []
     };
 
     this.provider = new HandlerProvider(new InstallationAreaProvider(), "local de instalação")
+    this.sectorProvider = new HandlerProvider(new SectorProvider(), "setor")
 
     this.loadList();
 
@@ -37,6 +41,10 @@ class CreateInstallationArea extends Component {
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
     this.autocompleteSelect = this.autocompleteSelect.bind(this);
+    this.loadlListSector = this.loadlListSector.bind(this);
+    this.autocompleteSelect = this.autocompleteSelect.bind(this);
+    this.autocompleteId = this.autocompleteId.bind(this);
+    this.autocompleteSector = this.autocompleteSector.bind(this);
   }
 
   async loadList() {
@@ -44,8 +52,18 @@ class CreateInstallationArea extends Component {
     let response = await this.provider.getList();
     if (response.success) {
       list = response.data
+      console.log("TCL: Installation -> loadList -> list", list)
     }
     this.setState({ list })
+  }
+
+  async loadlListSector() {
+    let sectorList = []
+    let response = await this.sectorProvider.getList();
+    if (response.success) {
+      sectorList = response.data
+    }
+    this.setState({ sectorList })
   }
 
   hideModal() {
@@ -54,13 +72,15 @@ class CreateInstallationArea extends Component {
   }
 
   clean() {
-    let fields = this.state.fields;
+    var fields = this.state.fields;
     let autocomplete = ''
+    let sector = ''
 
     ObjectHelper.clearFields(fields);
 
-    this.setState({ fields, autocomplete });
+    this.setState({ fields, autocomplete, sector });
     this.loadList()
+    this.loadlListSector()
   }
 
   delete() {
@@ -74,18 +94,37 @@ class CreateInstallationArea extends Component {
   }
 
   onChange(e, name) {
+
     if (name === "id") {
       this.setState({ autocomplete: e })
+      return
+    } else if (name === "sector") {
+      this.setState({ sector: e })
       return
     }
 
     let fields = this.state.fields;
 
     fields[e.target.name] = e.target.value;
-    this.setState({ fields })
+    this.setState({ fields });
   }
 
-  autocompleteSelect(id, name) {
+  formPreventDefault(event) {
+    event.preventDefault()
+  }
+
+  autocompleteSelect(id, inputName) {
+
+    if (inputName === "id") {
+      this.autocompleteId(id)
+    } else if (inputName === "sector") {
+      this.autocompleteSector(id)
+    }
+
+    return
+  }
+
+  autocompleteId(id) {
 
     if (id === undefined) {
       this.clean()
@@ -93,17 +132,31 @@ class CreateInstallationArea extends Component {
     }
 
     let item = this.state.list.find(element => element.id === id)
+    console.log("TCL: Installation -> autocompleteId -> item", item)
 
     let fields = {
       id: item.id,
-      description: item.description
+      description: item.description,
+      sector: item.sector.id
     }
 
-    this.setState({ fields })
+    let sector = item.sector.description
+    this.setState({ fields, sector })
+    return
   }
 
-  formPreventDefault(event) {
-    event.preventDefault()
+  autocompleteSector(id) {
+
+    if (id === undefined) {
+      this.setState({ sector: '' })
+      return
+    }
+
+    let fields = this.state.fields
+    fields.sector = id
+
+    this.setState({ fields })
+    return
   }
 
   render() {
@@ -137,18 +190,18 @@ class CreateInstallationArea extends Component {
               label="Código Local de Instalação"
               placeholder="Código Local de Instalação"
               rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
-              block paddedBlock
             /><br></br>
             <C_AutoComplete
               id="secor"
               name="sector"
-              value={this.state.fields.sector}
+              value={this.state.sector}
               onChange={this.onChange}
               type="search"
               label="Setor"
               placeholder="Setor"
               rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
-              block paddedBlock
+              dataSelected={this.autocompleteSelect}
+              list={this.state.sectorList}
             /><br></br>
             <C_TextField
               id="description"
