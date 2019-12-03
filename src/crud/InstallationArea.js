@@ -192,7 +192,7 @@ class CreateInstallationArea extends Component {
               rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
             /><br></br>
             <C_AutoComplete
-              id="secor"
+              id="sector"
               name="sector"
               value={this.state.sector}
               onChange={this.onChange}
