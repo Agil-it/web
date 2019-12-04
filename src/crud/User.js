@@ -17,7 +17,7 @@ import C_RadioGroup from '../components/RadioGroup';
 import { HandlerProvider } from '../providers/Handler';
 import { UserProvider } from '../providers/User';
 import { ObjectHelper } from '../helpers/Object';
-
+import C_AutoComplete from '../components/AutoComplete';
 
 class CreateUser extends Component {
 
@@ -27,6 +27,11 @@ class CreateUser extends Component {
     this.state = {
       selectedProfile: undefined,
       visible: true,
+      fields: {
+        birthDate: new Date()
+      },
+      list:[],
+      autocomplete: '',
       genders: [{
         label: 'Feminino',
         value: 'female',
@@ -57,21 +62,6 @@ class CreateUser extends Component {
         value: 'E',
       }],
 
-      fields: {
-        id: undefined,
-        name: undefined,
-        role: undefined,
-        sector: "",
-        forceChangePassword: false,
-        password: undefined,
-        email: "",
-        contact: undefined,
-        birthDate: undefined,
-        gender: undefined,
-        workCenter: undefined,
-        employeeBadge: undefined
-      },
-
       profiles: [{
         label: 'Líder de Setor',
         value: 'sector_leader',
@@ -87,12 +77,24 @@ class CreateUser extends Component {
     };
 
     this.provider = new HandlerProvider(new UserProvider(), "usuário")
+    this.loadList();
 
     this.hideModal = this.hideModal.bind(this);
     this.onChange = this.onChange.bind(this);
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
+    this.autocompleteSelect = this.autocompleteSelect.bind(this);
+  }
+
+  async loadList() {
+    let list = []
+    let response = await this.provider.getList();
+    if (response.success) {
+      list = response.data
+      console.log("TCL: Installation -> loadList -> list", list)
+    }
+    this.setState({ list })
   }
 
   hideModal() {
@@ -102,10 +104,14 @@ class CreateUser extends Component {
 
   clean() {
     var fields = this.state.fields;
+    let autocomplete = ''
 
     ObjectHelper.clearFields(fields);
-    this.setState({ fields });
+
+    this.setState({ fields, autocomplete });
+    this.loadList()
   }
+
 
   delete() {
     let user = this.state.fields;
@@ -114,20 +120,50 @@ class CreateUser extends Component {
 
   save() {
     let user = this.state.fields;
-    console.log("TCL: CreateUser -> save -> user", user)
+
+    if(user.birthDate){
+      user.birthDate = new Date(user.birthDate).toISOString().substr(0,10);
+      console.log("TCL: CreateUser -> save -> user.birthDate", user.birthDate)
+    }
+  
     this.provider.save(user, this.clean)
   }
 
-  onChange(e) {
+  onChange(e, name) {
+
+    if (name === "id") {
+      this.setState({ autocomplete: e })
+      return
+    }
+
     let fields = this.state.fields;
 
     fields[e.target.name] = e.target.value;
+
     this.setState({ fields })
   }
 
   formPreventDefault(event) {
     event.preventDefault()
   }
+
+  autocompleteSelect(id, name) {
+
+    if (id === undefined) {
+      this.clean()
+      return
+    }
+
+    let item = this.state.list.find(element => element.id === id)
+
+    let fields = {
+      id: item.id,
+      name: item.name
+    }
+
+    this.setState({ fields })
+  }
+
 
   render() {
     return (
@@ -149,19 +185,22 @@ class CreateUser extends Component {
         <section className="md-toolbar-relative">
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
             <div style={{ display: "flex", justifyContent: "left" }}>
-              <C_TextField
+              <C_AutoComplete
                 id="id"
                 name="id"
-                value={this.state.fields.id}
+                value={this.state.autocomplete}
+                dataSelected={this.autocompleteSelect}
+                list={this.state.list}
                 onChange={this.onChange}
                 type="search"
-                label="Código do Usuário"
-                placeholder="Código do Usuário"
+                label="Buscar Usuário"
+                placeholder="Buscar Usuário"
+                style={{ width: 350 }}
                 rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
-                required={true}
-                css={{ width: 350 }}
+                description="name"
               />
               <C_TextField
+                id="name"
                 name="name"
                 value={this.state.fields.name}
                 onChange={this.onChange}

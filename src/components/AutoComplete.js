@@ -10,7 +10,8 @@ class C_AutoComplete extends Component {
 
     this.state = {
       list: [],
-      value: this.props.value
+      value: this.props.value,
+      description: this.props.description
     }
 
     this.filter = this.filter.bind(this);
@@ -20,7 +21,9 @@ class C_AutoComplete extends Component {
   }
 
   componentDidUpdate() {
-    let list = this.props.list.map((item => item.description ))
+    this.state.description = this.props.description || "description";
+
+    let list = this.props.list.map((item => item[this.state.description] ))
 
     if (JSON.stringify(list) !== JSON.stringify(this.state.list)) 
       this.setState({ list })
@@ -48,7 +51,7 @@ class C_AutoComplete extends Component {
 
   onBlur() {
     let value = this.state.value
-    let item = this.props.list.find(element => element.description === value)
+    let item = this.props.list.find(element => element[this.state.description] === value)
 
     if( item === undefined) {
       value = ""
@@ -83,6 +86,7 @@ class C_AutoComplete extends Component {
           style={this.props.style}
           deleteKeys={this.props.deleteKeys}
           rightIcon={this.props.rightIcon}
+          description={this.props.description}
         />
       </div>
 
