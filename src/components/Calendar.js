@@ -9,13 +9,17 @@ class C_Calendar extends Component {
     super(props);
 
     this.onChange = this.onChange.bind(this);
-
+    this.changeDate = this.changeDate.bind(this);
   }
 
   onChange(pValue) {
 
     if (this.props.onChange)
       this.props.onChange({ target: { name: this.props.name, value: pValue } });
+  }
+
+  changeDate(date){
+
   }
 
   render() {
@@ -31,13 +35,17 @@ class C_Calendar extends Component {
             cancelLabel={this.props.cancelLabel}
             onChange={this.onChange}
             style={this.props.style}
+            value={this.props.value}
             fullWidth={false}
             icon={false}
             yearsDisplayed={239}
             portal
             lastChild
+            locales="pt-BR"
             renderNode={null}
             disableScrollLocking
+            defaultValue={this.props.defaultValue}
+
         />
     );
   }

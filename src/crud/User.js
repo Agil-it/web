@@ -27,9 +27,7 @@ class CreateUser extends Component {
     this.state = {
       selectedProfile: undefined,
       visible: true,
-      fields: {
-        birthDate: new Date()
-      },
+      fields: {},
       list:[],
       autocomplete: '',
       genders: [{
@@ -85,6 +83,7 @@ class CreateUser extends Component {
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
     this.autocompleteSelect = this.autocompleteSelect.bind(this);
+    this.getdisplayDate = this.getdisplayDate.bind(this);
   }
 
   async loadList() {
@@ -92,7 +91,6 @@ class CreateUser extends Component {
     let response = await this.provider.getList();
     if (response.success) {
       list = response.data
-      console.log("TCL: Installation -> loadList -> list", list)
     }
     this.setState({ list })
   }
@@ -120,10 +118,9 @@ class CreateUser extends Component {
 
   save() {
     let user = this.state.fields;
-
     if(user.birthDate){
-      user.birthDate = new Date(user.birthDate).toISOString().substr(0,10);
-      console.log("TCL: CreateUser -> save -> user.birthDate", user.birthDate)
+      let arrayData = user.birthDate.split('/')
+      user.birthDate = `${arrayData[2]}-${arrayData[1]}-${arrayData[0]}`
     }
   
     this.provider.save(user, this.clean)
@@ -156,12 +153,34 @@ class CreateUser extends Component {
 
     let item = this.state.list.find(element => element.id === id)
 
+    var displayBirthDate = this.getdisplayDate(item.birthDate);
+
     let fields = {
       id: item.id,
-      name: item.name
-    }
+      name: item.name,
+      role: item.role,
+      email: item.email,
+      birthDate: item.birthDate,
+      contact: item.contact,
+      gender: item.gender,
+      employeeBadge: item.employeeBadge,
+      forceChangePassword: item.forceChangePassword,
+      birthDate: displayBirthDate
+    }    
 
     this.setState({ fields })
+  }
+
+  getdisplayDate(date){
+
+    var formatDate = date.split("-");
+
+    var dt = new Date(formatDate);
+    var day = dt.getDate();
+    var month = dt.getMonth();
+    var year = dt.getFullYear();
+
+    return `${day}/${month + 1}/${year}`;
   }
 
 
@@ -266,6 +285,7 @@ class CreateUser extends Component {
                 label={<div style={{ fontSize: 17, color: "#616161d9" }}>Alterar Senha no Primeiro Acesso</div>}
                 type="checkbox"
                 style={{}}
+                checked={this.state.fields.forceChangePassword}
               />
             </div><br /><br />
             <div style={{ display: "flex", justifyContent: "left" }}>
@@ -322,7 +342,7 @@ class CreateUser extends Component {
               />
               <C_TextField
                 name="employeeBadge"
-                value={this.state.fields.geemployeeBadgeder}
+                value={this.state.fields.employeeBadge}
                 onChange={this.onChange}
                 label="Crachá do Usuário"
                 placeholder="Crachá do Usuário"
