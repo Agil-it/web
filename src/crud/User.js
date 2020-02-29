@@ -14,7 +14,7 @@ import C_SelectField from '../components/SelectField';
 import C_CheckBox from '../components/CheckBox';
 import C_Calendar from '../components/Calendar';
 import C_RadioGroup from '../components/RadioGroup';
-import { HandlerProvider } from '../providers/Handler';
+import { HandlerProvider } from '../providers/handler';
 import { UserProvider } from '../providers/User';
 import { ObjectHelper } from '../helpers/Object';
 import C_AutoComplete from '../components/AutoComplete';
@@ -25,11 +25,22 @@ class CreateUser extends Component {
     super(props);
 
     this.state = {
-      selectedProfile: undefined,
       visible: true,
-      fields: {},
       list:[],
+      fields: {},
       autocomplete: '',
+      role : [{
+        label: 'Líder de Setor',
+        value: 'sector_leader',
+      },
+      {
+        label: 'Técnico',
+        value: 'maintainer',
+      },
+      {
+        label: 'Admin',
+        value: 'administrator',
+      }],
       genders: [{
         label: 'Feminino',
         value: 'female',
@@ -58,24 +69,12 @@ class CreateUser extends Component {
       {
         label: 'Equipamento Superior',
         value: 'E',
-      }],
-
-      profiles: [{
-        label: 'Líder de Setor',
-        value: 'sector_leader',
-      },
-      {
-        label: 'Técnico',
-        value: 'maintainer',
-      },
-      {
-        label: 'Admin',
-        value: 'administrator',
       }]
     };
 
     this.provider = new HandlerProvider(new UserProvider(), "usuário")
     this.loadList();
+    this.loadDefaultValues();
 
     this.hideModal = this.hideModal.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -84,6 +83,7 @@ class CreateUser extends Component {
     this.delete = this.delete.bind(this);
     this.autocompleteSelect = this.autocompleteSelect.bind(this);
     this.getdisplayDate = this.getdisplayDate.bind(this);
+    this.generatePassword = this.generatePassword.bind(this);
   }
 
   async loadList() {
@@ -95,19 +95,25 @@ class CreateUser extends Component {
     this.setState({ list })
   }
 
+  loadDefaultValues() {
+    this.setState({
+      fields: {
+        password: undefined,
+        gender: 'male'
+      },
+      autocomplete: ''
+    })
+  }
+
   hideModal() {
     this.setState({ visible: false })
     this.props.onClose()
   }
 
   clean() {
-    var fields = this.state.fields;
-    let autocomplete = ''
 
-    ObjectHelper.clearFields(fields);
-
-    this.setState({ fields, autocomplete });
-    this.loadList()
+    this.loadDefaultValues();
+    this.loadList();
   }
 
 
@@ -122,6 +128,9 @@ class CreateUser extends Component {
       let arrayData = user.birthDate.split('/')
       user.birthDate = `${arrayData[2]}-${arrayData[1]}-${arrayData[0]}`
     }
+
+    if(user.password) String(user.password);
+    console.log("CreateUser -> save -> user", user)
   
     this.provider.save(user, this.clean)
   }
@@ -183,8 +192,17 @@ class CreateUser extends Component {
     return `${day}/${month + 1}/${year}`;
   }
 
+  generatePassword(){
+    var fields = this.state.fields;
+
+    fields.password = Math.random().toString(36).slice(2)
+
+    return this.setState({fields});
+  }
+
 
   render() {
+    console.log("CreateUser -> render -> this.state.fields", this.state.fields)
     return (
       <DialogContainer
         id="simple-full-page-dialog"
@@ -230,13 +248,12 @@ class CreateUser extends Component {
             </div><br></br>
             <div style={{ display: "flex", justifyContent: "left" }}>
               <C_SelectField
+                id="role"
                 name="role"
                 value={this.state.fields.role}
                 onChange={this.onChange}
-                type="text"
                 label={"Perfil de Usuário"}
-                placeholder="Selecione"
-                list={this.state.profiles}
+                list={this.state.role}
                 required={false}
                 style={{ width: 350 }}
               />
@@ -276,6 +293,7 @@ class CreateUser extends Component {
                   primary={true}
                   label={"Gerar senha"}
                   icon={<FontIcon>lock</FontIcon>}
+                  action={() => this.generatePassword()}
                 />
               </div>
               <C_CheckBox
@@ -303,8 +321,8 @@ class CreateUser extends Component {
                 value={this.state.fields.password}
                 onChange={this.onChange}
                 type="password"
-                label="Password"
-                placeholder="Password"
+                label="Senha"
+                placeholder="Senha"
                 css={{ width: 350, marginLeft: 30 }}
               />
             </div><br></br>
@@ -337,6 +355,7 @@ class CreateUser extends Component {
                 onChange={this.onChange}
                 label={<div style={{ fontSize: 17, color: "#616161d9" }}>Gênero</div>}
                 type="radio"
+                checked={false}
                 style={{ width: 350 }}
                 list={this.state.genders}
               />

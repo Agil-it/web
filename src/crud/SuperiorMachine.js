@@ -9,7 +9,7 @@ import {
 
 import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
-import { HandlerProvider } from '../providers/Handler';
+import { HandlerProvider } from '../providers/handler';
 import { SuperiorMachineProvider } from '../providers/SuperiorMachine';
 import { InstallationAreaProvider } from '../providers/InstallationArea';
 import { ObjectHelper } from '../helpers/Object';

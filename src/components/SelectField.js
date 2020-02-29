@@ -23,20 +23,21 @@ class C_SelectField extends Component {
     return (
       <div>
         <SelectField
-            label={this.props.label}
-            onChange={this.onChange}
-            onClick={this.props.action}
-            style={this.props.style}
-            required={this.props.required}
-            id={this.props.name}
-            placeholder={this.props.placeholder}
-            className={this.props.className}
-            menuItems={this.props.list}
-            disabled={this.props.disabled}
-            errorText={this.props.errorText}
-            inputStyle={this.props.inputStyle}
-            fullWidth={this.props.fullWidth}
-            position={SelectField.Positions.BELOW}
+          label={this.props.label}
+          onChange={this.onChange}
+          onClick={this.props.action}
+          style={this.props.style}
+          required={this.props.required}
+          id={this.props.id}
+          name={this.props.name}
+          placeholder={this.props.placeholder}
+          className={this.props.className}
+          menuItems={this.props.list}
+          disabled={this.props.disabled}
+          errorText={this.props.errorText}
+          inputStyle={this.props.inputStyle}
+          fullWidth={this.props.fullWidth}
+          position={SelectField.Positions.BELOW}
         />
       </div>
       
