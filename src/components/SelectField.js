@@ -30,6 +30,7 @@ class C_SelectField extends Component {
           required={this.props.required}
           id={this.props.id}
           name={this.props.name}
+          defaultValue={this.props.valueElement}
           placeholder={this.props.placeholder}
           className={this.props.className}
           menuItems={this.props.list}

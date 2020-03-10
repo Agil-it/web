@@ -41,6 +41,7 @@ class CreateUser extends Component {
         label: 'Admin',
         value: 'administrator',
       }],
+      
       genders: [{
         label: 'Feminino',
         value: 'female',
