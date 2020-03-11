@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { SelectField, FontIcon } from 'react-md';
+import PropTypes from 'prop-types';
 import '../index.css';
 
 class C_SelectField extends Component {
@@ -29,16 +30,17 @@ class C_SelectField extends Component {
           style={this.props.style}
           required={this.props.required}
           id={this.props.id}
+          value={this.props.value}
           name={this.props.name}
-          defaultValue={this.props.valueElement}
+          itemValue={this.props.valueElement}
+          itemLabel={this.props.labelElement}
           placeholder={this.props.placeholder}
           className={this.props.className}
           menuItems={this.props.list}
           disabled={this.props.disabled}
           errorText={this.props.errorText}
-          inputStyle={this.props.inputStyle}
+          listStyle={this.props.listStyle}
           fullWidth={this.props.fullWidth}
-          position={SelectField.Positions.BELOW}
         />
       </div>
       

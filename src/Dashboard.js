@@ -2,69 +2,71 @@ import React, { Component } from 'react';
 import C_SelectField from './components/SelectField'
 
 class Dashboard extends Component {
- constructor(props) {
-  super(props);
+  constructor(props) {
+    super(props);
 
-  this.state = {
-    listStatus: [
-      {
-        label: "Todos",
-        value: "ALL"
+    this.state = {
+      listStatus: [{
+        name: "Todos",
+        id: "ALL"
       },
       {
-        label: "Abertas",
-        value: "OPEN"
+        name: "Abertas",
+        id: "OPEN"
       },
       {
-        label: "Pendentes",
-        value: "PENDING"
+        name: "Pendentes",
+        id: "PENDING"
       },
       {
-        label: "Em Andamento",
-        value: "IN_PROGRESS"
+        name: "Em Andamento",
+        id: "IN_PROGRESS"
       },
       {
-        label: "Finalizadas",
-        value: "FINISHED"
-      }
-    ],
+        name: "Finalizadas",
+        id: "FINISHED"
+      }],
 
-    fields:{}
+      fields: {},
+      selectedStatus: "ALL"
+    }
+
+    this.onChange = this.onChange.bind(this);
+
   }
 
-  this.onChange = this.onChange.bind(this);
+  onChange(e, name) {
 
- }
+    let fields = this.state.fields;
 
- onChange(e, name) {
+    fields[e.target.name] = e.target.value;
 
-  let fields = this.state.fields;
+    this.setState({ fields })
+  }
 
-  fields[e.target.name] = e.target.value;
-
-  this.setState({ fields })
-}
-
- render() {
-  console.log("Dashboard -> render -> fields", this.state)
-  return (
-    <div>
-      <h1>Monitor de Ordens de Manutenção</h1>
+  render() {
+    console.log("Dashboard -> render -> fields", this.state)
+    return (
       <div>
-        <C_SelectField
-          id="status"
-          name="status"
-          onChange={this.onChange}
-          label={"Status"}
-          list={this.state.listStatus}
-          // valueElement={"ALL"}
-          required={false}
-          style={{ width: 350 }}
-        />
+        <h1>Monitor de Ordens de Manutenção</h1>
+        <div style={{zIndex:1}}>
+          <C_SelectField
+            id="status"
+            name="status"
+            onChange={this.onChange}
+            value={this.state.selectedStatus}
+            label={"Status"}
+            list={this.state.listStatus}
+            labelElement="name"
+            valueElement="id"
+            required={false}
+            style={{ width: 200}}
+            listStyle={{width:200}}
+          />
+        </div>
       </div>
-    </div>
-  )
- }
+    )
+  }
 }
 
 export default Dashboard;

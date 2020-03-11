@@ -30,16 +30,16 @@ class CreateUser extends Component {
       fields: {},
       autocomplete: '',
       role : [{
-        label: 'Líder de Setor',
-        value: 'sector_leader',
+        name: 'Líder de Setor',
+        id: 'sector_leader',
       },
       {
-        label: 'Técnico',
-        value: 'maintainer',
+        name: 'Técnico',
+        id: 'maintainer',
       },
       {
-        label: 'Admin',
-        value: 'administrator',
+        name: 'Admin',
+        id: 'administrator',
       }],
       
       genders: [{
@@ -254,9 +254,12 @@ class CreateUser extends Component {
                 value={this.state.fields.role}
                 onChange={this.onChange}
                 label={"Perfil de Usuário"}
+                labelElement="name"
+                valueElement="id"
                 list={this.state.role}
                 required={false}
                 style={{ width: 350 }}
+                listStyle={{width:350}}
               />
               {this.state.fields.role == "sector_leader" ?
                 <C_TextField
