@@ -7,24 +7,24 @@ class Dashboard extends Component {
 
     this.state = {
       listStatus: [{
-        name: "Todos",
-        id: "ALL"
+        label: "Todos",
+        value: "ALL"
       },
       {
-        name: "Abertas",
-        id: "OPEN"
+        label: "Abertas",
+        value: "OPEN"
       },
       {
-        name: "Pendentes",
-        id: "PENDING"
+        label: "Pendentes",
+        value: "PENDING"
       },
       {
-        name: "Em Andamento",
-        id: "IN_PROGRESS"
+        label: "Em Andamento",
+        value: "IN_PROGRESS"
       },
       {
-        name: "Finalizadas",
-        id: "FINISHED"
+        label: "Finalizadas",
+        value: "FINISHED"
       }],
 
       fields: {},
@@ -49,7 +49,7 @@ class Dashboard extends Component {
     return (
       <div>
         <h1>Monitor de Ordens de Manutenção</h1>
-        <div style={{zIndex:1}}>
+        <div>
           <C_SelectField
             id="status"
             name="status"
@@ -57,11 +57,9 @@ class Dashboard extends Component {
             value={this.state.selectedStatus}
             label={"Status"}
             list={this.state.listStatus}
-            labelElement="name"
-            valueElement="id"
-            required={false}
-            style={{ width: 200}}
-            listStyle={{width:200}}
+            labelElement="label"
+            valueElement="value"
+            className="md-cell md-cell--2 md-cell--bottom" 
           />
         </div>
       </div>
