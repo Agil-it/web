@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import C_Button from '../components/Button';
+import {C_Button} from '../components/Button';
 import C_TextField from '../components/TextField';
 import {AuthProvider} from '../providers/Auth'
 

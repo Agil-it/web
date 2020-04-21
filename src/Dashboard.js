@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import C_SelectField from './components/SelectField';
 import C_Calendar from './components/Calendar';
-import C_Button from './components/Button';
+import {C_Button, C_ButtonFloat} from './components/Button';
+import { C_Table } from './components/Table';
+
 
 
 class Dashboard extends Component {
@@ -53,7 +55,8 @@ class Dashboard extends Component {
 
       fields: {},
       selectedStatus: "ALL",
-      selectedPriority: "ALL"
+      selectedPriority: "ALL",
+      showOrdersList: false
     }
 
     this.onChange = this.onChange.bind(this);
@@ -145,6 +148,10 @@ class Dashboard extends Component {
     console.log("Dashboard -> render -> fields", this.state)
     var orders = this.state.orders
     console.log("Dashboard -> render -> orders", orders)
+
+    const columns = [
+      {name: "Data"}, {name: "Ordem de Manutenção"}, {name: "Tipo Manutenção"}, {name:"Equipamento"}, {name:"Prioridade"}
+    ]
     return (
       <div>
         <h1>Monitor de Ordens de Manutenção</h1>
@@ -196,7 +203,31 @@ class Dashboard extends Component {
             action={() => this.listOrders()}
           />
         </div>
-        <div style={{display:"flex", flexWrap: "wrap"}}>
+       
+        <div style={{position: "relative", display:"flex", flexWrap: "wrap"}}>
+          <div  style={{position: "absolute", top: 0, right: 0}}>
+            <C_ButtonFloat
+              icon={!this.state.showOrdersList ? "reorder" : "view_module"}
+              tooltipLabel={!this.state.showOrdersList ? "Exibir como Lista" : "Exibir como Grade"}
+              tooltipPosition="left"
+              secondary
+              style={{width:54, height:54}}
+              iconSize={28}
+              action={() => this.setState({showOrdersList: !this.state.showOrdersList ? true : false})}
+            />
+          </div>
+
+          { this.state.showOrdersList ? 
+            <div style={{marginTop:40}}>
+              <C_Table 
+                columns={columns}
+                content={this.state.orders}
+              >
+              </C_Table>
+            </div>
+           
+          : undefined }
+
           { orders && orders.map((order) => {
 
             var colorPriority; 
@@ -207,24 +238,26 @@ class Dashboard extends Component {
             if (order.Priority == "Baixa") colorPriority = "#03a140"
 
             return (
-              <fieldset style={{position:"relative", width:"30%", borderRadius: 5, border: "1px solid silver", marginBottom: 40, padding:10, marginTop:40, marginRight: 20}}>
-                <legend style={{width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, marginBottom: 0,color: "#666666a6", fontWeight: "bold", fontSize: 25, marginTop: 100}}>{order.OrderNumber}</legend>
-                <div style={{}}>
-                  <div style={{borderRadius: 5, top:16, right:0, position:"absolute", height:158, width:60, backgroundColor: colorPriority}}></div>
-                  <div style={{display:"flex"}}> 
-                    <strong style={{marginRight:5}}>Tipo:</strong><p>{order.Type}</p>
+              !this.state.showOrdersList ? 
+                <fieldset className={"effectfront"} style={{cursor:"pointer",position:"relative", width:"30%", borderRadius: 5, border: "1px solid silver", marginBottom: 40, padding:10, marginTop:40, marginRight: 20}}>
+                  <legend style={{width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, marginBottom: 0,color: "#666666a6", fontWeight: "bold", fontSize: 25, marginTop: 100}}>{order.OrderNumber}</legend>
+                  <div style={{}}>
+                    <div style={{borderRadius: 5, top:16, right:0, position:"absolute", height:158, width:60, backgroundColor: colorPriority}}></div>
+                    <div style={{display:"flex"}}> 
+                      <strong style={{marginRight:5}}>Tipo:</strong><p>{order.Type}</p>
+                    </div>
+                    <div style={{display:"flex"}}> 
+                      <strong style={{marginRight:5}}>Equipamento:</strong><p>{order.Equipment}</p>
+                    </div>
+                    <div style={{display:"flex"}}> 
+                      <strong style={{marginRight:5}}>Prioridade:</strong><p>{order.Priority}</p>
+                    </div>
+                    <div style={{display:"flex"}}> 
+                      <strong style={{marginRight:5}}>Abertura:</strong><p>{order.OpenDate}</p>
+                    </div>
                   </div>
-                  <div style={{display:"flex"}}> 
-                    <strong style={{marginRight:5}}>Equipamento:</strong><p>{order.Equipment}</p>
-                  </div>
-                  <div style={{display:"flex"}}> 
-                    <strong style={{marginRight:5}}>Prioridade:</strong><p>{order.Priority}</p>
-                  </div>
-                  <div style={{display:"flex"}}> 
-                    <strong style={{marginRight:5}}>Abertura:</strong><p>{order.OpenDate}</p>
-                  </div>
-                </div>
-              </fieldset>            
+                </fieldset> 
+              : undefined 
             )
             })
           }
