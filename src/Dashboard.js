@@ -150,7 +150,7 @@ class Dashboard extends Component {
     console.log("Dashboard -> render -> orders", orders)
 
     const columns = [
-      {name: "Data"}, {name: "Ordem de Manutenção"}, {name: "Tipo Manutenção"}, {name:"Equipamento"}, {name:"Prioridade"}
+      {name: "Abertura"}, {name: "Ordem de Manutenção"}, {name: "Tipo Manutenção"}, {name:"Equipamento"}, {name:"Prioridade"}
     ]
     return (
       <div>
@@ -205,20 +205,22 @@ class Dashboard extends Component {
         </div>
        
         <div style={{position: "relative", display:"flex", flexWrap: "wrap"}}>
-          <div  style={{position: "absolute", top: 0, right: 0}}>
-            <C_ButtonFloat
-              icon={!this.state.showOrdersList ? "reorder" : "view_module"}
-              tooltipLabel={!this.state.showOrdersList ? "Exibir como Lista" : "Exibir como Grade"}
-              tooltipPosition="left"
-              secondary
-              style={{width:54, height:54}}
-              iconSize={28}
-              action={() => this.setState({showOrdersList: !this.state.showOrdersList ? true : false})}
-            />
+          <div  style={{position: "absolute", top: -10, right: 0}}>
+            { orders ? 
+              <C_ButtonFloat
+                icon={!this.state.showOrdersList ? "reorder" : "view_module"}
+                tooltipLabel={!this.state.showOrdersList ? "Exibir como Lista" : "Exibir como Cartões"}
+                tooltipPosition="left"
+                secondary
+                style={{ width: 54, height: 54 }}
+                iconSize={28}
+                action={() => this.setState({ showOrdersList: !this.state.showOrdersList ? true : false })}
+              /> 
+            : undefined }
           </div>
 
           { this.state.showOrdersList ? 
-            <div style={{marginTop:40}}>
+            <div style={{marginTop:60}}>
               <C_Table 
                 columns={columns}
                 content={this.state.orders}
