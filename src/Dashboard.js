@@ -166,8 +166,21 @@ class Dashboard extends Component {
       { name: "Status" },
     ]
     return (
-      <div>
+      <div style={{position:"relative"}}>
         <h1>Monitor de Ordens de Manutenção</h1>
+        <div style={{ position: "absolute", top:30, right: 0 }}>
+          {orders ?
+            <C_ButtonFloat
+              icon={!this.state.showOrdersList ? "reorder" : "view_module"}
+              tooltipLabel={!this.state.showOrdersList ? "Exibir como Lista" : "Exibir como Cartões"}
+              tooltipPosition="left"
+              secondary
+              style={{ width: 54, height: 54 }}
+              iconSize={28}
+              action={() => this.setState({ showOrdersList: !this.state.showOrdersList ? true : false })}
+            />
+            : undefined}
+        </div>
         <div className="md-grid" style={{ padding: 0 }}>
           <C_Calendar
             id="from"
@@ -218,22 +231,8 @@ class Dashboard extends Component {
         </div>
 
         <div style={{ position: "relative", display: "flex", flexWrap: "wrap" }}>
-          <div style={{ position: "absolute", top: -10, right: 0 }}>
-            {orders ?
-              <C_ButtonFloat
-                icon={!this.state.showOrdersList ? "reorder" : "view_module"}
-                tooltipLabel={!this.state.showOrdersList ? "Exibir como Lista" : "Exibir como Cartões"}
-                tooltipPosition="left"
-                secondary
-                style={{ width: 54, height: 54 }}
-                iconSize={28}
-                action={() => this.setState({ showOrdersList: !this.state.showOrdersList ? true : false })}
-              />
-              : undefined}
-          </div>
-
           {this.state.showOrdersList ?
-            <div style={{ marginTop: 40 }}>
+            <div style={{ marginTop: 40, width:"100%" }}>
               <C_Table
                 columns={columns}
                 content={this.state.orders}
