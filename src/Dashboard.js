@@ -82,7 +82,7 @@ class Dashboard extends Component {
         Priority: "Alta",
         Equipment: "JDB388/32",
         OpenDate: "09/05/2019 ás 23:53",
-        Status: "Finalizada",
+        Status: "Aberta",
       },
       {
         id: 2,
@@ -100,7 +100,7 @@ class Dashboard extends Component {
         Priority: "Baixa",
         Equipment: "JDB388/32",
         OpenDate: "23/06/2019 ás 06:25",
-        Status: "Em Pausa",
+        Status: "Aberta",
       },
       {
         id: 4,
@@ -145,7 +145,7 @@ class Dashboard extends Component {
         Priority: "Urgente",
         Equipment: "JDB388/32",
         OpenDate: "23/06/2019 ás 06:25",
-        Status: "Em Pausa",
+        Status: "Pendente",
       }
     ]
 
