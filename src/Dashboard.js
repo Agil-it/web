@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import C_SelectField from './components/SelectField';
 import C_Calendar from './components/Calendar';
-import {C_Button, C_ButtonFloat} from './components/Button';
+import { C_Button, C_ButtonFloat } from './components/Button';
 import { C_Table } from './components/Table';
 
 
@@ -73,7 +73,7 @@ class Dashboard extends Component {
     this.setState({ fields })
   }
 
-  listOrders(){
+  listOrders() {
     let orders = [
       {
         id: 1,
@@ -81,7 +81,8 @@ class Dashboard extends Component {
         Type: "Preventiva",
         Priority: "Alta",
         Equipment: "JDB388/32",
-        OpenDate: "09/05/2019 ás 23:53"
+        OpenDate: "09/05/2019 ás 23:53",
+        Status: "Finalizada",
       },
       {
         id: 2,
@@ -89,7 +90,8 @@ class Dashboard extends Component {
         Type: "Corretiva",
         Priority: "Média",
         Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25"
+        OpenDate: "23/06/2019 ás 06:25",
+        Status: "Finalizada",
       },
       {
         id: 3,
@@ -97,7 +99,8 @@ class Dashboard extends Component {
         Type: "Corretiva",
         Priority: "Baixa",
         Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25"
+        OpenDate: "23/06/2019 ás 06:25",
+        Status: "Em Pausa",
       },
       {
         id: 4,
@@ -105,7 +108,8 @@ class Dashboard extends Component {
         Type: "Preventiva",
         Priority: "Urgente",
         Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25"
+        OpenDate: "23/06/2019 ás 06:25",
+        Status: "Finalizada",
       },
       {
         id: 5,
@@ -113,7 +117,8 @@ class Dashboard extends Component {
         Type: "Preventiva",
         Priority: "Alta",
         Equipment: "JDB388/32",
-        OpenDate: "09/05/2019 ás 23:53"
+        OpenDate: "09/05/2019 ás 23:53",
+        Status: "Em Andamento",
       },
       {
         id: 6,
@@ -121,7 +126,8 @@ class Dashboard extends Component {
         Type: "Corretiva",
         Priority: "Média",
         Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25"
+        OpenDate: "23/06/2019 ás 06:25",
+        Status: "Finalizada",
       },
       {
         id: 7,
@@ -129,7 +135,8 @@ class Dashboard extends Component {
         Type: "Corretiva",
         Priority: "Baixa",
         Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25"
+        OpenDate: "23/06/2019 ás 06:25",
+        Status: "Em Andamento",
       },
       {
         id: 8,
@@ -137,11 +144,12 @@ class Dashboard extends Component {
         Type: "Preventiva",
         Priority: "Urgente",
         Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25"
+        OpenDate: "23/06/2019 ás 06:25",
+        Status: "Em Pausa",
       }
     ]
 
-    this.setState({orders});
+    this.setState({ orders });
   }
 
   render() {
@@ -150,7 +158,12 @@ class Dashboard extends Component {
     console.log("Dashboard -> render -> orders", orders)
 
     const columns = [
-      {name: "Abertura"}, {name: "Ordem de Manutenção"}, {name: "Tipo Manutenção"}, {name:"Equipamento"}, {name:"Prioridade"}
+      { name: "Abertura" },
+      { name: "Ordem Manutenção" },
+      { name: "Tipo Manutenção" },
+      { name: "Equipamento" },
+      { name: "Prioridade" },
+      { name: "Status" },
     ]
     return (
       <div>
@@ -163,7 +176,7 @@ class Dashboard extends Component {
             onChange={this.onChange}
             label={"De"}
             allDay
-            style={{ marginTop:8, marginRight: 20}}
+            style={{ marginTop: 8, marginRight: 20 }}
           />
           <C_Calendar
             id="to"
@@ -172,7 +185,7 @@ class Dashboard extends Component {
             onChange={this.onChange}
             label={"Até"}
             allDay
-            style={{marginTop:8, marginRight: 20}}
+            style={{ marginTop: 8, marginRight: 20 }}
           />
           <C_SelectField
             id="status"
@@ -183,9 +196,9 @@ class Dashboard extends Component {
             list={this.state.listStatus}
             labelElement="label"
             valueElement="value"
-            style={{width:200, marginTop:8, marginRight: 20}}
+            style={{ width: 200, marginTop: 8, marginRight: 20 }}
           />
-           <C_SelectField
+          <C_SelectField
             id="priority"
             name="priority"
             onChange={this.onChange}
@@ -194,19 +207,19 @@ class Dashboard extends Component {
             list={this.state.listPriority}
             labelElement="label"
             valueElement="value"
-            style={{ marginRight: 30, width:200, marginTop:8}}
+            style={{ marginRight: 30, width: 200, marginTop: 8 }}
           />
           <C_Button
             primary={true}
-            style={{ marginTop:30, fontSize: 16, width: "10%"}}
+            style={{ marginTop: 30, fontSize: 16, width: "10%" }}
             label={"LISTAR"}
             action={() => this.listOrders()}
           />
         </div>
-       
-        <div style={{position: "relative", display:"flex", flexWrap: "wrap"}}>
-          <div  style={{position: "absolute", top: -10, right: 0}}>
-            { orders ? 
+
+        <div style={{ position: "relative", display: "flex", flexWrap: "wrap" }}>
+          <div style={{ position: "absolute", top: -10, right: 0 }}>
+            {orders ?
               <C_ButtonFloat
                 icon={!this.state.showOrdersList ? "reorder" : "view_module"}
                 tooltipLabel={!this.state.showOrdersList ? "Exibir como Lista" : "Exibir como Cartões"}
@@ -215,24 +228,24 @@ class Dashboard extends Component {
                 style={{ width: 54, height: 54 }}
                 iconSize={28}
                 action={() => this.setState({ showOrdersList: !this.state.showOrdersList ? true : false })}
-              /> 
-            : undefined }
+              />
+              : undefined}
           </div>
 
-          { this.state.showOrdersList ? 
-            <div style={{marginTop:60}}>
-              <C_Table 
+          {this.state.showOrdersList ?
+            <div style={{ marginTop: 40 }}>
+              <C_Table
                 columns={columns}
                 content={this.state.orders}
               >
               </C_Table>
             </div>
-           
-          : undefined }
 
-          { orders && orders.map((order) => {
+            : undefined}
 
-            var colorPriority; 
+          {orders && orders.map((order) => {
+
+            var colorPriority;
 
             if (order.Priority == "Urgente") colorPriority = "red"
             if (order.Priority == "Alta") colorPriority = "#ffd300"
@@ -240,28 +253,28 @@ class Dashboard extends Component {
             if (order.Priority == "Baixa") colorPriority = "#03a140"
 
             return (
-              !this.state.showOrdersList ? 
-                <fieldset className={"effectfront"} style={{cursor:"pointer",position:"relative", width:"30%", borderRadius: 5, border: "1px solid silver", marginBottom: 40, padding:10, marginTop:40, marginRight: 20}}>
-                  <legend style={{width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, marginBottom: 0,color: "#666666a6", fontWeight: "bold", fontSize: 25, marginTop: 100}}>{order.OrderNumber}</legend>
+              !this.state.showOrdersList ?
+                <fieldset className={"effectfront"} style={{ cursor: "pointer", position: "relative", width: "30%", borderRadius: 5, border: "1px solid silver", marginBottom: 40, padding: 10, marginTop: 40, marginRight: 20 }}>
+                  <legend style={{ width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, marginBottom: 0, color: "#666666a6", fontWeight: "bold", fontSize: 25, marginTop: 100 }}>{order.OrderNumber}</legend>
                   <div style={{}}>
-                    <div style={{borderRadius: 5, top:16, right:0, position:"absolute", height:158, width:60, backgroundColor: colorPriority}}></div>
-                    <div style={{display:"flex"}}> 
-                      <strong style={{marginRight:5}}>Tipo:</strong><p>{order.Type}</p>
+                    <div style={{ borderRadius: 5, top: 16, right: 0, position: "absolute", height: 158, width: 60, backgroundColor: colorPriority }}></div>
+                    <div style={{ display: "flex" }}>
+                      <strong style={{ marginRight: 5 }}>Tipo:</strong><p>{order.Type}</p>
                     </div>
-                    <div style={{display:"flex"}}> 
-                      <strong style={{marginRight:5}}>Equipamento:</strong><p>{order.Equipment}</p>
+                    <div style={{ display: "flex" }}>
+                      <strong style={{ marginRight: 5 }}>Equipamento:</strong><p>{order.Equipment}</p>
                     </div>
-                    <div style={{display:"flex"}}> 
-                      <strong style={{marginRight:5}}>Prioridade:</strong><p>{order.Priority}</p>
+                    <div style={{ display: "flex" }}>
+                      <strong style={{ marginRight: 5 }}>Prioridade:</strong><p>{order.Priority}</p>
                     </div>
-                    <div style={{display:"flex"}}> 
-                      <strong style={{marginRight:5}}>Abertura:</strong><p>{order.OpenDate}</p>
+                    <div style={{ display: "flex" }}>
+                      <strong style={{ marginRight: 5 }}>Abertura:</strong><p>{order.OpenDate}</p>
                     </div>
                   </div>
-                </fieldset> 
-              : undefined 
+                </fieldset>
+                : undefined
             )
-            })
+          })
           }
         </div>
       </div>

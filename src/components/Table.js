@@ -34,34 +34,36 @@ export class C_Table extends React.Component {
             width: "100%"
         }
 
-        var defaultStyleColumns = {
-            border: "1px solid silver",
+        var defaultStyleRows = {
             textAlign: "left",
-            padding: 8,
-            width: this.props.widthColumns ? this.props.widthColumns : 300,
-            fontSize:15,
+            fontSize:16,
         }
         console.log("C_Table -> render -> columns", columns);
 
         return (
-            <div style={{border:"1px solid black", borderRadius: 5}}>
-                <table style={defaultStyleTable}>
-                    <tr>
-                        {columns && columns.map((colum) => (
-                            <th style={defaultStyleColumns}>{colum.name ? colum.name : ""}</th>
+            <div style={{border:"1px solid silver", borderRadius:5}}>
+                <DataTable style={{}} baseId="simple-pagination">
+                    <TableHeader>
+                        <TableRow selectable={false}>
+                            {columns && columns.map((colum) => (
+                                <TableColumn grow={true} style={{color:"black", textAlign: "left", fontSize: 22 }}>{colum.name ? colum.name : ""}</TableColumn>
+                            ))}
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {content && content.map((content) => (
+                            <TableRow key={content.id} selectable={false}>
+                                <TableColumn header={true} grow={true} style={defaultStyleRows}>{content.OpenDate ? content.OpenDate : ""}</TableColumn>
+                                <TableColumn header={true} grow={true} style={defaultStyleRows}>{content.OrderNumber ? content.OrderNumber : ""}</TableColumn>
+                                <TableColumn header={true} grow={true} style={defaultStyleRows}>{content.Type ? content.Type : ""}</TableColumn>
+                                <TableColumn header={true} grow={true} style={defaultStyleRows}>{content.Equipment ? content.Equipment : ""}</TableColumn>
+                                <TableColumn header={true} grow={true} style={defaultStyleRows}> {content.Priority ? content.Priority : ""}</TableColumn>
+                                <TableColumn header={true} grow={true} style={defaultStyleRows}> {content.Status ? content.Status : ""}</TableColumn>
+                            </TableRow>
                         ))}
-                    </tr>
- 
-                    {content && content.map((content) => (
-                        <tr style={{ }}>
-                            <td style={defaultStyleColumns}>{content.OpenDate ? content.OpenDate : ""}</td>
-                            <td style={defaultStyleColumns}>{content.OrderNumber ? content.OrderNumber : ""}</td>
-                            <td style={defaultStyleColumns}>{content.Type ? content.Type : ""}</td>
-                            <td style={defaultStyleColumns}>{content.Equipment ? content.Equipment : ""}</td>
-                            <td style={defaultStyleColumns}>{content.Priority ? content.Priority : ""}</td>
-                        </tr>
-                    ))}
-                </table>
+                    </TableBody>
+                    <TablePagination rows={1} rowsPerPageLabel={1} onPagination={this.handlePagination} />
+                </DataTable>
             </div>
         );
     }
