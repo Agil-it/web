@@ -339,7 +339,7 @@ class CreateUser extends Component {
                 label={"Data de Nascimento"}
                 allDay
                 cancelLabel={"Cancelar"}
-                css={{ width: 350 }}
+                inputStyle={{ width: 350 }}
               />
               <C_TextField
                 name="contact"

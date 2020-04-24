@@ -24,7 +24,7 @@ class C_SelectField extends Component {
     var inputStyle = this.props.inputStyle;
     var listStyle = this.props.listStyle;
 
-    if (!listStyle) listStyle = { position: "relative"};
+    if (!listStyle) listStyle = {};
     if (!listStyle.fontSize) listStyle.fontSize = 16;
 
     if (!inputStyle) inputStyle = { overflow: "hidden" };

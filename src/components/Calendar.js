@@ -23,30 +23,35 @@ class C_Calendar extends Component {
   }
 
   render() {
+    var inputStyle = this.props.inputStyle;
+
+    if (!inputStyle) inputStyle = {};
+
+    if (!inputStyle.fontSize) inputStyle.fontSize = 16;
 
     return (
-        <DatePicker
-          id={this.props.name}
-          name={this.props.name}
-          label={this.props.label}
-          className={this.props.className}
-          showAllDays={this.props.allDays}
-          inputStyle={this.props.css}
-          rightIcon={this.props.rightIcon}
-          cancelLabel={this.props.cancelLabel}
-          onChange={this.onChange}
-          style={this.props.style}
-          value={this.props.value}
-          fullWidth={false}
-          icon={false}
-          yearsDisplayed={239}
-          portal
-          lastChild
-          locales="pt-BR"
-          renderNode={null}
-          disableScrollLocking
-          defaultValue={this.props.defaultValue}
-        />
+      <DatePicker
+        id={this.props.name}
+        name={this.props.name}
+        label={this.props.label}
+        className={this.props.className}
+        showAllDays={this.props.allDays}
+        inputStyle={this.props.inputStyle}
+        rightIcon={this.props.rightIcon}
+        cancelLabel={this.props.cancelLabel}
+        onChange={this.onChange}
+        style={this.props.style}
+        value={this.props.value}
+        fullWidth={false}
+        icon={false}
+        yearsDisplayed={239}
+        portal
+        lastChild
+        locales="pt-BR"
+        renderNode={null}
+        disableScrollLocking
+        defaultValue={this.props.defaultValue}
+      />
     );
   }
 }

@@ -46,19 +46,19 @@ export class C_Table extends React.Component {
                     <TableHeader>
                         <TableRow selectable={false}>
                             {columns && columns.map((colum) => (
-                                <TableColumn grow={true} style={{color:"black", textAlign: "left", fontSize: 22 }}>{colum.name ? colum.name : ""}</TableColumn>
+                                <TableColumn style={{color:"black", textAlign: "left", fontSize: 20 }}>{colum.name ? colum.name : ""}</TableColumn>
                             ))}
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {content && content.map((content) => (
-                            <TableRow key={content.id} selectable={false}>
-                                <TableColumn header={true} grow={true} style={defaultStyleRows}>{content.OpenDate ? content.OpenDate : ""}</TableColumn>
-                                <TableColumn header={true} grow={true} style={defaultStyleRows}>{content.OrderNumber ? content.OrderNumber : ""}</TableColumn>
-                                <TableColumn header={true} grow={true} style={defaultStyleRows}>{content.Type ? content.Type : ""}</TableColumn>
-                                <TableColumn header={true} grow={true} style={defaultStyleRows}>{content.Equipment ? content.Equipment : ""}</TableColumn>
-                                <TableColumn header={true} grow={true} style={defaultStyleRows}> {content.Priority ? content.Priority : ""}</TableColumn>
-                                <TableColumn header={true} grow={true} style={defaultStyleRows}> {content.Status ? content.Status : ""}</TableColumn>
+                            <TableRow style={{cursor:"pointer"}} className={"effectfrontSmall"} key={content.id} selectable={false}>
+                                <TableColumn header={true} style={defaultStyleRows}>{content.OpenDate ? content.OpenDate : ""}</TableColumn>
+                                <TableColumn header={true} style={defaultStyleRows}>{content.OrderNumber ? content.OrderNumber : ""}</TableColumn>
+                                <TableColumn header={true} style={defaultStyleRows}>{content.Type ? content.Type : ""}</TableColumn>
+                                <TableColumn header={true} style={defaultStyleRows}>{content.Equipment ? content.Equipment : ""}</TableColumn>
+                                <TableColumn header={true} style={defaultStyleRows}> {content.Priority ? content.Priority : ""}</TableColumn>
+                                <TableColumn header={true} style={defaultStyleRows}> {content.Status ? content.Status : ""}</TableColumn>
                             </TableRow>
                         ))}
                     </TableBody>

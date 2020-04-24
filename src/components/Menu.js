@@ -13,7 +13,6 @@ const Main = styled.main`
   position: relative;
   overflow: hidden;
   transition: all .15s;
-  padding: 0 20px;
   margin-left: ${props => (props.expanded ? 240 : 64)}px;
 `;
 class C_Menu extends Component {
@@ -105,7 +104,7 @@ class C_Menu extends Component {
       <div>
         <div style={{
           marginLeft: expanded ? 240 : 64,
-          padding: '15px 20px 0 20px'
+          paddingRight: '20px'
         }}/>
         <BrowserRouter>
           <Route render={({ location, history }) => (
