@@ -3,6 +3,8 @@ import C_SelectField from './components/SelectField';
 import C_Calendar from './components/Calendar';
 import { C_Button, C_ButtonFloat } from './components/Button';
 import { C_Table } from './components/Table';
+import { C_MaintenanceOrder } from './components/Order';
+import ReactDOM from 'react-dom';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -59,7 +61,12 @@ class Dashboard extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.listOrders = this.listOrders.bind(this);
+    this.openOrder = this.openOrder.bind(this);
+  }
 
+  openOrder(order){
+    console.log("Dashboard -> openOrder -> order", order)
+    return ReactDOM.render(<C_MaintenanceOrder order={order}/>)
   }
 
   onChange(e, name) {
@@ -327,7 +334,7 @@ class Dashboard extends Component {
 
             return (
               !this.state.showOrdersList ?
-                <fieldset className={"effectfront"} style={{ cursor: "pointer", position: "relative", width: "30%", borderRadius: 5, border: "1px solid silver", marginBottom: 20, padding: 10, marginTop: 40, marginRight: 20 }}>
+                <fieldset onClick={() => this.openOrder(order)} className={"effectfront"} style={{ cursor: "pointer", position: "relative", width: "30%", borderRadius: 5, border: "1px solid silver", marginBottom: 20, padding: 10, marginTop: 40, marginRight: 20 }}>
                   <legend style={{ width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, marginBottom: 0, color: "#666666a6", fontWeight: "bold", fontSize: 25, marginTop: 100 }}>{order.OrderNumber}</legend>
                   <div style={{}}>
                     <div style={{ borderRadius: 5, top: 16, right: 0, position: "absolute", height: 194, width: 60, backgroundColor: colorPriority }}></div>
