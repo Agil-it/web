@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import C_SelectField from './components/SelectField';
 import C_Calendar from './components/Calendar';
-import { C_Button, C_ButtonFloat } from './components/Button';
+import { C_Button, C_ButtonFloat, C_MenuButton} from './components/Button';
 import { C_Table } from './components/Table';
 import { C_MaintenanceOrder } from './components/Order';
 import ReactDOM from 'react-dom';
@@ -61,12 +61,6 @@ class Dashboard extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.listOrders = this.listOrders.bind(this);
-    this.openOrder = this.openOrder.bind(this);
-  }
-
-  openOrder(order){
-    console.log("Dashboard -> openOrder -> order", order)
-    return ReactDOM.render(<C_MaintenanceOrder order={order}/>)
   }
 
   onChange(e, name) {
@@ -223,6 +217,7 @@ class Dashboard extends Component {
   render() {
     console.log("Dashboard -> render -> fields", this.state)
     var orders = this.state.orders
+    var orderDetails = this.state.orderDetails;
     console.log("Dashboard -> render -> orders", orders)
 
     const columns = [
@@ -234,6 +229,14 @@ class Dashboard extends Component {
       { name: "Status" },
     ]
     return (
+      this.state.showOrderDetails ? 
+        <div id="order" style={{ width: "100%" }}>
+          <C_MaintenanceOrder 
+            order={orderDetails} 
+            onClose={() => this.setState({showOrderDetails:false})} 
+          />
+        </div>
+      :
       <div style={{ width: "100%" }}>
         <div style={{ padding: "6px 0px 12px 20px", borderBottom: "3px solid silver", position: "fixed", width: "100%", backgroundColor: "#fafafa", zIndex: 2 }}>
           <h1 style={{ width: "100%", fontWeight:"bold" }}>Monitor de Ordens de Manutenção</h1>
@@ -297,7 +300,7 @@ class Dashboard extends Component {
            
           </div>
         </div>
-        <div style={{ width: "100%", paddingBottom: !this.state.showOrdersList ? 160 : 150 }}> </div>
+        <div style={{width: "100%", paddingBottom: !this.state.showOrdersList ? 160 : 150 }}> </div>
         <div style={{ position:"relative", alignItems: "center", display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
           <div style={{ position: "absolute", top: !this.state.showOrdersList ? -5 : 10, right: 12}}>
             {orders ?
@@ -317,13 +320,17 @@ class Dashboard extends Component {
               <C_Table
                 columns={columns}
                 content={this.state.orders}
+                onClick={(event) => {
+                  this.setState({ showOrderDetails: true, orderDetails: event })
+                  }
+                }
               >
               </C_Table>
             </div>
 
-            : undefined}
+          : undefined}
 
-          {orders && orders.map((order) => {
+          {orders && orders.map((order, i) => {
 
             var colorPriority;
 
@@ -334,10 +341,10 @@ class Dashboard extends Component {
 
             return (
               !this.state.showOrdersList ?
-                <fieldset onClick={() => this.openOrder(order)} className={"effectfront"} style={{ cursor: "pointer", position: "relative", width: "30%", borderRadius: 5, border: "1px solid silver", marginBottom: 20, padding: 10, marginTop: 40, marginRight: 20 }}>
+                <fieldset onClick={() => { this.setState({ showOrderDetails: true, orderDetails: order}) }} className={"effectfront"} style={{ cursor: "pointer", position: "relative", width: "30%", borderRadius: 5, border: "1px solid silver", marginBottom: 20, padding: 10, marginTop: 40, marginRight: 20 }}>
                   <legend style={{ width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, marginBottom: 0, color: "#666666a6", fontWeight: "bold", fontSize: 25, marginTop: 100 }}>{order.OrderNumber}</legend>
                   <div style={{}}>
-                    <div style={{ borderRadius: 5, top: 16, right: 0, position: "absolute", height: 194, width: 60, backgroundColor: colorPriority }}></div>
+                    <div style={{ borderRadius: 5, top: 16, right: 0, position: "absolute", height: 194, width: 40, backgroundColor: colorPriority }}></div>
                     <div style={{ display: "flex" }}>
                       <strong style={{ marginRight: 5, fontSize: 16 }}>Tipo:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.Type}</p>
                     </div>

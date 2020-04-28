@@ -52,7 +52,7 @@ export class C_Table extends React.Component {
                     </TableHeader>
                     <TableBody>
                         {content && content.map((content) => (
-                            <TableRow style={{cursor:"pointer"}} className={"effectfrontSmall"} key={content.id} selectable={false}>
+                            <TableRow style={{cursor:"pointer"}} onClick={() => this.props.onClick(content)} className={"effectfrontSmall"} key={content.id} selectable={false}>
                                 <TableColumn header={true} style={defaultStyleRows}>{content.OpenDate ? content.OpenDate : ""}</TableColumn>
                                 <TableColumn header={true} style={defaultStyleRows}>{content.OrderNumber ? content.OrderNumber : ""}</TableColumn>
                                 <TableColumn header={true} style={defaultStyleRows}>{content.Type ? content.Type : ""}</TableColumn>
