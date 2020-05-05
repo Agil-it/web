@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import Button from 'react-md/lib/Buttons/Button';
 import '../index.css';
 import { C_ButtonFloat, C_MenuButton } from "./Button";
-// import './Button.css';
+import { C_Icon } from "./Icon";
+import { MaintenanceOrderHelper as HelperOM } from '../helpers/MaintenanceOrder';
 
 export class C_MaintenanceOrder extends React.Component {
   constructor(props) {
@@ -51,6 +51,12 @@ export class C_MaintenanceOrder extends React.Component {
             icon="settings"
             options={configOptions}
           />
+        </div>
+        <div>
+          <div style={{display:"flex", justifyContent:"center", alignItems:"center"}}>
+            <C_Icon style={{ fontSize: 60, color: HelperOM.translate("color", order.priority) }} icon="bookmark" />
+            <span style={{fontSize:18, fontWeight:"bold", color:"#424242"}}>{`Prioridade ${HelperOM.translate("priority", order.priority)}`}</span>
+          </div>
         </div>
       </div>
     );
