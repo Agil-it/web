@@ -20,4 +20,11 @@ export class StringHelper {
       return `${word.substr(0,1).toLocaleUpperCase()}${word.substr(1).toLocaleLowerCase()}`
     }).join(' ');
   }
+
+  static JustifyLeft(value, size, characterToFit = ""){
+
+    if(typeof value != "string") value = value.toString();
+    
+    return value.padStart(size, characterToFit);
+  }
 }

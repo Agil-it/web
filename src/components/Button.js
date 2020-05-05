@@ -74,7 +74,7 @@ export class C_MenuButton extends React.Component {
     options.map((item, i) => {
       var obj = {
         primaryText: item.name,
-        rightIcon: <FontIcon>{item.icon}</FontIcon>,
+        leftIcon: <FontIcon>{item.icon}</FontIcon>,
       } 
 
       listItem.push(obj);
@@ -86,12 +86,15 @@ export class C_MenuButton extends React.Component {
       <MenuButton
         id={this.props.name}
         icon
-        flat
+        cascading={this.props.cascading}
+        style={this.props.style}
+        listStyle={this.props.listStyle}
+        menuStyle={this.props.menuStyle}
         anchor={{
           x: MenuButton.HorizontalAnchors.INNER_LEFT,
           y: MenuButton.VerticalAnchors.TOP,
         }}
-        position={this.props.position ? this.props.position : MenuButton.Positions.TOP_LEFT}
+        position={this.props.position ? this.props.position : MenuButton.Positions.TOP_RIGHT}
         secondary
         menuItems={listItem}
       >

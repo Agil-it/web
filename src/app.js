@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import C_Menu from './components/Menu';
 import Login from './login/Login';
 import Cookies from 'universal-cookie';
+import Dashboard from './Dashboard';
 
 class App extends Component {
   constructor() {
@@ -30,7 +31,7 @@ class App extends Component {
       return <Login onSuccess={this.onLogin} />
     }
 
-    return <C_Menu onLogout={this.onLogout}/>
+    return <Dashboard />
   }
 }
 

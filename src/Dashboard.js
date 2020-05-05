@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import C_SelectField from './components/SelectField';
 import C_Calendar from './components/Calendar';
+import { HandlerProvider } from './providers/handler';
+import { MaintenanceOrderProvider } from './providers/MaintenanceOrder';
 import { C_Button, C_ButtonFloat, C_MenuButton} from './components/Button';
 import { C_Table } from './components/Table';
 import { C_MaintenanceOrder } from './components/Order';
-import ReactDOM from 'react-dom';
+import { C_Loading } from './components/Loading';
+import { MaintenanceOrderHelper as HelperOM } from './helpers/MaintenanceOrder';
+import { DateHelper } from './helpers/Date';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -61,6 +65,7 @@ class Dashboard extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.listOrders = this.listOrders.bind(this);
+    this.provider = new HandlerProvider(new MaintenanceOrderProvider(), "ordem de manutenção")
   }
 
   onChange(e, name) {
@@ -72,162 +77,45 @@ class Dashboard extends Component {
     this.setState({ fields })
   }
 
-  listOrders() {
-    let orders = [
-      {
-        id: 1,
-        OrderNumber: "OM - 445588/D37",
-        Type: "Preventiva",
-        Priority: "Alta",
-        Equipment: "JDB388/32",
-        OpenDate: "09/05/2019 ás 23:53",
-        Status: "Aberta",
-      },
-      {
-        id: 2,
-        OrderNumber: "OM - 986/IRH34",
-        Type: "Corretiva",
-        Priority: "Média",
-        Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25",
-        Status: "Finalizada",
-      },
-      {
-        id: 3,
-        OrderNumber: "OM - 87745/GU2",
-        Type: "Corretiva",
-        Priority: "Baixa",
-        Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25",
-        Status: "Aberta",
-      },
-      {
-        id: 4,
-        OrderNumber: "OM - 87745/GU2",
-        Type: "Preventiva",
-        Priority: "Urgente",
-        Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25",
-        Status: "Finalizada",
-      },
-      {
-        id: 5,
-        OrderNumber: "OM - 445588/D37",
-        Type: "Preventiva",
-        Priority: "Alta",
-        Equipment: "JDB388/32",
-        OpenDate: "09/05/2019 ás 23:53",
-        Status: "Em Andamento",
-      },
-      {
-        id: 6,
-        OrderNumber: "OM - 986/IRH34",
-        Type: "Corretiva",
-        Priority: "Média",
-        Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25",
-        Status: "Finalizada",
-      },
-      {
-        id: 7,
-        OrderNumber: "OM - 87745/GU2",
-        Type: "Corretiva",
-        Priority: "Baixa",
-        Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25",
-        Status: "Em Andamento",
-      },
-      {
-        id: 8,
-        OrderNumber: "OM - 87745/GU2",
-        Type: "Preventiva",
-        Priority: "Urgente",
-        Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25",
-        Status: "Pendente",
-      },
-      {
-        id: 9,
-        OrderNumber: "OM - 986/IRH34",
-        Type: "Corretiva",
-        Priority: "Média",
-        Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25",
-        Status: "Finalizada",
-      },
-      {
-        id: 10,
-        OrderNumber: "OM - 87745/GU2",
-        Type: "Corretiva",
-        Priority: "Baixa",
-        Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25",
-        Status: "Aberta",
-      },
-      {
-        id: 11,
-        OrderNumber: "OM - 87745/GU2",
-        Type: "Preventiva",
-        Priority: "Urgente",
-        Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25",
-        Status: "Finalizada",
-      },
-      {
-        id: 12,
-        OrderNumber: "OM - 445588/D37",
-        Type: "Preventiva",
-        Priority: "Alta",
-        Equipment: "JDB388/32",
-        OpenDate: "09/05/2019 ás 23:53",
-        Status: "Em Andamento",
-      },
-      {
-        id: 13,
-        OrderNumber: "OM - 986/IRH34",
-        Type: "Corretiva",
-        Priority: "Média",
-        Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25",
-        Status: "Finalizada",
-      },
-      {
-        id: 14,
-        OrderNumber: "OM - 87745/GU2",
-        Type: "Corretiva",
-        Priority: "Baixa",
-        Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25",
-        Status: "Em Andamento",
-      },
-      {
-        id: 15,
-        OrderNumber: "OM - 87745/GU2",
-        Type: "Preventiva",
-        Priority: "Urgente",
-        Equipment: "JDB388/32",
-        OpenDate: "23/06/2019 ás 06:25",
-        Status: "Pendente",
-      }
-    ]
+  async listOrders() {
 
-    this.setState({ orders });
+    let orders = []
+    let response = await this.provider.getList();
+    // console.log("Dashboard -> listOrders -> response", response)
+    if (response.success) {
+      orders = response.data
+    }
+
+    this.setState({ orders, showLoading:false })
+    // let orders = [
+    //   {
+    //     id: 1,
+    //     OrderNumber: "OM - 445588/D37",
+    //     Type: "Preventiva",
+    //     Priority: "Alta",
+    //     Equipment: "JDB388/32",
+    //     OpenDate: "09/05/2019 ás 23:53",
+    //     Status: "Aberta",
+    //   },
   }
 
   render() {
     console.log("Dashboard -> render -> fields", this.state)
     var orders = this.state.orders
     var orderDetails = this.state.orderDetails;
-    console.log("Dashboard -> render -> orders", orders)
+    // console.log("Dashboard -> render -> orders", orders)
 
     const columns = [
       { name: "Abertura" },
       { name: "Ordem Manutenção" },
-      { name: "Tipo Manutenção" },
+      { name: "Tipo Layout" },
       { name: "Equipamento" },
       { name: "Prioridade" },
       { name: "Status" },
     ]
+
+   
+  
     return (
       this.state.showOrderDetails ? 
         <div id="order" style={{ width: "100%" }}>
@@ -295,7 +183,10 @@ class Dashboard extends Component {
               secondary={true}
               style={{ marginTop: 30, fontSize: 16, width: "10%" }}
               label={"LISTAR"}
-              action={() => this.listOrders()}
+              action={() => {
+                this.listOrders();
+                this.setState({showLoading:true})
+              }}
             />
            
           </div>
@@ -303,7 +194,7 @@ class Dashboard extends Component {
         <div style={{width: "100%", paddingBottom: !this.state.showOrdersList ? 160 : 150 }}> </div>
         <div style={{ position:"relative", alignItems: "center", display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
           <div style={{ position: "absolute", top: !this.state.showOrdersList ? -5 : 10, right: 12}}>
-            {orders ?
+            {orders && orders.length > 0 ?  
               <C_ButtonFloat
                 icon={!this.state.showOrdersList ? "reorder" : "view_module"}
                 tooltipLabel={!this.state.showOrdersList ? "Exibir como Lista" : "Exibir como Cartões"}
@@ -315,7 +206,8 @@ class Dashboard extends Component {
               />
               : undefined}
           </div>
-          {this.state.showOrdersList ?
+
+          {this.state.showOrdersList && !this.state.showLoading?
             <div style={{ marginTop: 40, width: "100%", boxShadow: "1px 3px 12px 1px #918f8e" }}>
               <C_Table
                 columns={columns}
@@ -330,35 +222,37 @@ class Dashboard extends Component {
 
           : undefined}
 
-          {orders && orders.map((order, i) => {
+          {this.state.showLoading ?
+            <div style={{ marginTop:"10%"}}>
+              <C_Loading 
+                scale={4}
+                footer={true}
+                message={"Carregando Ordens..."}
+              />
+            </div>
+          : undefined }
 
-            var colorPriority;
-
-            if (order.Priority == "Urgente") colorPriority = "red"
-            if (order.Priority == "Alta") colorPriority = "#ffd300"
-            if (order.Priority == "Média") colorPriority = "#3177e8"
-            if (order.Priority == "Baixa") colorPriority = "#03a140"
-
+          {orders && !this.state.showLoading && orders.map((order, i) => {
             return (
               !this.state.showOrdersList ?
                 <fieldset onClick={() => { this.setState({ showOrderDetails: true, orderDetails: order}) }} className={"effectfront"} style={{ cursor: "pointer", position: "relative", width: "30%", borderRadius: 5, border: "1px solid silver", marginBottom: 20, padding: 10, marginTop: 40, marginRight: 20 }}>
-                  <legend style={{ width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, marginBottom: 0, color: "#666666a6", fontWeight: "bold", fontSize: 25, marginTop: 100 }}>{order.OrderNumber}</legend>
+                  <legend style={{ width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, marginBottom: 0, color: "#666666a6", fontWeight: "bold", fontSize: 25, marginTop: 100 }}>{order.orderNumber}</legend>
                   <div style={{}}>
-                    <div style={{ borderRadius: 5, top: 16, right: 0, position: "absolute", height: 194, width: 40, backgroundColor: colorPriority }}></div>
+                    <div style={{ borderRadius: 5, top: 16, right: 0, position: "absolute", height: 194, width: 40, backgroundColor: HelperOM.translate("color", order.priority) }}></div>
                     <div style={{ display: "flex" }}>
-                      <strong style={{ marginRight: 5, fontSize: 16 }}>Tipo:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.Type}</p>
+                      <strong style={{ marginRight: 5, fontSize: 16 }}>Layout:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.orderLayout.description}</p>
                     </div>
                     <div style={{ display: "flex" }}>
-                      <strong style={{ marginRight: 5, fontSize: 16 }}>Equipamento:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.Equipment}</p>
+                      <strong style={{ marginRight: 5, fontSize: 16 }}>Equipamento:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.orderEquipment[0].equipment.description}</p>
                     </div>
                     <div style={{ display: "flex" }}>
-                      <strong style={{ marginRight: 5, fontSize: 16 }}>Prioridade:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.Priority}</p>
+                      <strong style={{ marginRight: 5, fontSize: 16 }}>Prioridade:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{HelperOM.translate("priority", order.priority)}</p>
                     </div>
                     <div style={{ display: "flex" }}>
-                      <strong style={{ marginRight: 5, fontSize: 16 }}>Abertura:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.OpenDate}</p>
+                      <strong style={{ marginRight: 5, fontSize: 16 }}>Abertura:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{DateHelper.formatDate(order.openedDate)}</p>
                     </div>
                     <div style={{ display: "flex" }}>
-                      <strong style={{ marginRight: 5, fontSize: 16 }}>Status:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.Status}</p>
+                      <strong style={{ marginRight: 5, fontSize: 16 }}>Status:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{HelperOM.translate("status", order.orderStatus)}</p>
                     </div>
                   </div>
                 </fieldset>
