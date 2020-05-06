@@ -31,7 +31,7 @@ class App extends Component {
       return <Login onSuccess={this.onLogin} />
     }
 
-    return <Dashboard />
+    return <Dashboard/>
   }
 }
 

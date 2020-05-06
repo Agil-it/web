@@ -62,7 +62,6 @@ export class C_MenuButton extends React.Component {
       options: this.props.options
     }
 
-    console.log("C_MaintenanceOrder -> render -> this.state", this.state)
   }
 
 
@@ -79,8 +78,6 @@ export class C_MenuButton extends React.Component {
 
       listItem.push(obj);
     })
-
-    console.log("C_MenuButton -> render -> listItem", listItem)
 
     return (
       <MenuButton

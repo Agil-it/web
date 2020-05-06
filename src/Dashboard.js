@@ -120,7 +120,7 @@ class Dashboard extends Component {
       this.state.showOrderDetails ? 
         <div id="order" style={{ width: "100%" }}>
           <C_MaintenanceOrder 
-            order={orderDetails} 
+            orderId={orderDetails.id} 
             onClose={() => this.setState({showOrderDetails:false})} 
           />
         </div>

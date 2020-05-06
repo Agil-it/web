@@ -35,6 +35,16 @@ export class HandlerProvider {
     }
   }
 
+  async get(id){
+    try {
+      let response = await this.provider.get(id);
+      return response;
+    } catch (error) {
+      return error.message;
+    }
+
+  }
+
   delete(id, successCallBack) {
     
     try {
