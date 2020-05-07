@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SelectField, FontIcon } from 'react-md';
+import SelectField from 'react-md/lib/SelectFields';
 import PropTypes from 'prop-types';
 import '../index.css';
 
@@ -21,22 +21,6 @@ class C_SelectField extends Component {
 
   render() {
 
-    var inputStyle = this.props.inputStyle;
-    var listStyle = this.props.listStyle;
-
-    if (!listStyle) listStyle = {};
-    if (!listStyle.fontSize) listStyle.fontSize = 16;
-
-    if (!inputStyle) inputStyle = { overflow: "hidden" };
-
-    if (!inputStyle.fontSize) inputStyle.fontSize = 16;
-
-    var style = this.props.style;
-
-    if (!style) style = {};
-
-    if (!style.fontSize) style.fontSize = 16;
-
     return (
       <div>
         <SelectField
@@ -45,9 +29,9 @@ class C_SelectField extends Component {
           key={this.props.key}
           name={this.props.name}
           label={this.props.label}
-          inputStyle={inputStyle}
-          listStyle={listStyle}
-          style={style}
+          inputStyle={this.props.inputStyle}
+          listStyle={this.props.listStyle}
+          style={this.props.style}
           disabled={this.props.disabled}
           placeholder={this.props.placeholder}
           menuItems={this.props.list}

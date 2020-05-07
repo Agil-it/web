@@ -91,7 +91,7 @@ class C_Menu extends Component {
 
     let menu = menuItens.map((menuItem, key) =>
       <NavItem key={key} eventKey={menuItem.key} style={{ marginTop: 40 }}>
-        <NavIcon>
+        <NavIcon >
           <FontIcon style={{ fontSize: 35, marginTop: "10%" }}>{menuItem.icon}</FontIcon>
         </NavIcon>
         <NavText style={{ fontSize: 20, float: "right", width: "75%" }}>

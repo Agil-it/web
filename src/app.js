@@ -28,10 +28,10 @@ class App extends Component {
     const { token } = this.state
 
     if (!token) {
-      return <Login onSuccess={this.onLogin} />
+      return <Login onSuccess={this.onLogin}/>
     }
 
-    return <Dashboard/>
+    return <C_Menu onLogout={this.onLogout}/>
   }
 }
 

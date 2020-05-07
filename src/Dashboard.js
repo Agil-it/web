@@ -3,7 +3,7 @@ import C_SelectField from './components/SelectField';
 import C_Calendar from './components/Calendar';
 import { HandlerProvider } from './providers/handler';
 import { MaintenanceOrderProvider } from './providers/MaintenanceOrder';
-import { C_Button, C_ButtonFloat, C_MenuButton} from './components/Button';
+import { C_Button, C_ButtonFloat, C_MenuButton } from './components/Button';
 import { C_Table } from './components/Table';
 import { C_MaintenanceOrder } from './components/Order';
 import { C_Loading } from './components/Loading';
@@ -15,51 +15,30 @@ class Dashboard extends Component {
     super(props);
 
     this.state = {
-      listStatus: [{
-        label: "Todos",
-        value: "ALL"
-      },
-      {
-        label: "Abertas",
-        value: "OPEN"
-      },
-      {
-        label: "Pendentes",
-        value: "PENDING"
-      },
-      {
-        label: "Em Andamento",
-        value: "IN_PROGRESS"
-      },
-      {
-        label: "Finalizadas",
-        value: "FINISHED"
-      }],
+      listStatus: [
+        { label: "TODOS", value: "all" },
+        { label: "ABERTA", value: "created" },
+        { label: "ASSINADA", value: "signatured" },
+        { label: "ASSINATURA PENDENTE", value: "signature_pending" },
+        { label: "ASSUMIDA", value: "assumed" },
+        { label: "CANCELADA", value: "canceled" },
+        { label: "FINALIZADA", value: "finished" },
+        { label: "INICIADA", value: "started" },
+        { label: "PARADA", value: "stopped" },
+        { label: "PAUSADA", value: "paused" },
+      ],
 
-      listPriority: [{
-        label: "Todas",
-        value: "ALL"
-      },
-      {
-        label: "Urgente",
-        value: "URGENT"
-      },
-      {
-        label: "Alta",
-        value: "HIGH"
-      },
-      {
-        label: "Média",
-        value: "MEDIUM"
-      },
-      {
-        label: "Baixa",
-        value: "LOW"
-      }],
+      listPriority: [
+        { label: "TODAS", value: "all" },
+        { label: "URGENTE", value: "urgent" },
+        { label: "ALTA", value: "high" },
+        { label: "MÉDIA", value: "medium" },
+        { label: "BAIXA", value: "low" },
+      ],
 
       fields: {},
-      selectedStatus: "ALL",
-      selectedPriority: "ALL",
+      selectedStatus: "all",
+      selectedPriority: "all",
       showOrdersList: false
     }
 
@@ -86,7 +65,7 @@ class Dashboard extends Component {
       orders = response.data
     }
 
-    this.setState({ orders, showLoading:false })
+    this.setState({ orders, showLoading: false })
     // let orders = [
     //   {
     //     id: 1,
@@ -114,154 +93,153 @@ class Dashboard extends Component {
       { name: "Status" },
     ]
 
-   
-  
+
+
     return (
-      this.state.showOrderDetails ? 
+      this.state.showOrderDetails ?
         <div id="order" style={{ width: "100%" }}>
-          <C_MaintenanceOrder 
-            orderId={orderDetails.id} 
-            onClose={() => this.setState({showOrderDetails:false})} 
+          <C_MaintenanceOrder
+            orderId={orderDetails.id}
+            onClose={() => this.setState({ showOrderDetails: false })}
           />
         </div>
-      :
-      <div style={{ width: "100%" }}>
-        <div style={{ padding: "6px 0px 12px 20px", borderBottom: "3px solid silver", position: "fixed", width: "100%", backgroundColor: "#fafafa", zIndex: 2 }}>
-          <h1 style={{ width: "100%", fontWeight:"bold" }}>Monitor de Ordens de Manutenção</h1>
-          <div style={{ width: "100%", display: "flex" }}>
-            <div style={{ width: "20%", marginTop: 8 }}>
-              <C_Calendar
-                id="from"
-                name="from"
-                value={new Date()}
-                onChange={this.onChange}
-                label={"De"}
-                allDay
-                inputStyle={{ width: 200, }}
+        :
+        <div style={{ width: "100%" }}>
+          <div style={{ padding: "6px 0px 2px 20px", borderBottom: "2px solid silver", position: "fixed", width: "100%", backgroundColor: "#fafafa", zIndex: 2 }}>
+            <h1 style={{ width: "100%", color: "black" }}>Monitor de Ordens de Manutenção</h1>
+            <div className="md-grid" style={{ padding: 0 }}>
+              <div className="md-cell md-cell--2">
+                <C_Calendar
+                  id="from"
+                  name="from"
+                  value={new Date()}
+                  onChange={this.onChange}
+                  label={"De"}
+                  allDay
+                  inputStyle={{ width: 200, }}
+                />
+              </div>
+              <div className="md-cell md-cell--2">
+                <C_Calendar
+                  id="to"
+                  name="to"
+                  value={new Date()}
+                  onChange={this.onChange}
+                  label={"Até"}
+                  allDay
+                  inputStyle={{ width: 200 }}
+                />
+              </div>
+              <div className="md-cell md-cell--2 md-cell--bottom">
+                <C_SelectField
+                  id="status"
+                  name="status"
+                  onChange={this.onChange}
+                  value={this.state.selectedStatus}
+                  label={"Status"}
+                  list={this.state.listStatus}
+                  labelElement="label"
+                  valueElement="value"
+                  style={{ width: 200 }}
+                />
+              </div>
+              <div className="md-cell md-cell--3 md-cell--bottom">
+                <C_SelectField
+                  id="priority"
+                  name="priority"
+                  onChange={this.onChange}
+                  value={this.state.selectedPriority}
+                  label={"Prioridade"}
+                  list={this.state.listPriority}
+                  labelElement="label"
+                  valueElement="value"
+                  style={{ width: 200}}
+                />
+              </div>
+              <C_Button
+                secondary={true}
+                className="md-cell md-cell--middle md-cell--2"
+                style={{ width: 130, marginTop: 30, fontSize: 16 }}
+                label={"LISTAR"}
+                action={() => {
+                  this.listOrders();
+                  this.setState({ showLoading: true })
+                }}
               />
-            </div>
-            <div style={{ width: "20%", marginTop: 8 }}>
-              <C_Calendar
-                id="to"
-                name="to"
-                value={new Date()}
-                onChange={this.onChange}
-                label={"Até"}
-                allDay
-                inputStyle={{ width: 200 }}
-              />
-            </div>
-            <div style={{ width: "20%" }}>
-              <C_SelectField
-                id="status"
-                name="status"
-                onChange={this.onChange}
-                value={this.state.selectedStatus}
-                label={"Status"}
-                list={this.state.listStatus}
-                labelElement="label"
-                valueElement="value"
-                listStyle={{ position: "fixed", width: 200 }}
-                style={{ width: 200, marginTop: 8, marginRight: 20 }}
-              />
-            </div>
-            <div style={{ width: "20%" }}>
-              <C_SelectField
-                id="priority"
-                name="priority"
-                onChange={this.onChange}
-                value={this.state.selectedPriority}
-                label={"Prioridade"}
-                list={this.state.listPriority}
-                labelElement="label"
-                valueElement="value"
-                listStyle={{ position: "fixed", width: 200 }}
-                style={{ marginRight: 30, width: 200, marginTop: 8 }}
-              />
-            </div>
-            <C_Button
-              secondary={true}
-              style={{ marginTop: 30, fontSize: 16, width: "10%" }}
-              label={"LISTAR"}
-              action={() => {
-                this.listOrders();
-                this.setState({showLoading:true})
-              }}
-            />
-           
-          </div>
-        </div>
-        <div style={{width: "100%", paddingBottom: !this.state.showOrdersList ? 160 : 150 }}> </div>
-        <div style={{ position:"relative", alignItems: "center", display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
-          <div style={{ position: "absolute", top: !this.state.showOrdersList ? -5 : 10, right: 12}}>
-            {orders && orders.length > 0 ?  
-              <C_ButtonFloat
-                icon={!this.state.showOrdersList ? "reorder" : "view_module"}
-                tooltipLabel={!this.state.showOrdersList ? "Exibir como Lista" : "Exibir como Cartões"}
-                tooltipPosition="left"
-                secondary
-                style={{ width: 51, height: 51 }}
-                iconSize={25}
-                action={() => this.setState({ showOrdersList: !this.state.showOrdersList ? true : false })}
-              />
-              : undefined}
-          </div>
 
-          {this.state.showOrdersList && !this.state.showLoading?
-            <div style={{ marginTop: 40, width: "100%", boxShadow: "1px 3px 12px 1px #918f8e" }}>
-              <C_Table
-                columns={columns}
-                content={this.state.orders}
-                onClick={(event) => {
-                  this.setState({ showOrderDetails: true, orderDetails: event })
+            </div>
+          </div>
+          <div style={{ width: "100%", paddingBottom: !this.state.showOrdersList ? 160 : 150 }}> </div>
+          <div style={{ position: "relative", alignItems: "center", display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+            <div style={{ position: "absolute", top: !this.state.showOrdersList ? -5 : 10, right: 12 }}>
+              {orders && orders.length > 0 ?
+                <C_ButtonFloat
+                  icon={!this.state.showOrdersList ? "reorder" : "view_module"}
+                  tooltipLabel={!this.state.showOrdersList ? "Exibir como Lista" : "Exibir como Cartões"}
+                  tooltipPosition="left"
+                  secondary
+                  style={{ width: 51, height: 51 }}
+                  iconSize={25}
+                  action={() => this.setState({ showOrdersList: !this.state.showOrdersList ? true : false })}
+                />
+                : undefined}
+            </div>
+
+            {this.state.showOrdersList && !this.state.showLoading ?
+              <div style={{ marginTop: 40, width: "100%", boxShadow: "1px 3px 12px 1px #918f8e" }}>
+                <C_Table
+                  columns={columns}
+                  content={this.state.orders}
+                  onClick={(event) => {
+                    this.setState({ showOrderDetails: true, orderDetails: event })
                   }
-                }
-              >
-              </C_Table>
-            </div>
+                  }
+                >
+                </C_Table>
+              </div>
 
-          : undefined}
+              : undefined}
 
-          {this.state.showLoading ?
-            <div style={{ marginTop:"10%"}}>
-              <C_Loading 
-                scale={4}
-                footer={true}
-                message={"Carregando Ordens..."}
-              />
-            </div>
-          : undefined }
+            {this.state.showLoading ?
+              <div style={{ marginTop: "10%" }}>
+                <C_Loading
+                  scale={4}
+                  footer={true}
+                  message={"Carregando Ordens..."}
+                />
+              </div>
+              : undefined}
 
-          {orders && !this.state.showLoading && orders.map((order, i) => {
-            return (
-              !this.state.showOrdersList ?
-                <fieldset onClick={() => { this.setState({ showOrderDetails: true, orderDetails: order}) }} className={"effectfront"} style={{ cursor: "pointer", position: "relative", width: "30%", borderRadius: 5, border: "1px solid silver", marginBottom: 20, padding: 10, marginTop: 40, marginRight: 20 }}>
-                  <legend style={{ width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, marginBottom: 0, color: "#666666a6", fontWeight: "bold", fontSize: 25, marginTop: 100 }}>{order.orderNumber}</legend>
-                  <div style={{}}>
-                    <div style={{ borderRadius: 5, top: 16, right: 0, position: "absolute", height: 194, width: 40, backgroundColor: HelperOM.translate("color", order.priority) }}></div>
-                    <div style={{ display: "flex" }}>
-                      <strong style={{ marginRight: 5, fontSize: 16 }}>Layout:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.orderLayout.description}</p>
+            {orders && !this.state.showLoading && orders.map((order, i) => {
+              return (
+                !this.state.showOrdersList ?
+                  <fieldset onClick={() => { this.setState({ showOrderDetails: true, orderDetails: order }) }} className={"effectfront"} style={{ cursor: "pointer", position: "relative", width: "30%", borderRadius: 5, border: "1px solid silver", marginBottom: 20, padding: 10, marginTop: 40, marginRight: 20 }}>
+                    <legend style={{ width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, marginBottom: 0, color: "#666666a6", fontWeight: "bold", fontSize: 25, marginTop: 100 }}>{order.orderNumber}</legend>
+                    <div style={{}}>
+                      <div style={{ borderRadius: 5, top: 16, right: 0, position: "absolute", height: 194, width: 40, backgroundColor: HelperOM.translate("color", order.priority) }}></div>
+                      <div style={{ display: "flex" }}>
+                        <strong style={{ marginRight: 5, fontSize: 16 }}>Layout:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.orderLayout.description}</p>
+                      </div>
+                      <div style={{ display: "flex" }}>
+                        <strong style={{ marginRight: 5, fontSize: 16 }}>Equipamento:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.orderEquipment[0].equipment.description}</p>
+                      </div>
+                      <div style={{ display: "flex" }}>
+                        <strong style={{ marginRight: 5, fontSize: 16 }}>Prioridade:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{HelperOM.translate("priority", order.priority)}</p>
+                      </div>
+                      <div style={{ display: "flex" }}>
+                        <strong style={{ marginRight: 5, fontSize: 16 }}>Abertura:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{DateHelper.formatDate(order.openedDate)}</p>
+                      </div>
+                      <div style={{ display: "flex" }}>
+                        <strong style={{ marginRight: 5, fontSize: 16 }}>Status:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{HelperOM.translate("status", order.orderStatus)}</p>
+                      </div>
                     </div>
-                    <div style={{ display: "flex" }}>
-                      <strong style={{ marginRight: 5, fontSize: 16 }}>Equipamento:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.orderEquipment[0].equipment.description}</p>
-                    </div>
-                    <div style={{ display: "flex" }}>
-                      <strong style={{ marginRight: 5, fontSize: 16 }}>Prioridade:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{HelperOM.translate("priority", order.priority)}</p>
-                    </div>
-                    <div style={{ display: "flex" }}>
-                      <strong style={{ marginRight: 5, fontSize: 16 }}>Abertura:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{DateHelper.formatDate(order.openedDate)}</p>
-                    </div>
-                    <div style={{ display: "flex" }}>
-                      <strong style={{ marginRight: 5, fontSize: 16 }}>Status:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{HelperOM.translate("status", order.orderStatus)}</p>
-                    </div>
-                  </div>
-                </fieldset>
-                : undefined
-            )
-          })
-          }
+                  </fieldset>
+                  : undefined
+              )
+            })
+            }
+          </div>
         </div>
-      </div>
     )
   }
 }

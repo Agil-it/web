@@ -27,7 +27,7 @@ class C_Calendar extends Component {
 
     if (!inputStyle) inputStyle = {};
 
-    if (!inputStyle.fontSize) inputStyle.fontSize = 16;
+    if (!inputStyle.fontSize) inputStyle.fontSize = 15;
 
     return (
       <DatePicker

@@ -1,5 +1,14 @@
 @import 'react-md/src/scss/react-md';
 
+$md-font-size: "16px";
+$md-body-desktop-font-size: 16px;
+$md-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+@include react-md-select-fields;
+@include react-md-tooltips;
+@include react-md-selection-controls;
+@include react-md-grid;
+
 //$md-mobile-min-width: 320px !default;
 
 // Variable overrides

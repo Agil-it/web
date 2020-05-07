@@ -108,8 +108,8 @@ export class C_MaintenanceOrder extends React.Component {
             <h3 style={{ fontWeight: "bold" }}>{`STATUS:`}</h3>
             <div style={{ fontSize: 18, marginLeft: 5 }}>{HelperOM.translate("status", order.orderStatus)}</div>
           </div>
-          <div style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <fieldset style={{ paddingTop: 20, paddingBottom: 20, width: "50%", borderRadius: 5, border: "1px solid silver" }}>
+          <div className="slideInLeft" style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <fieldset style={{ paddingTop: 10, paddingBottom: 10, width: "50%", borderRadius: 5, border: "1px solid silver" }}>
               <legend style={{ paddingRight: 10, paddingLeft: 10, marginLeft: 10, color: "#666666a6", fontWeight: "bold", fontSize: 30 }}>{`Informações`}</legend>
               <div className="md-grid" style={{ justifyContent:"space-around"}}>
                 <div style={{textAlign:"center"}}>
@@ -126,14 +126,14 @@ export class C_MaintenanceOrder extends React.Component {
                   <C_Icon style={{ fontSize: 100, color: "#03a140"}} icon="location_on" />
                   <div style={{}}>
                     <div style={{ fontSize: 18, fontWeight: "bold" }}>{`Localização`}</div>
-                    <div style={{ fontSize: 25, color: "#424242", marginTop: 15 }}>{order.orderEquipment[0].installationArea.description}</div>
+                    <div style={{ fontSize: 23, color: "#424242", marginTop: 15 }}>{order.orderEquipment[0].installationArea.description}</div>
                   </div>
                 </div>
               </div>
             </fieldset>
           </div>
-          <div style={{ marginTop: 15, position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <fieldset style={{ paddingTop: 20, paddingBottom: 20, width: "50%", borderRadius: 5, border: "1px solid silver" }}>
+          <div className="slideInRight" style={{ marginTop: 10, position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <fieldset style={{ paddingTop: 10, paddingBottom: 10, width: "50%", borderRadius: 5, border: "1px solid silver" }}>
               <legend style={{ paddingRight: 10, paddingLeft: 10, marginLeft: 10, color: "#666666a6", fontWeight: "bold", fontSize: 30 }}>{`Abertura`}</legend>
               <div className="md-grid" style={{ justifyContent: "space-around" }}>
                 <div style={{ textAlign: "center" }}>
@@ -146,8 +146,8 @@ export class C_MaintenanceOrder extends React.Component {
               </div>
             </fieldset>
           </div>
-          <div style={{ marginTop: 15, position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <fieldset style={{ paddingTop: 20, paddingBottom: 20, width: "50%", borderRadius: 5, border: "1px solid silver" }}>
+          <div className="slideInDown" style={{ marginTop: 10, position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <fieldset style={{ paddingTop: 10, paddingBottom: 10, width: "50%", borderRadius: 5, border: "1px solid silver" }}>
               <legend style={{ paddingRight: 10, paddingLeft: 10, marginLeft: 10, color: "#666666a6", fontWeight: "bold", fontSize: 30 }}>{`Info. Adicionais`}</legend>
               <div className="md-grid" style={{ justifyContent: "space-around" }}>
                 <div style={{ textAlign: "center" }}>
@@ -162,7 +162,6 @@ export class C_MaintenanceOrder extends React.Component {
                 </div>
               </div>
             </fieldset>
-
           </div>
         </div>
     );
