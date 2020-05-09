@@ -61,10 +61,10 @@ export class HandlerProvider {
     MessageModal.confirmation(title, "Confirma a ação?", async() => {this.execute(this.provider.delete(id), "deletar", successCallBack)})
   }
 
-  async getList(){
+  async getList(data){
 
     try {
-      let response = await this.provider.getList();
+      let response = await this.provider.getList(data);
       return response;
     } catch (error) {
       return [];

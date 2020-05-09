@@ -57,15 +57,20 @@ class Dashboard extends Component {
   }
 
   async listOrders() {
+    let sendData = {}
 
-    let orders = []
-    let response = await this.provider.getList();
-    // console.log("Dashboard -> listOrders -> response", response)
+    if (this.state.selectedPriority != "all") sendData.priority = this.state.selectedPriority;
+    if (this.state.selectedStatus != "all") sendData.orderStatus  = this.state.selectedStatus;
+    
+    let response = await this.provider.getList(sendData);
+    let list = []
+    console.log("Dashboard -> listOrders -> response", response)
     if (response.success) {
-      orders = response.data
+      list = response.data
+
     }
 
-    this.setState({ orders, showLoading: false })
+    this.setState({ orders: list, showLoading: false })
     // let orders = [
     //   {
     //     id: 1,
@@ -132,9 +137,9 @@ class Dashboard extends Component {
               </div>
               <div className="md-cell md-cell--2 md-cell--bottom">
                 <C_SelectField
-                  id="status"
-                  name="status"
-                  onChange={this.onChange}
+                  id="orderStatus"
+                  name="orderStatus"
+                  onChange={(e) => this.setState({selectedStatus: e.target.value})}
                   value={this.state.selectedStatus}
                   label={"Status"}
                   list={this.state.listStatus}
@@ -147,7 +152,7 @@ class Dashboard extends Component {
                 <C_SelectField
                   id="priority"
                   name="priority"
-                  onChange={this.onChange}
+                  onChange={(e) => this.setState({selectedPriority: e.target.value})}
                   value={this.state.selectedPriority}
                   label={"Prioridade"}
                   list={this.state.listPriority}
@@ -221,7 +226,7 @@ class Dashboard extends Component {
                         <strong style={{ marginRight: 5, fontSize: 16 }}>Layout:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.orderLayout.description}</p>
                       </div>
                       <div style={{ display: "flex" }}>
-                        <strong style={{ marginRight: 5, fontSize: 16 }}>Equipamento:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.orderEquipment[0].equipment.description}</p>
+                        <strong style={{ marginRight: 5, fontSize: 16 }}>Equipamento:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.orderEquipment[0] ? order.orderEquipment[0].equipment.description : "Sem Equipamento"}</p>
                       </div>
                       <div style={{ display: "flex" }}>
                         <strong style={{ marginRight: 5, fontSize: 16 }}>Prioridade:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{HelperOM.translate("priority", order.priority)}</p>

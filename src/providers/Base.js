@@ -54,8 +54,6 @@ export class BaseProvider {
     try {
       const response = await callback;
 
-      console.log("TCL: BaseProvider -> handleRequest -> response", response)
-
       this.checkResponse(response)
 
       let atualizouToken = this.updateToken(response)

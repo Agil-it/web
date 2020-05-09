@@ -116,17 +116,17 @@ export class C_MaintenanceOrder extends React.Component {
                   <C_Icon style={{ fontSize: 100 }} icon="build" />
                   <div style={{ }}>
                     <div style={{ fontSize: 18, fontWeight: "bold" }}>{`Equipamento Superior`}</div>
-                    <div style={{ fontSize: 16 }}>{order.orderEquipment[0].superiorEquipment.description}</div>
+                    <div style={{ fontSize: 16 }}>{order.orderEquipment[0] ? order.orderEquipment[0].superiorEquipment.description : "Não informado"}</div>
                     <hr />
                     <div style={{ fontSize: 18, fontWeight: "bold" }}>{`Equipamento`}</div>
-                    <div style={{ fontSize: 16 }}>{order.orderEquipment[0].equipment.description}</div>
+                    <div style={{ fontSize: 16 }}>{order.orderEquipment[0] ? order.orderEquipment[0].equipment.description : "Não informado"}</div>
                   </div>
                 </div>
                 <div style={{ textAlign: "center" }}>
                   <C_Icon style={{ fontSize: 100, color: "#03a140"}} icon="location_on" />
                   <div style={{}}>
                     <div style={{ fontSize: 18, fontWeight: "bold" }}>{`Localização`}</div>
-                    <div style={{ fontSize: 23, color: "#424242", marginTop: 15 }}>{order.orderEquipment[0].installationArea.description}</div>
+                    <div style={{ fontSize: 23, color: "#424242", marginTop: 15 }}>{order.orderEquipment[0] ? order.orderEquipment[0].installationArea.description : "Não informado"}</div>
                   </div>
                 </div>
               </div>

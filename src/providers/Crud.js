@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { BaseProvider } from "./Base";
+import { StringHelper } from '../helpers/String';
 
 export class CrudProvider extends BaseProvider {
 
@@ -13,8 +14,12 @@ export class CrudProvider extends BaseProvider {
     }))
   }
 
-  async getList() {
-    return this.handleRequest(axios.get(`${this.baseUrl}`, {
+  async getList(data) {
+    console.log("getList -> data", data)
+
+    let queryString = StringHelper.formatParamsToQueryString(data);
+    
+    return this.handleRequest(axios.get(`${this.baseUrl}${queryString}`, {
       headers: this.getHeaders()
     }))
   }

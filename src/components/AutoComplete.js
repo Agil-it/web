@@ -11,7 +11,7 @@ class C_AutoComplete extends Component {
     this.state = {
       list: [],
       value: this.props.value,
-      description: this.props.description
+      description: this.props.description,
     }
 
     this.filter = this.filter.bind(this);
@@ -25,8 +25,10 @@ class C_AutoComplete extends Component {
 
     let list = this.props.list.map((item => item[this.state.description] ))
 
-    if (JSON.stringify(list) !== JSON.stringify(this.state.list)) 
+    if (JSON.stringify(list) !== JSON.stringify(this.state.list)) {
       this.setState({ list })
+    }
+      
 
     this.indexer = new Fuse(list.map((data) => ({ primaryText: data })), {
       keys: [{ name: 'primaryText', weight: 1 }],

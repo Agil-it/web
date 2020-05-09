@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TextField, FontIcon } from 'react-md';
+import TextField from 'react-md/lib/TextFields';
 import '../index.css';
 
 class C_TextField extends Component {

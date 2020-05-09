@@ -27,4 +27,15 @@ export class StringHelper {
     
     return value.padStart(size, characterToFit);
   }
+
+  static formatParamsToQueryString(params){
+    var queryString;
+    queryString = new URLSearchParams(params).toString();
+
+    if(queryString != "") queryString = `?${queryString}`;
+
+    return queryString;
+
+
+  }
 }
