@@ -59,7 +59,7 @@ export class C_Table extends React.Component {
                 <TableColumn header={true} style={defaultStyleRows}>{DateHelper.formatDate(content.openedDate)}</TableColumn>
                 <TableColumn header={true} style={defaultStyleRows}>{content.orderNumber ? content.orderNumber : ""}</TableColumn>
                 <TableColumn header={true} style={defaultStyleRows}>{content.orderLayout.description ? content.orderLayout.description : ""}</TableColumn>
-                <TableColumn header={true} style={defaultStyleRows}>{content.orderEquipment[0].equipment.description ? content.orderEquipment[0].equipment.description : "Sem Equipamento"}</TableColumn>
+                <TableColumn header={true} style={defaultStyleRows}>{content.orderEquipment[0] ? content.orderEquipment[0].equipment.description : "Sem Equipamento"}</TableColumn>
                 <TableColumn header={true} style={defaultStyleRows}> {HelperOM.translate("priority", content.priority)}</TableColumn>
                 <TableColumn header={true} style={defaultStyleRows}> {HelperOM.translate("status", content.orderStatus)}</TableColumn>
               </TableRow>
