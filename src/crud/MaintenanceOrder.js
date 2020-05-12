@@ -14,6 +14,11 @@ import { HandlerProvider } from '../providers/handler';
 import { ObjectHelper } from '../helpers/Object';
 import C_AutoComplete from '../components/AutoComplete';
 import { MaintenanceOrderProvider } from '../providers/MaintenanceOrder';
+import { MachineProvider } from '../providers/Machine';
+import { C_Button } from '../components/Button';
+import C_Card  from '../components/Card';
+
+
 
 
 
@@ -26,6 +31,9 @@ class CreateMaintenanceOrder extends Component {
       selectedProfile: undefined,
       visible: true,
       autocomplete: '',
+      autocompleteEquipment: '',
+      listEquipments: [],
+      orderEquipments: [],
       list: [],
       fields: {},
       priority: [
@@ -44,8 +52,10 @@ class CreateMaintenanceOrder extends Component {
 
     // this.provider = new HandlerProvider(new UserProvider(), "usuário")
     this.provider = new HandlerProvider(new MaintenanceOrderProvider(), "ordem de manutenção")
+    this.providerEquipment = new HandlerProvider(new MachineProvider(), "equipamento")
 
     this.loadList();
+    this.loadEquipments();
 
     this.hideModal = this.hideModal.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -53,8 +63,20 @@ class CreateMaintenanceOrder extends Component {
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
     this.autocompleteSelect = this.autocompleteSelect.bind(this);
+    this.autoCompleteEquipment = this.autoCompleteEquipment.bind(this);
     this.getOrder = this.getOrder.bind(this);
- 
+    this.getEquipment = this.getEquipment.bind(this);
+
+  }
+
+  async loadEquipments() {
+    let listEquipments = []
+    let response = await this.providerEquipment.getList();
+    console.log("CreateMaintenanceOrder -> loadEquipments -> response", response)
+    if (response.success) {
+      listEquipments = response.data
+    }
+    this.setState({ listEquipments })
   }
 
   async loadList() {
@@ -73,9 +95,12 @@ class CreateMaintenanceOrder extends Component {
 
   clean() {
     var fields = this.state.fields;
+    let autocomplete = ''
+    let order = {}
 
     ObjectHelper.clearFields(fields);
-    this.setState({ fields });
+    this.setState({ fields, autocomplete, order });
+
   }
 
   delete() {
@@ -104,11 +129,10 @@ class CreateMaintenanceOrder extends Component {
         id: 1
       },
       orderClassification: {
-        id:1
+        id: 1
       },
       needStopping: false
     }
-    console.log("TCL: Createorder -> save -> order", order)
     this.provider.save(order, this.clean)
   }
 
@@ -133,11 +157,9 @@ class CreateMaintenanceOrder extends Component {
 
     if (response.success) {
       order = response.data
-      console.log("CreateMaintenanceOrder -> getOrder -> order", order)
     }
 
     let fields = {
-      id: order.id,
       orderNumber: order.orderNumber,
       priority: order.priority,
       machine: order && order.orderEquipment[0] ? order.orderEquipment[0].equipment.description : "",
@@ -146,14 +168,37 @@ class CreateMaintenanceOrder extends Component {
       orderLayout: order.orderLayout.orderLayout,
       classification: order.orderClassification.description,
       maintenanceOrderType: order.orderType.description,
-      
     }
 
     this.setState({ fields })
   }
 
+  async getEquipment(id) {
+    let orderEquipments = this.state.orderEquipments;
+
+    let response = await this.providerEquipment.get(id);
+    console.log("getEquipment -> response", response)
+
+    if (response.success) {
+      orderEquipments.push(response.data)
+    }
+
+    this.setState({ orderEquipments });
+  }
+
+  autoCompleteEquipment(id, name) {
+    if (id === undefined) {
+      this.clean()
+      return
+    }
+
+    let equipment = this.state.listEquipments.find(element => element.id === id)
+    console.log("autoCompleteEquipment -> equipment", equipment)
+
+    this.getEquipment(equipment.id)
+  }
+
   autocompleteSelect(id, name) {
-  console.log("CreateMaintenanceOrder -> autocompleteSelect -> id", id)
 
     if (id === undefined) {
       this.clean()
@@ -161,7 +206,6 @@ class CreateMaintenanceOrder extends Component {
     }
 
     let item = this.state.list.find(element => element.id === id)
-    console.log("CreateMaintenanceOrder -> autocompleteSelect -> item", item)
 
     this.getOrder(item.id)
   }
@@ -171,8 +215,11 @@ class CreateMaintenanceOrder extends Component {
   }
 
   render() {
-    
-    console.log("CreateMaintenanceOrder -> render -> this.state.fields", this.state.fields)
+
+    console.log("render -> orderEquipments", this.state.orderEquipments)
+
+    var orderEquipments = this.state.orderEquipments;
+
     return (
       <DialogContainer
         id="simple-full-page-dialog"
@@ -309,19 +356,41 @@ class CreateMaintenanceOrder extends Component {
                 // css={{ width: 350 }}
                 />
               </div>
-              <div className="md-cell md-cell--6 md-cell--bottom">
-                <C_TextField
-                  id="machine"
-                  name="machine"
-                  value={this.state.fields.machine}
+              <div style={{ position: "relative" }} className="md-cell md-cell--6 md-cell--bottom">
+                <C_AutoComplete
+                  id="orderEquipmentId"
+                  name="id"
                   onChange={this.onChange}
                   type="search"
-                  label="Equipamento"
-                  placeholder="Equipamento"
+                  list={this.state.listEquipments}
+                  label="Adicionar Equipamento"
+                  placeholder="Adicionar Equipamento"
                   rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
-                  required={true}
-                // css={{ width: 350, marginLeft: 30 }}
+                  value={this.state.autocompleteEquipment}
+                  dataSelected={this.autoCompleteEquipment}
+                // css={{ width: 350 }}
                 />
+
+                {orderEquipments && orderEquipments.length > 0 ?
+                  <div onClick={() => this.setState({ showModalEquipments: true })} className="slideInRight" style={{ alignItems: "center", display: "flex", left: 0, position: "absolute" }}>
+                    <div style={{ cursor: "pointer", padding: 5, backgroundColor: "green", color: "white", width: 35, height: 35, borderRadius: 22 }}>
+                      <div style={{ fontSize: 18, textAlign: "center" }}>{orderEquipments.length}</div>
+                    </div>
+                    <div style={{ marginLeft: 10, fontSize: 14 }}>{orderEquipments.length == 1 ? "Equipamento Adicionado!" : "Equipamentos Adicionados!"}</div>
+                  </div>
+                : undefined}
+
+                {this.state.showModalEquipments ?
+                  <div>
+                    {orderEquipments.map((equipment, i ) => 
+                    <div style={{}}>
+                      <C_Card
+                        title={<div style={{ fontWeight: "bold" }}>{equipment.description + " - " + equipment.machineType.description}</div>}
+                      />
+                    </div>
+                    )}
+                  </div>
+                : undefined }
               </div>
             </div>
             <div className="md-grid">
@@ -406,7 +475,7 @@ class CreateMaintenanceOrder extends Component {
                   label="Descrição do Sintoma"
                   placeholder="Descrição do Sintoma"
                   required={true}
-                  // css={{ width: 350, marginLeft: 30 }}
+                // css={{ width: 350, marginLeft: 30 }}
                 />
               </div>
             </div>

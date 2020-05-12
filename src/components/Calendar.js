@@ -42,7 +42,7 @@ class C_Calendar extends Component {
         onChange={this.onChange}
         style={this.props.style}
         value={this.props.value}
-        fullWidth={false}
+        fullWidth={this.props.fullWidth}
         icon={false}
         yearsDisplayed={239}
         portal

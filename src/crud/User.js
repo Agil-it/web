@@ -9,7 +9,7 @@ import {
 
 import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
-import {C_Button} from '../components/Button';
+import { C_Button } from '../components/Button';
 import C_SelectField from '../components/SelectField';
 import C_CheckBox from '../components/CheckBox';
 import C_Calendar from '../components/Calendar';
@@ -26,10 +26,10 @@ class CreateUser extends Component {
 
     this.state = {
       visible: true,
-      list:[],
+      list: [],
       fields: {},
       autocomplete: '',
-      role : [{
+      role: [{
         name: 'Líder de Setor',
         id: 'sector_leader',
       },
@@ -40,15 +40,6 @@ class CreateUser extends Component {
       {
         name: 'Admin',
         id: 'administrator',
-      }],
-      
-      genders: [{
-        label: 'Feminino',
-        value: 'female',
-      },
-      {
-        label: 'Masculino',
-        value: 'male',
       }],
 
       types: [{
@@ -125,14 +116,14 @@ class CreateUser extends Component {
 
   save() {
     let user = this.state.fields;
-    if(user.birthDate){
+    if (user.birthDate) {
       let arrayData = user.birthDate.split('/')
       user.birthDate = `${arrayData[2]}-${arrayData[1]}-${arrayData[0]}`
     }
 
-    if(user.password) String(user.password);
+    if (user.password) String(user.password);
     console.log("CreateUser -> save -> user", user)
-  
+
     this.provider.save(user, this.clean)
   }
 
@@ -176,12 +167,12 @@ class CreateUser extends Component {
       employeeBadge: item.employeeBadge,
       forceChangePassword: item.forceChangePassword,
       birthDate: displayBirthDate
-    }    
+    }
 
     this.setState({ fields })
   }
 
-  getdisplayDate(date){
+  getdisplayDate(date) {
 
     var formatDate = date.split("-");
 
@@ -193,184 +184,206 @@ class CreateUser extends Component {
     return `${day}/${month + 1}/${year}`;
   }
 
-  generatePassword(){
+  generatePassword() {
     var fields = this.state.fields;
 
     fields.password = Math.random().toString(36).slice(2)
 
-    return this.setState({fields});
+    return this.setState({ fields });
   }
 
 
   render() {
     console.log("CreateUser -> render -> this.state.fields", this.state.fields)
+
+    const genders = [
+      { label: 'Feminino', value: 'female' },
+      { label: 'Masculino', value: 'male' }
+    ]
+
     return (
       <DialogContainer
         id="simple-full-page-dialog"
         visible={this.state.visible}
         width="60%"
         height="100%"
-        dialogStyle={{borderRadius:5}}
+        dialogStyle={{ borderRadius: 5 }}
         aria-labelledby="simple-full-page-dialog-title"
       >
         <Toolbar
           fixed
           colored
           title="Cadastrar Usuários"
-          style={{borderRadius:5}}
+          style={{ borderRadius: 5 }}
           actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
         />
         <section className="md-toolbar-relative">
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
-            <div style={{ display: "flex", justifyContent: "left" }}>
-              <C_AutoComplete
-                id="id"
-                name="id"
-                value={this.state.autocomplete}
-                dataSelected={this.autocompleteSelect}
-                list={this.state.list}
-                onChange={this.onChange}
-                type="search"
-                label="Buscar Usuário"
-                placeholder="Buscar Usuário"
-                style={{ width: 350 }}
-                rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
-                description="name"
-              />
-              <C_TextField
-                id="name"
-                name="name"
-                value={this.state.fields.name}
-                onChange={this.onChange}
-                label="Nome do Usuário"
-                placeholder="Nome do Usuário"
-                css={{ width: 350, marginLeft: 30 }}
-              />
-            </div><br></br>
-            <div style={{ display: "flex", justifyContent: "left" }}>
-              <C_SelectField
-                id="role"
-                name="role"
-                value={this.state.fields.role}
-                onChange={this.onChange}
-                label={"Perfil de Usuário"}
-                labelElement="name"
-                valueElement="id"
-                list={this.state.role}
-                required={false}
-                style={{ width: 350 }}
-                listStyle={{width:350}}
-              />
-              {this.state.fields.role == "sector_leader" ?
-                <C_TextField
-                  name="sector"
-                  value={this.state.fields.sector}
+            <div className="md-grid">
+              <div className="md-cell md-cell--6 md-cell--bottom">
+                <C_AutoComplete
+                  id="id"
+                  name="id"
+                  value={this.state.autocomplete}
+                  dataSelected={this.autocompleteSelect}
+                  list={this.state.list}
                   onChange={this.onChange}
                   type="search"
-                  label="Setor"
-                  placeholder="Setor"
+                  label="Buscar Usuário"
+                  placeholder="Buscar Usuário"
+                  style={{ width: "100%" }}
                   rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
-                  block paddedBlock
-                  required={true}
-                  css={{ width: 350, marginLeft: 30 }}
+                  description="name"
                 />
-                : (this.state.fields.role == "maintainer" ?
+              </div>
+              <div className="md-cell md-cell--6 md-cell--bottom">
+                <C_TextField
+                  id="name"
+                  name="name"
+                  value={this.state.fields.name}
+                  onChange={this.onChange}
+                  label="Nome do Usuário"
+                  placeholder="Nome do Usuário"
+                />
+              </div>
+            </div>
+            <div className="md-grid">
+              <div className="md-cell md-cell--6 md-cell--bottom">
+                <C_SelectField
+                  id="role"
+                  name="role"
+                  value={this.state.fields.role}
+                  onChange={this.onChange}
+                  label={"Perfil de Usuário"}
+                  labelElement="name"
+                  valueElement="id"
+                  list={this.state.role}
+                  required={false}
+                  style={{ width: "100%" }}
+                />
+              </div>
+              {this.state.fields.role == "sector_leader" ?
+                <div className="md-cell md-cell--6 md-cell--bottom">
                   <C_TextField
-                    name="workCenter"
-                    value={this.state.fields.workCenter}
+                    name="sector"
+                    value={this.state.fields.sector}
                     onChange={this.onChange}
                     type="search"
-                    label="Centro de Trabalho"
-                    placeholder="Centro de Trabalho"
+                    label="Setor"
+                    placeholder="Setor"
                     rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
                     block paddedBlock
                     required={true}
-                    onChange={this.onChange}
-                    css={{ width: 350, marginLeft: 30 }}
-                  /> : undefined)
+                  />
+                </div>
+                : (this.state.fields.role == "maintainer" ?
+                  <div className="md-cell md-cell--6 md-cell--bottom">
+                    <C_TextField
+                      name="workCenter"
+                      value={this.state.fields.workCenter}
+                      onChange={this.onChange}
+                      type="search"
+                      label="Centro de Trabalho"
+                      placeholder="Centro de Trabalho"
+                      rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                      block paddedBlock
+                      required={true}
+                      onChange={this.onChange}
+                    />
+                  </div>
+                  : undefined)
               }
-            </div><br></br>
-            <div style={{ display: "flex" }}>
-              <div style={{ width: "50%", marginLeft: 20 }}>
+            </div>
+            <div className="md-grid">
+              <div className="md-cell md-cell--3 md-cell--bottom">
                 <C_Button
-                  style={{ height: 50, width: "50%", display: "flex", justifyContent: "center", fontSize: 15 }}
+                  style={{ width: "100%" }}
                   primary={true}
-                  label={"Gerar senha"}
+                  label={<div style={{textAlign:"center"}}>Gerar senha</div>}
                   icon={<FontIcon>lock</FontIcon>}
                   action={() => this.generatePassword()}
                 />
               </div>
-              <C_CheckBox
-                name="forceChangePassword"
-                value={this.state.fields.forceChangePassword}
-                onChange={this.onChange}
-                label={<div style={{ fontSize: 17, color: "#616161d9" }}>Alterar Senha no Primeiro Acesso</div>}
-                type="checkbox"
-                style={{}}
-                checked={this.state.fields.forceChangePassword}
-              />
-            </div><br /><br />
-            <div style={{ display: "flex", justifyContent: "left" }}>
-              <C_TextField
-                name="email"
-                value={this.state.fields.email}
-                onChange={this.onChange}
-                label="Email"
-                placeholder="Email"
-                required={true}
-                css={{ width: 350 }}
-              />
-              <C_TextField
-                name="password"
-                value={this.state.fields.password}
-                onChange={this.onChange}
-                type="password"
-                label="Senha"
-                placeholder="Senha"
-                css={{ width: 350, marginLeft: 30 }}
-              />
-            </div><br></br>
-            <div style={{ display: "flex", justifyContent: "left" }}>
-              <C_Calendar
-                id="birthDate"
-                name="birthDate"
-                value={this.state.fields.birthDate}
-                onChange={this.onChange}
-                label={"Data de Nascimento"}
-                allDay
-                cancelLabel={"Cancelar"}
-                inputStyle={{ width: 350 }}
-              />
-              <C_TextField
-                name="contact"
-                value={this.state.fields.contact}
-                onChange={this.onChange}
-                label="Telefone de Contato"
-                placeholder="Telefone de Contato"
-                required={true}
-                onChange={this.onChange}
-                css={{ width: 350, marginLeft: 30, marginTop: 16 }}
-              />
-            </div><br></br>
-            <div style={{ display: "flex", justifyContent: "left" }}>
-              <C_RadioGroup
-                name="gender"
-                value={this.state.fields.gender}
-                onChange={this.onChange}
-                label={<div style={{ fontSize: 17, color: "#616161d9" }}>Gênero</div>}
-                type="radio"
-                checked={false}
-                style={{ width: 350 }}
-                list={this.state.genders}
-              />
-              <C_TextField
-                name="employeeBadge"
-                value={this.state.fields.employeeBadge}
-                onChange={this.onChange}
-                label="Crachá do Usuário"
-                placeholder="Crachá do Usuário"
-                css={{ width: 350, marginLeft: 30 }}
-              />
+              <div className="md-cell md-cell--9 md-cell--bottom">
+                <C_CheckBox
+                  name="forceChangePassword"
+                  value={this.state.fields.forceChangePassword}
+                  onChange={this.onChange}
+                  label={<div style={{ fontSize: 15, color: "#616161d9" }}>Alterar Senha no Primeiro Acesso</div>}
+                  type="checkbox"
+                  style={{ width: "100%", textAlign: "center" }}
+                  checked={this.state.fields.forceChangePassword}
+                />
+              </div>
+            </div>
+            <div className="md-grid">
+              <div className="md-cell md-cell--6 md-cell--bottom">
+                <C_TextField
+                  name="email"
+                  value={this.state.fields.email}
+                  onChange={this.onChange}
+                  label="Email"
+                  placeholder="Email"
+                  required={true}
+                />
+              </div>
+              <div className="md-cell md-cell--6 md-cell--bottom">
+                <C_TextField
+                  name="password"
+                  value={this.state.fields.password}
+                  onChange={this.onChange}
+                  type="password"
+                  label="Senha"
+                  placeholder="Senha"
+                />
+              </div>
+            </div>
+            <div className="md-grid">
+              <div className="md-cell md-cell--6">
+                <C_Calendar
+                  id="birthDate"
+                  name="birthDate"
+                  value={this.state.fields.birthDate}
+                  onChange={this.onChange}
+                  label={"Data de Nascimento"}
+                  allDay
+                  cancelLabel={"Cancelar"}
+                />
+              </div>
+              <div className="md-cell md-cell--6 md-cell--bottom">
+                <C_TextField
+                  name="contact"
+                  value={this.state.fields.contact}
+                  onChange={this.onChange}
+                  label="Telefone de Contato"
+                  placeholder="Telefone de Contato"
+                  required={true}
+                  onChange={this.onChange}
+                />
+              </div>
+            </div>
+            <div className="md-grid">
+              <div className="md-cell md-cell--6 md-cell--bottom">
+                <fieldset style={{ borderRadius: 5, border: "1px solid silver", padding: 10}}>
+                  <legend style={{ width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, color: "#666666a6", fontSize: 16}}>Gênero</legend>
+                    <C_RadioGroup
+                      id="gender"
+                      name="gender"
+                      value={this.state.fields.gender}
+                      onChange={this.onChange}
+                      options={genders}
+                    />
+                </fieldset>
+              </div>
+              <div className="md-cell md-cell--6 md-cell--bottom">
+                <C_TextField
+                  name="employeeBadge"
+                  value={this.state.fields.employeeBadge}
+                  onChange={this.onChange}
+                  label="Crachá do Usuário"
+                  placeholder="Crachá do Usuário"
+                />
+              </div>
             </div>
           </form>
         </section>
