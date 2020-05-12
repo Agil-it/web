@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .md-display-4 {
   letter-spacing: -.1px; }
 
@@ -4477,8 +4478,31 @@ body {
     -webkit-transform: translateY(0);
     transform: translateY(0); } }
 
-/* width */
-::-webkit-scrollbar {
+.zoomIn {
+  -webkit-animation-name: zoomIn;
+  animation-name: zoomIn;
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both; }
+
+@-webkit-keyframes zoomIn {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+    transform: scale3d(0.3, 0.3, 0.3); }
+  50% {
+    opacity: 1; } }
+
+@keyframes zoomIn {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+    transform: scale3d(0.3, 0.3, 0.3); }
+  50% {
+    opacity: 1; } }
+
+× ::-webkit-scrollbar {
   width: 8px; }
 
 /* Track */

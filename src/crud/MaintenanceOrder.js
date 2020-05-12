@@ -17,10 +17,7 @@ import { MaintenanceOrderProvider } from '../providers/MaintenanceOrder';
 import { MachineProvider } from '../providers/Machine';
 import { C_Button } from '../components/Button';
 import C_Card  from '../components/Card';
-
-
-
-
+import { C_Icon } from '../components/Icon';
 
 class CreateMaintenanceOrder extends Component {
 
@@ -373,21 +370,44 @@ class CreateMaintenanceOrder extends Component {
 
                 {orderEquipments && orderEquipments.length > 0 ?
                   <div onClick={() => this.setState({ showModalEquipments: true })} className="slideInRight" style={{ alignItems: "center", display: "flex", left: 0, position: "absolute" }}>
-                    <div style={{ cursor: "pointer", padding: 5, backgroundColor: "green", color: "white", width: 35, height: 35, borderRadius: 22 }}>
+                    <div style={{ cursor: "pointer", padding: 5, backgroundColor: "#A40003", color: "white", width: 35, height: 35, borderRadius: 22 }}>
                       <div style={{ fontSize: 18, textAlign: "center" }}>{orderEquipments.length}</div>
                     </div>
-                    <div style={{ marginLeft: 10, fontSize: 14 }}>{orderEquipments.length == 1 ? "Equipamento Adicionado!" : "Equipamentos Adicionados!"}</div>
+                    <div style={{ color: "#A40003", marginLeft: 10, fontSize: 14 }}>{orderEquipments.length == 1 ? "Equipamento Adicionado!" : "Equipamentos Adicionados!"}</div>
                   </div>
                 : undefined}
 
-                {this.state.showModalEquipments ?
-                  <div>
+                {this.state.showModalEquipments && orderEquipments.length > 0 ?
+                  <div className="zoomIn" style={{ position:"absolute", width:"100%", zIndex:2}}>
+                    <C_Icon 
+                      style={{cursor:"pointer", margin:10, position:"absolute", right:0 }} 
+                      icon="close"
+                      action={() => this.setState({showModalEquipments:false})}
+                    />
                     {orderEquipments.map((equipment, i ) => 
-                    <div style={{}}>
-                      <C_Card
-                        title={<div style={{ fontWeight: "bold" }}>{equipment.description + " - " + equipment.machineType.description}</div>}
-                      />
-                    </div>
+                      <div>
+                        <div style={{ position: "relative" }}>
+                          <C_Icon
+                            iconSize={16}
+                            style={{ color:"#A40003", cursor: "pointer", position: "absolute", top: 0, margin:10 }}
+                            icon="delete"
+                            action={() => {
+                              orderEquipments.splice(i, 1);
+
+                              this.setState({ orderEquipments })
+
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <C_Card
+                            icon={i+1}
+                            title={<div style={{ fontWeight: "bold" }}>{equipment.description}</div>}
+                            subtitle={equipment.machineType.description}
+                            style={{width:"100%"}}
+                          />                        
+                        </div>
+                      </div>
                     )}
                   </div>
                 : undefined }
