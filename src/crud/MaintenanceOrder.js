@@ -93,10 +93,9 @@ class CreateMaintenanceOrder extends Component {
   clean() {
     var fields = this.state.fields;
     let autocomplete = ''
-    let order = {}
 
     ObjectHelper.clearFields(fields);
-    this.setState({ fields, autocomplete, order });
+    this.setState({ fields, autocomplete, order: {}, autocompleteEquipment: "", orderEquipments: [] });
 
   }
 
@@ -110,13 +109,7 @@ class CreateMaintenanceOrder extends Component {
 
     let order = {
       orderNumber: fields.orderNumber,
-      // orderEquipment: [
-      //   {
-      //     equipment: {
-      //       description: fields.machine,
-      //     }
-      //   }
-      // ],
+      orderEquipment: this.state.orderEquipments,
       orderLayout: {
         id: 1
       },
@@ -137,6 +130,11 @@ class CreateMaintenanceOrder extends Component {
   onChange(e, name) {
     if (name === "id") {
       this.setState({ autocomplete: e })
+      return
+    }
+
+    if (name === "orderEquipmentId"){
+      this.setState({ autocompleteEquipment: e })
       return
     }
 
@@ -167,17 +165,16 @@ class CreateMaintenanceOrder extends Component {
       maintenanceOrderType: order.orderType.description,
     }
 
-    this.setState({ fields })
+    this.setState({ fields, orderEquipments: order.orderEquipment })
   }
 
   async getEquipment(id) {
     let orderEquipments = this.state.orderEquipments;
 
     let response = await this.providerEquipment.get(id);
-    console.log("getEquipment -> response", response)
 
     if (response.success) {
-      orderEquipments.push(response.data)
+      orderEquipments.push({equipment: response.data, createdBy:1, updatedBy:1})
     }
 
     this.setState({ orderEquipments });
@@ -190,7 +187,6 @@ class CreateMaintenanceOrder extends Component {
     }
 
     let equipment = this.state.listEquipments.find(element => element.id === id)
-    console.log("autoCompleteEquipment -> equipment", equipment)
 
     this.getEquipment(equipment.id)
   }
@@ -213,7 +209,7 @@ class CreateMaintenanceOrder extends Component {
 
   render() {
 
-    console.log("render -> orderEquipments", this.state.orderEquipments)
+    console.log("render -> STATE", this.state)
 
     var orderEquipments = this.state.orderEquipments;
 
@@ -356,7 +352,7 @@ class CreateMaintenanceOrder extends Component {
               <div style={{ position: "relative" }} className="md-cell md-cell--6 md-cell--bottom">
                 <C_AutoComplete
                   id="orderEquipmentId"
-                  name="id"
+                  name="orderEquipmentId"
                   onChange={this.onChange}
                   type="search"
                   list={this.state.listEquipments}
@@ -370,8 +366,8 @@ class CreateMaintenanceOrder extends Component {
 
                 {orderEquipments && orderEquipments.length > 0 ?
                   <div onClick={() => this.setState({ showModalEquipments: true })} className="slideInRight" style={{ alignItems: "center", display: "flex", left: 0, position: "absolute" }}>
-                    <div style={{ cursor: "pointer", padding: 5, backgroundColor: "#A40003", color: "white", width: 35, height: 35, borderRadius: 22 }}>
-                      <div style={{ fontSize: 18, textAlign: "center" }}>{orderEquipments.length}</div>
+                    <div className="effectfront" style={{ cursor: "pointer", padding: 5, backgroundColor: "#A40003", color: "white", width: 30, height: 30, borderRadius: 22 }}>
+                      <div style={{ fontSize: 16, textAlign: "center" }}>{orderEquipments.length}</div>
                     </div>
                     <div style={{ color: "#A40003", marginLeft: 10, fontSize: 14 }}>{orderEquipments.length == 1 ? "Equipamento Adicionado!" : "Equipamentos Adicionados!"}</div>
                   </div>
@@ -384,7 +380,7 @@ class CreateMaintenanceOrder extends Component {
                       icon="close"
                       action={() => this.setState({showModalEquipments:false})}
                     />
-                    {orderEquipments.map((equipment, i ) => 
+                    {orderEquipments.map((item, i ) => 
                       <div>
                         <div style={{ position: "relative" }}>
                           <C_Icon
@@ -402,8 +398,8 @@ class CreateMaintenanceOrder extends Component {
                         <div>
                           <C_Card
                             icon={i+1}
-                            title={<div style={{ fontWeight: "bold" }}>{equipment.description}</div>}
-                            subtitle={equipment.machineType.description}
+                            title={<div style={{ fontWeight: "bold" }}>{item.equipment.description}</div>}
+                            subtitle={item.equipment.machineType.description}
                             style={{width:"100%"}}
                           />                        
                         </div>
