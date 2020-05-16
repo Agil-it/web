@@ -7,6 +7,8 @@ import { HandlerProvider } from '../providers/handler';
 import { MaintenanceOrderProvider } from '../providers/MaintenanceOrder';
 import { DateHelper } from '../helpers/Date';
 import { C_Loading } from './Loading';
+import { MenuButton } from 'react-md';
+import C_Operations from './Operations';
 
 export class C_MaintenanceOrder extends React.Component {
   constructor(props) {
@@ -14,7 +16,20 @@ export class C_MaintenanceOrder extends React.Component {
 
     this.state = {
       orderId: this.props.orderId,
-      order: undefined
+      order: undefined,
+      configOptions : [
+        { value: "assume", name: "ASSUMIR ORDEM", icon: "touch_app" },
+        { value: "play", name: "INICIAR ORDEM", icon: "play_circle_filled" },
+        { value: "pause", name: "PAUSAR ORDEM", icon: "pause_circle_filled" },
+        { value: "delegate", name: "DELEGAR ORDEM", icon: "person_add" },
+        { value: "invite", name: "CONVIDAR TÉCNICO", icon: "group" },
+        { value: "request", name: "SOLICITAR PARTICIPAÇÃO", icon: "group_add" },
+        { value: "appointments", name: "APONTAMENTOS", icon: "assignment" },
+        { value: "status_equipment", name: "STATUS EQUIPAMENTO", icon: "swap_vert" },
+        { value: "check_list", name: "CHECK-LIST ORDEM", icon: "done_all" },
+        { value: "operations", name: "OPERAÇÕES", icon: "build" },
+        { value: "sign", name: "ASSINATURA", icon: "fingerprint" },
+      ]
     }
 
     this.provider = new HandlerProvider(new MaintenanceOrderProvider(), "ordem de manutenção")
@@ -43,23 +58,12 @@ export class C_MaintenanceOrder extends React.Component {
     //   },
   }
 
+
   render() {
 
     var order = this.state.order;
     console.log("C_MaintenanceOrder -> render -> order", order)
-    var configOptions = [
-      { value: "assume", name: "ASSUMIR ORDEM", icon: "touch_app" },
-      { value: "play", name: "INICIAR ORDEM", icon: "play_circle_filled" },
-      { value: "pause", name: "PAUSAR ORDEM", icon: "pause_circle_filled" },
-      { value: "delegate", name: "DELEGAR ORDEM", icon: "person_add" },
-      { value: "invite", name: "CONVIDAR TÉCNICO", icon: "group" },
-      { value: "request", name: "SOLICITAR PARTICIPAÇÃO", icon: "group_add" },
-      { value: "appointments", name: "APONTAMENTOS", icon: "assignment" },
-      { value: "status_equipment", name: "STATUS EQUIPAMENTO", icon: "swap_vert" },
-      { value: "check_list", name: "CHECK-LIST ORDEM", icon: "done_all" },
-      { value: "operations", name: "OPERAÇÕES", icon: "build" },
-      { value: "sign", name: "ASSINATURA", icon: "fingerprint" },
-    ]
+
 
     return (
 
@@ -88,8 +92,10 @@ export class C_MaintenanceOrder extends React.Component {
               style={{ backgroundColor: '#424242', color: "white", width: 54, height: 54 }}
               listStyle={{ position: "fixed", top: 20, right: 20 }}
               icon="settings"
-              options={configOptions}
+              options={this.state.configOptions}
+              onClickItem={(item) => this.setState({ itemSelected : item})}
             />
+              
           </div>
           <div>
             <div style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -163,6 +169,16 @@ export class C_MaintenanceOrder extends React.Component {
               </div>
             </fieldset>
           </div>
+          
+          {this.state.itemSelected == "operations" ?
+            <div style={{width:"100%",display:"flex", justifyContent:"center", position:"absolute", top:"10%", right:0}}>
+              <C_Operations
+                title="OPERAÇÕES"
+                subtitle="Nova Operação"
+                style={{width:"50%"}}
+              />
+            </div>
+          : undefined }
         </div>
     );
   }
