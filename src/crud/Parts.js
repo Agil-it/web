@@ -187,7 +187,7 @@ class CreateParts extends Component {
               type="search"
               label="Código da Peça"
               placeholder="Código da Peça"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               list={this.state.list}
               dataSelected={this.autocompleteSelect}
               onChange={this.onChange}
@@ -200,7 +200,7 @@ class CreateParts extends Component {
               type="search"
               label="Unidade de Medida"
               placeholder="Unidade de Medida"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               list={this.state.unitMeasurementList}
               dataSelected={this.autocompleteSelect}
               onChange={this.onChange}

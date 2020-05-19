@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import TextField from 'react-md/lib/TextFields';
 import '../index.css';
+import { FontIcon } from 'react-md';
 
 class C_TextField extends Component {
 
@@ -25,10 +26,10 @@ class C_TextField extends Component {
           id={this.props.name}
           label={this.props.label}
           placeholder={this.props.placeholder}
-          leftIcon={this.props.icon}
+          leftIcon={this.props.icon ? <FontIcon style={{ fontSize: 25, cursor: "pointer" }}>{this.props.icon}</FontIcon> : undefined}
           inputStyle={this.props.style}
           type={this.props.type}
-          rightIcon={this.props.rightIcon}
+          rightIcon={this.props.rightIcon ? <FontIcon style={{ fontSize: 30, cursor: "pointer" }}>{this.props.rightIcon}</FontIcon> : undefined}
           className={this.props.className}
           rows={this.props.rows}
           onChange={this.onChange}

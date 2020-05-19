@@ -116,7 +116,7 @@ class CreateSafetyParameter extends Component {
               type="search"
               label="Status de Segurança"
               placeholder="Status de Segurança"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               block paddedBlock
               required={true}
               onChange={this.onChange}
@@ -150,7 +150,7 @@ class CreateSafetyParameter extends Component {
               type="search"
               label="Registro"
               placeholder="Registro"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               block paddedBlock
               disabled={this.state.fields.useAlways}
               onChange={this.onChange}

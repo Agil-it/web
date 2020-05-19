@@ -135,7 +135,7 @@ class CreateMachineType extends Component {
               type="search"
               label="Tipo de Máquina"
               placeholder="Tipo de Máquina"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
             /><br></br>
             <C_TextField
               id="description"

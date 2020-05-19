@@ -76,7 +76,7 @@ export class C_MaintenanceOrder extends React.Component {
           />
         </div>
         :
-        <div style={{ width: "100%", marginTop: 20 }}>
+        <div style={{ width: "100%", backgroundColor: this.state.showBackgroundColor ? "#858585" : undefined, padding: 20 }}>
           <div style={{ position: "relative", display: "flex", justifyContent: "space-between", width: "95%", margin: "auto" }}>
             <C_ButtonFloat
               icon={"keyboard_backspace"}
@@ -93,7 +93,7 @@ export class C_MaintenanceOrder extends React.Component {
               listStyle={{ position: "fixed", top: 20, right: 20 }}
               icon="settings"
               options={this.state.configOptions}
-              onClickItem={(item) => this.setState({ itemSelected : item})}
+              onClickItem={(item) => this.setState({ itemSelected : item, showBackgroundColor:true})}
             />
               
           </div>
@@ -171,11 +171,12 @@ export class C_MaintenanceOrder extends React.Component {
           </div>
           
           {this.state.itemSelected == "operations" ?
-            <div style={{width:"100%",display:"flex", justifyContent:"center", position:"absolute", top:"10%", right:0}}>
+            <div style={{width:"97%",display:"flex", justifyContent:"center", position:"fixed", top:"10%", right:0}}>
               <C_Operations
                 title="OPERAÇÕES"
-                subtitle="Nova Operação"
-                style={{width:"50%"}}
+                style={{width:"50%", padding:20}}
+                equipments={order.orderEquipment}
+                onClose={() => this.setState({itemSelected: "", showBackgroundColor: false})}
               />
             </div>
           : undefined }

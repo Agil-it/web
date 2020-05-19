@@ -133,7 +133,7 @@ class CreateSector extends Component {
               type="search"
               label="Código do Setor"
               placeholder="Código do Setor"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               list={this.state.list}
               onChange={this.onChange}
               value={this.state.autocomplete}

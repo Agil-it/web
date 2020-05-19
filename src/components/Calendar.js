@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import { DatePicker, FontIcon } from 'react-md';
+import React, { PureComponent } from 'react';
+import { DatePicker, TimePicker} from 'react-md/lib/Pickers';
 import '../index.css';
+import { FontIcon } from 'react-md';
 // import './Button.css';
 
-class C_Calendar extends Component {
+export default class C_Calendar extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.onChange = this.onChange.bind(this);
-    this.changeDate = this.changeDate.bind(this);
   }
 
   onChange(pValue) {
@@ -18,9 +18,6 @@ class C_Calendar extends Component {
       this.props.onChange({ target: { name: this.props.name, value: pValue } });
   }
 
-  changeDate(date){
-
-  }
 
   render() {
     var inputStyle = this.props.inputStyle;
@@ -56,4 +53,35 @@ class C_Calendar extends Component {
   }
 }
 
-export default C_Calendar;
+export class C_TimePicker extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onChange = this.onChange.bind(this);
+
+    console.log("C_TimePicker -> constructor -> this.props", this.props)
+  }
+
+  onChange(pValue) {
+
+    if (this.props.onChange)
+      this.props.onChange({ target: { name: this.props.name, value: pValue } });
+  }
+
+
+  render() {
+    return (
+      <TimePicker
+        icon={this.props.icon ? <FontIcon style={{ fontSize: 25, cursor: "pointer" }}>{this.props.icon}</FontIcon> : undefined}
+        onChange={this.onChange}
+        id={this.props.name}
+        name={this.props.name}
+        label={this.props.label}
+        value={this.props.value}
+        className={this.props.className}
+        displayMode="portrait"
+        showSeconds
+      />
+    );
+  }
+}

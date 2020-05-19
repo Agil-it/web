@@ -87,7 +87,7 @@ class C_AutoComplete extends Component {
           onBlur={this.onBlur}
           style={this.props.style}
           deleteKeys={this.props.deleteKeys}
-          rightIcon={this.props.rightIcon}
+          rightIcon={this.props.rightIcon ? <FontIcon style={{ fontSize: 30, cursor: "pointer" }}>{this.props.rightIcon}</FontIcon> : undefined}
           description={this.props.description}
         />
       </div>

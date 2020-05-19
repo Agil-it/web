@@ -186,7 +186,7 @@ class CreateDefectDiagnostic extends Component {
               type="search"
               label="Sintoma do Defeito"
               placeholder="Sintoma do Defeito"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               list={this.state.list}
               dataSelected={this.autocompleteSelect}
             /><br></br>
@@ -198,7 +198,7 @@ class CreateDefectDiagnostic extends Component {
               type="search"
               label="Tipo de Máquina"
               placeholder="Tipo de Máquina"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               list={this.state.machineTypeList}
               dataSelected={this.autocompleteSelect}
             /><br></br>

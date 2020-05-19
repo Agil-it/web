@@ -95,7 +95,7 @@ class CreateClassification extends Component {
               type="search"
               label="Classificação"
               placeholder="Classificação"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               block paddedBlock
             /><br></br>
             <C_TextField

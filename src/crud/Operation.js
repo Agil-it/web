@@ -96,7 +96,7 @@ class CreateDefaultOperation extends Component {
               type="search"
               label="Código da Operação"
               placeholder="Código da Operação"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               block paddedBlock
             /><br></br>
             <C_TextField

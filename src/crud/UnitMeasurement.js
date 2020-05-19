@@ -132,7 +132,7 @@ class CreateUnitMeasurement extends Component {
               value={this.state.autocomplete}
               label={"Unidade de Medida"}
               placeholder="Unidade de Medida"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               block paddedBlock
               list={this.state.list}
               dataSelected={this.autocompleteSelect}

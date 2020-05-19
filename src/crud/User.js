@@ -232,7 +232,7 @@ class CreateUser extends Component {
                   label="Buscar Usuário"
                   placeholder="Buscar Usuário"
                   style={{ width: "100%" }}
-                  rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                  rightIcon={"search"}
                   description="name"
                 />
               </div>
@@ -271,7 +271,7 @@ class CreateUser extends Component {
                     type="search"
                     label="Setor"
                     placeholder="Setor"
-                    rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                    rightIcon={"search"}
                     block paddedBlock
                     required={true}
                   />
@@ -285,7 +285,7 @@ class CreateUser extends Component {
                       type="search"
                       label="Centro de Trabalho"
                       placeholder="Centro de Trabalho"
-                      rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                      rightIcon={"search"}
                       block paddedBlock
                       required={true}
                       onChange={this.onChange}

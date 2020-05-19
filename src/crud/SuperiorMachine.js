@@ -188,7 +188,7 @@ class CreateSuperiorMachine extends Component {
               type="search"
               label="Equipamento Superior"
               placeholder="Equipamento Superior"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
             /><br></br>
             <C_AutoComplete
               id="installationArea"
@@ -198,7 +198,7 @@ class CreateSuperiorMachine extends Component {
               type="search"
               label="Local de Instalação"
               placeholder="Local de Instalação"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               dataSelected={this.autocompleteSelect}
               list={this.state.areasList}
             /><br></br>

@@ -94,7 +94,7 @@ class CreateDefaultNote extends Component {
               type="search"
               label="Código da Observação"
               placeholder="Código da Observação"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               block paddedBlock
             /><br></br>
             <C_TextField

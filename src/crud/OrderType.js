@@ -94,7 +94,7 @@ class CreateOrderType extends Component {
               type="search"
               label="Tipo de Ordem"
               placeholder="Tipo de Ordem"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               block paddedBlock
             /><br></br>
             <C_TextField

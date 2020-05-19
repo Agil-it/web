@@ -189,7 +189,7 @@ class CreateInstallationArea extends Component {
               type="search"
               label="Código Local de Instalação"
               placeholder="Código Local de Instalação"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
             /><br></br>
             <C_AutoComplete
               id="sector"
@@ -199,7 +199,7 @@ class CreateInstallationArea extends Component {
               type="search"
               label="Setor"
               placeholder="Setor"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               dataSelected={this.autocompleteSelect}
               list={this.state.sectorList}
             /><br></br>

@@ -242,7 +242,7 @@ class CreateMaintenanceOrder extends Component {
                   list={this.state.list}
                   label="Buscar Ordem de Manutenção"
                   placeholder="Buscar Ordem de Manutenção"
-                  rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                  rightIcon={"search"}
                   value={this.state.autocomplete}
                   dataSelected={this.autocompleteSelect}
                 // css={{ width: 350 }}
@@ -270,7 +270,7 @@ class CreateMaintenanceOrder extends Component {
                   type="search"
                   label="Local de Instalação"
                   placeholder="Local de Instalação"
-                  rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                  rightIcon={"search"}
                   required={true}
                 // css={{ width: 350, marginLeft: 30}}
                 />
@@ -286,7 +286,7 @@ class CreateMaintenanceOrder extends Component {
                   type="search"
                   label="Tipo da Ordem de Manutenção"
                   placeholder="Tipo da Ordem de Manutenção"
-                  rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                  rightIcon={"search"}
                   required={true}
                 />
               </div>
@@ -299,7 +299,7 @@ class CreateMaintenanceOrder extends Component {
                   type="search"
                   label="Classificação da Ordem"
                   placeholder="Classificação da Ordem"
-                  rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                  rightIcon={"search"}
                   required={true}
                 />
               </div>
@@ -344,7 +344,7 @@ class CreateMaintenanceOrder extends Component {
                   type="search"
                   label="Equipamento Superior"
                   placeholder="Equipamento Superior"
-                  rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                  rightIcon={"search"}
                   required={true}
                 // css={{ width: 350 }}
                 />
@@ -358,7 +358,7 @@ class CreateMaintenanceOrder extends Component {
                   list={this.state.listEquipments}
                   label="Adicionar Equipamento"
                   placeholder="Adicionar Equipamento"
-                  rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                  rightIcon={"search"}
                   value={this.state.autocompleteEquipment}
                   dataSelected={this.autoCompleteEquipment}
                 // css={{ width: 350 }}
@@ -376,7 +376,7 @@ class CreateMaintenanceOrder extends Component {
                 {this.state.showModalEquipments && orderEquipments.length > 0 ?
                   <div className="zoomIn" style={{ position:"absolute", width:"100%", zIndex:2}}>
                     <C_Icon 
-                      style={{cursor:"pointer", margin:10, position:"absolute", right:0 }} 
+                      style={{cursor:"pointer", position:"absolute", right:0 }} 
                       icon="close"
                       action={() => this.setState({showModalEquipments:false})}
                     />
@@ -419,7 +419,7 @@ class CreateMaintenanceOrder extends Component {
                   type="search"
                   label="Centro de Trabalho"
                   placeholder="Centro de Trabalho"
-                  rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                  rightIcon={"search"}
                   required={true}
                 // css={{ width: 350 }}
                 />
@@ -433,7 +433,7 @@ class CreateMaintenanceOrder extends Component {
                   type="search"
                   label="Componente Defeituoso"
                   placeholder="Componente Defeituoso"
-                  rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                  rightIcon={"search"}
                   required={true}
                 // css={{ width: 350, marginLeft: 30 }}
                 />
@@ -449,7 +449,7 @@ class CreateMaintenanceOrder extends Component {
                   type="search"
                   label="Causa do Defeito"
                   placeholder="Causa do Defeito"
-                  rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                  rightIcon={"search"}
                   required={true}
                 // css={{ width: 350 }}
                 />
@@ -477,7 +477,7 @@ class CreateMaintenanceOrder extends Component {
                   type="search"
                   label="Sintoma do Defeito"
                   placeholder="Sintoma do Defeito"
-                  rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+                  rightIcon={"search"}
                   required={true}
                 // css={{ width: 350 }}
                 />

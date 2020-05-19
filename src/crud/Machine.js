@@ -182,7 +182,7 @@ class CreateMachine extends Component {
               value={this.state.autocomplete}
               label={"Equipamento"}
               placeholder="Equipamento"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               block paddedBlock
               list={this.state.list}
               dataSelected={this.autocompleteSelect}
@@ -194,7 +194,7 @@ class CreateMachine extends Component {
               value={this.state.machineType}
               label={"Tipo de Máquina"}
               placeholder="Tipo de Máquina"
-              rightIcon={<FontIcon style={{ fontSize: 30, cursor: "pointer" }}>search</FontIcon>}
+              rightIcon={"search"}
               block paddedBlock
               list={this.state.machineTypeList}
               dataSelected={this.autocompleteSelect}
