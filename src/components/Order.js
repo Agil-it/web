@@ -8,7 +8,7 @@ import { MaintenanceOrderProvider } from '../providers/MaintenanceOrder';
 import { DateHelper } from '../helpers/Date';
 import { C_Loading } from './Loading';
 import { MenuButton } from 'react-md';
-import C_Operations from './Operations';
+import {C_Operations} from './Operations';
 
 export class C_MaintenanceOrder extends React.Component {
   constructor(props) {
@@ -82,14 +82,14 @@ export class C_MaintenanceOrder extends React.Component {
               icon={"keyboard_backspace"}
               tooltipLabel={"Voltar"}
               tooltipPosition="right"
-              style={{ width: 54, height: 54 }}
-              iconSize={27}
+              style={{ display:"flex", width: "auto", height: "auto" }}
+              iconSize={30}
               secondary
               action={() => this.props.onClose()}
             />
             <h1 style={{ fontSize: "3em", fontWeight: "bold" }}>{order.orderNumber}</h1>
             <C_MenuButton
-              style={{ backgroundColor: '#424242', color: "white", width: 54, height: 54 }}
+              style={{ backgroundColor: '#424242', color: "white", display:"flex", width: "auto", height: "auto" }}
               listStyle={{ position: "fixed", top: 20, right: 20 }}
               icon="settings"
               options={this.state.configOptions}
@@ -173,9 +173,9 @@ export class C_MaintenanceOrder extends React.Component {
           {this.state.itemSelected == "operations" ?
             <div style={{width:"97%",display:"flex", justifyContent:"center", position:"fixed", top:"10%", right:0}}>
               <C_Operations
-                title="OPERAÇÕES"
                 style={{width:"50%", padding:20}}
                 equipments={order.orderEquipment}
+                title="OPERAÇÕES"
                 onClose={() => this.setState({itemSelected: "", showBackgroundColor: false})}
               />
             </div>

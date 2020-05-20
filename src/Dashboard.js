@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import C_SelectField from './components/SelectField';
-import C_Calendar from './components/Calendar';
+import {C_Calendar} from './components/Calendar';
 import { HandlerProvider } from './providers/handler';
 import { MaintenanceOrderProvider } from './providers/MaintenanceOrder';
 import { C_Button, C_ButtonFloat, C_MenuButton } from './components/Button';
@@ -171,7 +171,6 @@ class Dashboard extends Component {
                   this.setState({ showLoading: true })
                 }}
               />
-
             </div>
           </div>
           <div style={{ width: "100%", paddingBottom: !this.state.showOrdersList ? 160 : 150 }}> </div>

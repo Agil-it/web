@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import { Checkbox, FontIcon } from 'react-md';
+import React, { PureComponent } from 'react';
+import Checkbox  from 'react-md/lib/SelectionControls/Checkbox';
+import Switch from 'react-md/lib/SelectionControls/Switch';
 import '../index.css';
 
-class C_Checkbox extends Component {
+export default class C_Checkbox extends React.Component {
 
   constructor(props) {
     super(props);
@@ -39,4 +40,39 @@ class C_Checkbox extends Component {
   }
 }
 
-export default C_Checkbox;
+export class C_Switch extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.onChange = this.onChange.bind(this);
+
+  }
+
+  onChange(pValue) {
+    console.log("pValue", pValue);
+
+    if (this.props.onChange)
+      this.props.onChange({ target: { name: this.props.name, value: pValue } });
+  }
+
+  render() {
+
+    return (
+      <div>
+        <Switch
+          id={this.props.name}
+          type={this.props.type}
+          label={<div style={{ color: '#0000008a' }}>{this.props.label}</div>}
+          name={this.props.name}
+          value={this.props.value}
+          className={this.props.className}
+          checked={this.props.checked}
+          onChange={this.onChange}
+          style={this.props.style}
+        />
+      </div>
+
+    );
+  }
+}

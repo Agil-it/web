@@ -4,7 +4,7 @@ import '../index.css';
 import { FontIcon } from 'react-md';
 // import './Button.css';
 
-export default class C_Calendar extends React.Component {
+export class C_Calendar extends React.Component {
 
   constructor(props) {
     super(props);

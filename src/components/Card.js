@@ -16,6 +16,7 @@ class C_Card extends Component {
              subtitle={this.props.subtitle} 
              avatar={!this.props.hideAvatar ? <Avatar contentStyle={this.props.avatarStyle} icon={this.props.icon} role="presentation" /> : undefined}
             />
+            {this.props.children}
         </Card>
       );
     }
