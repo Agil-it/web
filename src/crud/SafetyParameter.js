@@ -95,7 +95,7 @@ class CreateSafetyParameter extends Component {
         id="simple-full-page-dialog"
         visible={this.state.visible}
         width="40%"
-        height="100%"
+        height="60%"
         dialogStyle={{borderRadius:5}}
         aria-labelledby="simple-full-page-dialog-title"
       >

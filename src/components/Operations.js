@@ -15,15 +15,30 @@ export class C_Operations extends React.Component {
     super(props);
 
     this.state = {
-      viewOperations: true
+      viewOperations: true,
+      orderId: this.props.orderId,
+      operations: [],
     }
+
+    this.createOperation = this.createOperation.bind(this);
+    // this.updateOperatio
   }
 
-  componentDidMount() { }
+  componentDidMount() {
+
+  }
+
+  createOperation(operation) {
+    var operations = this.state.operations;
+
+    operations.push(operation);
+
+    this.setState({ operations, operation })
+  }
 
   render() {
 
-    console.log("state operations", this.state)
+    console.log("state", this.state)
 
 
     return (
@@ -50,16 +65,29 @@ export class C_Operations extends React.Component {
             >
               <C_ButtonFloat
                 iconSize={30} primary
-                style={{display:"flex", width:"auto", height:"auto"}}
-                icon={this.state.viewOperations ? "add" : "visibility"} action={() => this.setState({ viewOperations: !this.state.viewOperations ? true : false })}
+                style={{ display: "flex", width: "auto", height: "auto" }}
+                icon={this.state.viewOperations ? "add" : "visibility"} action={() => this.setState({ viewOperations: !this.state.viewOperations ? true : false, isEditing: false })}
               />
             </C_ToolTip>
           </div>
-          <div style={{ fontSize: 20, color: "#424242" }}>{this.state.viewOperations ? "Operações realizadas na Ordem." : "Cadastrar Nova Operação"}</div>
+
+          <div style={{ fontSize: 20, color: "#424242" }}>
+            {this.state.viewOperations ? "Operações realizadas na Ordem." : (this.state.isEditing ? "Editar Operação" : "Cadastrar Nova Operação")}
+          </div>
           {this.state.viewOperations ?
-            <ViewOperations />
+            <ViewOperations
+              orderId={this.state.orderId}
+              operations={this.state.operations}
+              isEditing={(item) => this.setState({ isEditing: true, viewOperations: false, operation : item})}
+            />
             :
-            <CreateOperation equipments={this.props.equipments} />
+            <CrudOperation
+              showOperations={() => this.setState({viewOperations:true})}
+              equipments={this.props.equipments}
+              edit={this.state.isEditing}
+              operation={this.state.operation}
+              save={(operation) => this.state.isEditing ? this.createOperation(operation) : this.createOperation(operation)}
+            />
           }
         </div>
       </Card>
@@ -73,41 +101,107 @@ export class ViewOperations extends React.Component {
     super(props);
 
     this.state = {
-      operations: this.props.operations,
+      operations: this.props.operations ? this.props.operations : undefined,
+      orderId: this.props.orderId
     }
+    console.log("ViewOperations -> constructor -> this.props", this.props)
   }
 
   componentDidMount() {
+
 
   }
 
 
   render() {
 
+    let operations = this.state.operations;
+
     return (
       <div>
-        <h3>Component ViewOperations works</h3>
+
+        {!operations || operations.length == 0 ?
+          <div style={{ textAlign: "center", marginTop: 50 }}>
+            <h1>Nenhuma Operação Realizada.</h1>
+          </div>
+          : undefined}
+
+        <div style={{ marginTop: 20 }}>
+          {operations && operations.map((operation, i) =>
+            <div>
+              <div className="md-grid">
+                <div className="effectfront" style={{ marginRight: 20, cursor: "pointer", padding: 5, backgroundColor: "#A40003", color: "white", width: 30, height: 30, borderRadius: 22 }}>
+                  <div style={{ fontSize: 16, textAlign: "center" }}>{i + 1}</div>
+                </div>
+                <div className="md-cell md-cell--10 md-cell--bottom">
+                  <C_TextField id="description" name="description"
+                    value={operation.description} onChange={this.onChange}
+                    type="text" label="Descrição" required={false}
+                    icon="description" disabled={true}
+                  />
+                </div>
+                <div style={{ display: "flex", position:"absolute", right:0, margin:20, alignItems: "center" }}>
+                  <div>
+                    <C_Icon style={{ cursor: "pointer", fontSize: 25, paddingRight: 20 }} icon="edit"
+                      action={() => this.props.isEditing(operation)}
+                    />
+                  </div>
+                  <div>
+                    <C_Icon style={{ cursor: "pointer", fontSize: 25, }} icon="delete" 
+                      action={() => {
+                          this.props.delete(operation)
+                        }
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
 }
 
 
-export class CreateOperation extends React.Component {
+export class CrudOperation extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       selectedEquipment: this.props.equipments[0].equipment.id,
       equipments: this.props.equipments,
-      operation: {},
+      operation: this.props.edit ? this.props.operation : {},
     }
 
     this.onChange = this.onChange.bind(this);
-    this.saveOperation = this.saveOperation.bind(this);
+    this.sendOperation = this.sendOperation.bind(this);
+
+    console.log("CrudOperation -> constructor -> this.props", this.props)
   }
 
-  saveOperation() { }
+  sendOperation() {
+    let operation = this.state.operation;
+    let listEquipments = this.state.listEquipments
+    console.log("CreateOperation -> sendOperation -> listEquipments", listEquipments)
+    let descriptionEquipment = "";
+
+    for (let i = 0; i < listEquipments.length; i++) {
+      if (listEquipments[i].value == this.state.selectedEquipment)
+        descriptionEquipment = listEquipments[i].label
+    }
+
+    operation.orderEquipment = {
+      id: this.state.selectedEquipment,
+      description: descriptionEquipment
+    }
+
+    this.props.save(operation);
+
+    this.setState({operation:{}})
+
+  }
 
   componentDidMount() {
 
@@ -127,8 +221,6 @@ export class CreateOperation extends React.Component {
   }
 
   onChange(e, name) {
-    console.log("C_Operations -> onChange -> name", name)
-    console.log("C_Operations -> onChange -> e", e)
 
     let operation = this.state.operation;
 
@@ -139,6 +231,9 @@ export class CreateOperation extends React.Component {
 
   render() {
 
+    console.log("list de operações", this.state.listOperations);
+
+
     return (
       <div>
         <div className="md-cell md-cell--12 md-cell--bottom">
@@ -146,7 +241,7 @@ export class CreateOperation extends React.Component {
             value={this.state.selectedEquipment} onChange={(e) => this.setState({ selectedEquipment: e.target.value })} type="text"
             label={"Selecione o Equipamento"} placeholder={"Selecionar"}
             list={this.state.listEquipments} required={true}
-            style={{ width: "100%" }}
+            style={{ width: "100%" }} disabled={this.props.edit}
           />
         </div>
         <div className="md-cell md-cell--12 md-cell--bottom">
@@ -160,7 +255,7 @@ export class CreateOperation extends React.Component {
           <C_TextField id="planningTime" name="planningTime"
             value={this.state.operation.planningTime} onChange={this.onChange}
             type="number" label="Tempo Planejado" placeholder="Informe o tempo em minutos" required={false}
-            icon="access_time"
+            icon="access_time" disabled={this.props.edit}
           />
         </div>
         <div className="md-cell md-cell--12 md-cell--bottom">
@@ -188,18 +283,14 @@ export class CreateOperation extends React.Component {
             <C_Button
               secondary={true}
               label="CANCELAR"
-              action={() => {
-                this.setState({ viewOperations: true })
-              }}
+              action={() => { this.props.showOperations() }}
             />
           </div>
           <div className="md-cell md-cell--2 md-cell--bottom">
             <C_Button
               primary={true}
               label="SALVAR"
-              action={() => {
-                this.saveOperation();
-              }}
+              action={() => this.sendOperation()}
             />
           </div>
         </div>

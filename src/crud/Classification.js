@@ -12,7 +12,7 @@ import C_CrudButtons from '../components/CrudButtons';
 import { HandlerProvider } from '../providers/handler';
 import { ClassificationProvider } from '../providers/Classification';
 import { ObjectHelper } from '../helpers/Object';
-
+import C_AutoComplete from '../components/AutoComplete';
 
 class CreateClassification extends Component {
 
@@ -21,16 +21,47 @@ class CreateClassification extends Component {
 
     this.state = {
       visible: true,
-      fields: {}
+      fields: {},
+      autocomplete: '',
+      list: [],
     };
 
     this.provider = new HandlerProvider(new ClassificationProvider(), "classificação da ordem")
+    this.loadList();
 
     this.hideModal = this.hideModal.bind(this);
     this.onChange = this.onChange.bind(this);
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
+    this.autocompleteSelect = this.autocompleteSelect.bind(this);
+  }
+
+  async loadList() {
+    let list = []
+    let response = await this.provider.getList();
+    if (response.success) {
+      list = response.data
+      console.log("TCL: CreateClassification -> loadList -> list", list)
+    }
+    this.setState({ list })
+  }
+
+  autocompleteSelect(id) {
+
+    if (id === undefined) {
+      this.clean()
+      return
+    }
+
+    let item = this.state.list.find(element => element.id === id)
+
+    let fields = {
+      id: item.id,
+      description: item.description,
+    }
+
+    this.setState({ fields })
   }
 
   hideModal() {
@@ -43,20 +74,27 @@ class CreateClassification extends Component {
 
     ObjectHelper.clearFields(fields);
 
-    this.setState({ fields });
+    this.setState({ fields, autocomplete: ""});
+    this.loadList()
   }
 
   delete() {
     let classification = this.state.fields;
-    this.provider.delete(classification.id,this.clean())
+    this.provider.delete(classification.id,this.clean)
   }
 
   save() {
     let classification = this.state.fields;
-    this.provider.save(classification,this.clean())
+    this.provider.save(classification,this.clean)
   }
 
-  onChange(e) {
+  onChange(e, name) {
+
+    if (name === "id") {
+      this.setState({ autocomplete: e })
+      return
+    } 
+
     let fields = this.state.fields;
 
     fields[e.target.name] = e.target.value;
@@ -69,6 +107,8 @@ class CreateClassification extends Component {
 
   render() {
     // const { visible } = this.state;
+
+    console.log("CreateClassification -> render -> this.state.fields", this.state.fields)
     return (
       <DialogContainer
         id="simple-full-page-dialog"
@@ -87,16 +127,17 @@ class CreateClassification extends Component {
         />
         <section className="md-toolbar-relative">
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
-            <C_TextField
-              id="type"
+            <C_AutoComplete
+              id="id"
               name="id"
-              value={this.state.fields.id}
-              onChange={this.onChange}
-              type="search"
-              label="Classificação"
+              value={this.state.autocomplete}
+              label={"Classificação"}
               placeholder="Classificação"
               rightIcon={"search"}
               block paddedBlock
+              list={this.state.list}
+              dataSelected={this.autocompleteSelect}
+              onChange={this.onChange}
             /><br></br>
             <C_TextField
               id="description"

@@ -107,9 +107,15 @@ class CreateMaintenanceOrder extends Component {
   save() {
     let fields = this.state.fields;
 
+    let orderEquipments = this.state.orderEquipments;
+
+    for (let i = 0; i < orderEquipments.length; i++) {
+      orderEquipments[i].installationArea = { id: 1}
+    }
+
     let order = {
       orderNumber: fields.orderNumber,
-      orderEquipment: this.state.orderEquipments,
+      orderEquipment: orderEquipments,
       orderLayout: {
         id: 1
       },

@@ -174,6 +174,7 @@ export class C_MaintenanceOrder extends React.Component {
             <div style={{width:"97%",display:"flex", justifyContent:"center", position:"fixed", top:"10%", right:0}}>
               <C_Operations
                 style={{width:"50%", padding:20}}
+                orderId={order.id}
                 equipments={order.orderEquipment}
                 title="OPERAÇÕES"
                 onClose={() => this.setState({itemSelected: "", showBackgroundColor: false})}

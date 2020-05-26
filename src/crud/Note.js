@@ -12,6 +12,7 @@ import C_CrudButtons from '../components/CrudButtons';
 import { HandlerProvider } from '../providers/handler';
 import { NoteProvider } from '../providers/Note';
 import { ObjectHelper } from '../helpers/Object';
+import C_AutoComplete from '../components/AutoComplete';
 
 class CreateDefaultNote extends Component {
 
@@ -20,16 +21,46 @@ class CreateDefaultNote extends Component {
 
     this.state = {
       visible: true,
-      fields: {}
+      fields: {},
+      autocomplete:"",
+      list:[]
     };
 
     this.provider = new HandlerProvider(new NoteProvider(), "observação padrão")
+    this.loadList();
 
     this.hideModal = this.hideModal.bind(this);
     this.onChange = this.onChange.bind(this);
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
+    this.autocompleteSelect = this.autocompleteSelect.bind(this);
+  }
+
+  async loadList() {
+    let list = []
+    let response = await this.provider.getList();
+    if (response.success) {
+      list = response.data
+    }
+    this.setState({ list })
+  }
+
+  autocompleteSelect(id) {
+
+    if (id === undefined) {
+      this.clean()
+      return
+    }
+
+    let item = this.state.list.find(element => element.id === id)
+
+    let fields = {
+      id: item.id,
+      description: item.description,
+    }
+
+    this.setState({ fields })
   }
 
   hideModal() {
@@ -42,7 +73,8 @@ class CreateDefaultNote extends Component {
 
     ObjectHelper.clearFields(fields);
 
-    this.setState({ fields });
+    this.loadList()
+    this.setState({ fields, autocomplete:"" });
   }
 
   delete() {
@@ -55,11 +87,17 @@ class CreateDefaultNote extends Component {
     this.provider.save(note,this.clean)
   }
 
-  onChange(e) {
+  onChange(e, name) {
+
+    if (name === "id") {
+      this.setState({ autocomplete: e })
+      return
+    }
+
     let fields = this.state.fields;
 
     fields[e.target.name] = e.target.value;
-    this.setState({ fields })
+    this.setState({ fields });
   }
 
   formPreventDefault(event) {
@@ -86,16 +124,17 @@ class CreateDefaultNote extends Component {
         />
         <section className="md-toolbar-relative">
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
-            <C_TextField
+            <C_AutoComplete
               id="id"
               name="id"
-              value={this.state.fields.id}
-              onChange={this.onChange}
-              type="search"
-              label="Código da Observação"
-              placeholder="Código da Observação"
+              value={this.state.autocomplete}
+              label={"Buscar Observação Padrão"}
+              placeholder="Buscar Observação Padrão"
               rightIcon={"search"}
               block paddedBlock
+              list={this.state.list}
+              dataSelected={this.autocompleteSelect}
+              onChange={this.onChange}
             /><br></br>
             <C_TextField
               id="description"
@@ -103,8 +142,8 @@ class CreateDefaultNote extends Component {
               value={this.state.fields.description}
               onChange={this.onChange}
               type="text"
-              label="Descrição"
-              placeholder="Descrição"
+              label="Descrição da Observação"
+              placeholder="Descrição da Observação"
               block paddedBlock
               rows={2}
             />

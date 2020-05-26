@@ -12,8 +12,8 @@ import C_SelectField from '../components/SelectField';
 import C_CrudButtons from '../components/CrudButtons';
 import { HandlerProvider } from '../providers/handler';
 import { OrderLayoutProvider } from '../providers/OrderLayout';
-
-
+import C_AutoComplete from '../components/AutoComplete';
+import { ObjectHelper } from '../helpers/Object';
 class CreateOrderLayout extends Component {
 
   constructor(props) {
@@ -33,17 +33,47 @@ class CreateOrderLayout extends Component {
       {
         label: 'Lista',
         value: 'list',
-      }]
+      }],
+      autocomplete: "",
+      list: []
     };
 
     this.provider = new HandlerProvider(new OrderLayoutProvider(), "tipo de ordem de manutenção")
+    this.loadList();
 
     this.hideModal = this.hideModal.bind(this);
-    this.clearFields = this.clearFields.bind(this);
     this.onChange = this.onChange.bind(this);
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
+    this.autocompleteSelect = this.autocompleteSelect.bind(this);
+  }
+
+  async loadList() {
+    let list = []
+    let response = await this.provider.getList();
+    if (response.success) {
+      list = response.data
+    }
+    this.setState({ list })
+  }
+
+  autocompleteSelect(id) {
+
+    if (id === undefined) {
+      this.clean()
+      return
+    }
+
+    let item = this.state.list.find(element => element.id === id)
+
+    let fields = {
+      id: item.id,
+      orderLayoutType: item.orderLayout,
+      description: item.description,
+    }
+
+    this.setState({ fields })
   }
 
   hideModal() {
@@ -52,12 +82,12 @@ class CreateOrderLayout extends Component {
   }
 
   clean() {
-    this.setState({ fields: {} })
-    this.clearFields()
-  }
+    var fields = this.state.fields;
 
-  clearFields() {
-    this.form.reset()
+    ObjectHelper.clearFields(fields);
+
+    this.loadList()
+    this.setState({ fields, autocomplete: "" });
   }
 
   delete() {
@@ -70,11 +100,17 @@ class CreateOrderLayout extends Component {
     this.provider.save(orderLayout, this.clean)
   }
 
-  onChange(e) {
+  onChange(e, name) {
+
+    if (name === "id") {
+      this.setState({ autocomplete: e })
+      return
+    }
+
     let fields = this.state.fields;
 
     fields[e.target.name] = e.target.value;
-    this.setState({ fields })
+    this.setState({ fields });
   }
 
   formPreventDefault(event) {
@@ -101,21 +137,22 @@ class CreateOrderLayout extends Component {
         />
         <section className="md-toolbar-relative">
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
-            <C_TextField
+            <C_AutoComplete
               id="id"
               name="id"
-              value={this.state.fields.id}
-              onChange={this.onChange}
-              type="search"
-              label="Tipo de Ordem"
-              placeholder="Tipo de Ordem"
-              rightIcon={"search"}
+              value={this.state.autocomplete}
+              label="Buscar Layout"
+              placeholder="Buscar Layout"
+              rightIcon="search"
               block paddedBlock
+              list={this.state.list}
+              dataSelected={this.autocompleteSelect}
+              onChange={this.onChange}
             /><br></br>
             <C_SelectField
               id="orderLayout"
               name="orderLayout"
-              value={this.state.fields.orderLayout}
+              value={this.state.fields.orderLayoutType}
               onChange={this.onChange}
               type="text"
               label="Layout da Ordem"
