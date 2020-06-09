@@ -218,7 +218,7 @@ class Dashboard extends Component {
               return (
                 !this.state.showOrdersList ?
                   <fieldset onClick={() => { this.setState({ showOrderDetails: true, orderDetails: order }) }} className={"effectfront"} style={{ cursor: "pointer", position: "relative", width: "30%", borderRadius: 5, border: "1px solid silver", marginBottom: 20, padding: 10, marginTop: 40, marginRight: 20 }}>
-                    <legend style={{ width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, marginBottom: 0, color: "#666666a6", fontWeight: "bold", fontSize: 25, marginTop: 100 }}>{order.orderNumber}</legend>
+                    <legend style={{ width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, marginBottom: 0, color: "#666666a6", fontWeight: "bold", fontSize: 25, marginTop: 100 }}>{order.orderNumber ? order.orderNumber : "SEM TÍTULO"}</legend>
                     <div style={{}}>
                       <div style={{ borderRadius: 5, top: 16, right: 0, position: "absolute", height: 194, width: 40, backgroundColor: HelperOM.translate("color", order.priority) }}></div>
                       <div style={{ display: "flex" }}>

@@ -40,6 +40,7 @@ export class C_MaintenanceOrder extends React.Component {
 
     let order = {};
     let response = await this.provider.get(this.state.orderId);
+    console.log("C_MaintenanceOrder -> getOrder -> response", response)
 
     if (response.success) {
       order = response.data
@@ -122,7 +123,7 @@ export class C_MaintenanceOrder extends React.Component {
                   <C_Icon style={{ fontSize: 100 }} icon="build" />
                   <div style={{ }}>
                     <div style={{ fontSize: 18, fontWeight: "bold" }}>{`Equipamento Superior`}</div>
-                    <div style={{ fontSize: 16 }}>{order.orderEquipment[0] ? order.orderEquipment[0].superiorEquipment.description : "Não informado"}</div>
+                    <div style={{ fontSize: 16 }}>{order.orderEquipment[0] && order.orderEquipment[0].superiorEquipment ? order.orderEquipment[0].superiorEquipment.description : "Não informado"}</div>
                     <hr />
                     <div style={{ fontSize: 18, fontWeight: "bold" }}>{`Equipamento`}</div>
                     <div style={{ fontSize: 16 }}>{order.orderEquipment[0] ? order.orderEquipment[0].equipment.description : "Não informado"}</div>
