@@ -1,12 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Button,
-  DialogContainer,
-  Divider,
-  Toolbar,
-  FontIcon,
-} from 'react-md';
-
+import { DialogContainer, Toolbar, FontIcon } from 'react-md';
 import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
 import C_SelectField from '../components/SelectField';
@@ -18,9 +11,13 @@ import { InstallationAreaProvider } from '../providers/InstallationArea';
 import { OrderTypeProvider } from '../providers/OrderType';
 import { ClassificationProvider } from '../providers/Classification';
 import { MachineProvider } from '../providers/Machine';
-import { C_Button } from '../components/Button';
-import C_Card  from '../components/Card';
+import { OrderLayoutProvider } from '../providers/OrderLayout';
+import { WorkCenterProvider } from '../providers/WorkCenter';
+import { UserProvider } from '../providers/User';
+import C_Card from '../components/Card';
 import { C_Icon } from '../components/Icon';
+import { C_Tabs } from '../components/Tabs';
+
 
 class CreateMaintenanceOrder extends Component {
 
@@ -29,13 +26,11 @@ class CreateMaintenanceOrder extends Component {
 
     this.state = {
       selectedProfile: undefined, visible: true,
-      completeOrder: '', completeClassification: "", completeOrderType: '', completeArea: '', completeEquipment: '',
-      listEquipments: [],
-      orderEquipments: [],
-      listAreas : [],
-      classifications: [],
-      listTypes: [],
-      listOrders: [],
+      completeOrder: '', completeClassification: "", completeOrderType: '', completeArea: '', completeEquipment: '', completeWorkcenter: '',
+      listEquipments: [], orderEquipments: [],
+      listAreas: [], classifications: [],
+      layouts: [], listUsers: [], listWorkcenter: [],
+      listTypes: [], listOrders: [],
       fields: {},
       priority: [
         { label: 'Urgente', value: 'urgent' },
@@ -44,11 +39,6 @@ class CreateMaintenanceOrder extends Component {
         { label: 'Baixa', value: 'low' },
 
       ],
-      orderLayout: [
-        { label: 'Preventiva/Corretiva', value: 'default' },
-        { label: 'Rota', value: 'route' },
-        { label: 'Lista', value: 'list' },
-      ]
     };
 
     // this.provider = new HandlerProvider(new UserProvider(), "usuário")
@@ -57,6 +47,9 @@ class CreateMaintenanceOrder extends Component {
     this.providerArea = new HandlerProvider(new InstallationAreaProvider(), "área de instalação")
     this.providerOrderType = new HandlerProvider(new OrderTypeProvider(), "tipo de ordem")
     this.providerClassification = new HandlerProvider(new ClassificationProvider(), "classificação da ordem")
+    this.providerLayout = new HandlerProvider(new OrderLayoutProvider(), "layout da ordem")
+    this.providerUser = new HandlerProvider(new UserProvider(), "usuário")
+    this.providerWorkcenter = new HandlerProvider(new WorkCenterProvider(), "centro de trabalho")
 
     this.loadingData();
 
@@ -70,17 +63,51 @@ class CreateMaintenanceOrder extends Component {
     this.equipmentComplete = this.equipmentComplete.bind(this);
     this.areaComplete = this.areaComplete.bind(this);
     this.classificationComplete = this.classificationComplete.bind(this);
+    this.workcenterComplete = this.workcenterComplete.bind(this);
     this.getOrder = this.getOrder.bind(this);
     this.getEquipment = this.getEquipment.bind(this);
 
   }
 
-  async loadingData(){
+  async loadingData() {
     this.loadOrders();
     this.loadEquipments();
     this.loadAreas();
     this.loadTypes();
     this.loadClassifications();
+    this.loadLayouts();
+    this.loadUsers();
+    this.loadWorkCenters();
+  }
+
+  async loadWorkCenters() {
+    let listWorkcenter = this.state.listWorkcenter
+    let response = await this.providerWorkcenter.getList();
+    console.log("CreateMaintenanceOrder -> layouts -> response", response)
+    if (response.success) {
+      listWorkcenter = response.data
+    }
+    this.setState({ listWorkcenter })
+  }
+
+  async loadUsers() {
+    let listUsers = this.state.listUsers
+    let response = await this.providerUser.getList();
+    console.log("CreateMaintenanceOrder -> layouts -> response", response)
+    if (response.success) {
+      listUsers = response.data
+    }
+    this.setState({ listUsers })
+  }
+
+  async loadLayouts() {
+    let layouts = this.state.layouts;
+    let response = await this.providerLayout.getList();
+    console.log("CreateMaintenanceOrder -> layouts -> response", response)
+    if (response.success) {
+      layouts = response.data
+    }
+    this.setState({ layouts })
   }
 
   async loadClassifications() {
@@ -93,7 +120,7 @@ class CreateMaintenanceOrder extends Component {
     this.setState({ classifications })
   }
 
-  async loadTypes(){
+  async loadTypes() {
     let listTypes = []
     let response = await this.providerOrderType.getList();
     console.log("CreateMaintenanceOrder -> listAreas -> response", response)
@@ -142,12 +169,12 @@ class CreateMaintenanceOrder extends Component {
     var fields = this.state.fields;
 
     ObjectHelper.clearFields(fields);
-    this.setState({ fields,  
+    this.setState({
+      fields,
       order: {}, orderEquipments: [],
       completeEquipment: "", completeArea: "", completeOrder: "",
-      completeOrderType: "", completeClassification: ""
-    });
-
+      completeOrderType: "", completeClassification: "", completeWorkcenter: ""
+    }, () => this.loadingData());
   }
 
   delete() {
@@ -161,14 +188,14 @@ class CreateMaintenanceOrder extends Component {
     let orderEquipments = this.state.orderEquipments;
 
     for (let i = 0; i < orderEquipments.length; i++) {
-      orderEquipments[i].installationArea = { id: this.state.installationArea.id}
+      orderEquipments[i].installationArea = { id: this.state.installationArea.id }
     }
 
     let order = {
       orderNumber: fields.orderNumber,
       orderEquipment: orderEquipments,
       orderLayout: {
-        id: 1
+        id: fields.orderLayout
       },
       priority: fields.priority,
       openedDate: new Date(),
@@ -190,7 +217,7 @@ class CreateMaintenanceOrder extends Component {
       return
     }
 
-    if (name === "orderEquipmentId"){
+    if (name === "orderEquipmentId") {
       this.setState({ completeEquipment: e })
       return
     }
@@ -207,6 +234,11 @@ class CreateMaintenanceOrder extends Component {
 
     if (name === "orderClassification") {
       this.setState({ completeClassification: e })
+      return
+    }
+
+    if (name === "workCenter") {
+      this.setState({ completeWorkcenter: e })
       return
     }
 
@@ -233,22 +265,22 @@ class CreateMaintenanceOrder extends Component {
       machine: order && order.orderEquipment[0] ? order.orderEquipment[0].equipment.description : "",
       descriptionArea: order && order.orderEquipment[0] ? order.orderEquipment[0].installationArea.description : "",
       superiorMachine: order && order.orderEquipment[0] && order.orderEquipment[0].superiorEquipment ? order.orderEquipment[0].superiorEquipment.description : "",
-      orderLayout: order.orderLayout.orderLayout,
+      orderLayout: order.orderLayout.id,
       descriptionClassification: order.orderClassification.description,
       descriptionOrderType: order.orderType.description,
     }
 
     let installationArea = order && order.orderEquipment[0] ? order.orderEquipment[0].installationArea : {}
-    let orderType = order.orderType.description
-    let orderClassification = order.orderClassification.description,
+    let orderType = order.orderType
+    let orderClassification = order.orderClassification
 
 
-    this.setState({ 
-      fields, installationArea, orderType, orderClassification, 
+    this.setState({
+      fields, installationArea, orderType, orderClassification,
       completeOrderType: fields.descriptionOrderType,
       completeClassification: fields.descriptionClassification,
       completeArea: fields.descriptionArea,
-      orderEquipments: order.orderEquipment 
+      orderEquipments: order.orderEquipment
     })
   }
 
@@ -258,10 +290,22 @@ class CreateMaintenanceOrder extends Component {
     let response = await this.providerEquipment.get(id);
 
     if (response.success) {
-      orderEquipments.push({equipment: response.data, createdBy:1, updatedBy:1})
+      orderEquipments.push({ equipment: response.data, createdBy: 1, updatedBy: 1 })
     }
 
     this.setState({ orderEquipments });
+  }
+
+  workcenterComplete(id, name) {
+    if (id === undefined) {
+      this.clean()
+      return
+    }
+
+    let workCenter = this.state.listWorkcenter.find(element => element.id === id)
+
+    this.setState({ workCenter })
+    return
   }
 
   classificationComplete(id, name) {
@@ -276,7 +320,7 @@ class CreateMaintenanceOrder extends Component {
     return
   }
 
-  areaComplete(id, name){
+  areaComplete(id, name) {
     if (id === undefined) {
       this.clean()
       return
@@ -312,7 +356,7 @@ class CreateMaintenanceOrder extends Component {
   }
 
   orderComplete(id, name) {
-  console.log("CreateMaintenanceOrder -> orderComplete -> id", id)
+    console.log("CreateMaintenanceOrder -> orderComplete -> id", id)
 
     if (id === undefined) {
       this.clean()
@@ -332,6 +376,10 @@ class CreateMaintenanceOrder extends Component {
 
     console.log("render -> STATE", this.state)
 
+    const tabs = [
+      { name: "Capa" },
+      { name: "Equipamento" }
+    ]
     var orderEquipments = this.state.orderEquipments;
 
     return (
@@ -350,275 +398,163 @@ class CreateMaintenanceOrder extends Component {
           style={{ borderRadius: 5 }}
           actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
         />
-        <section className="md-toolbar-relative">
-          <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
-            <div className="md-grid">
-              <div className="md-cell md-cell--12 md-cell--bottom">
-                <C_AutoComplete
-                  id="id"
-                  name="id"
-                  description="orderNumber"
-                  onChange={this.onChange}
-                  type="search"
-                  list={this.state.listOrders}
-                  label="Buscar Ordem de Manutenção"
-                  placeholder="Buscar Ordem de Manutenção"
-                  rightIcon={"search"}
-                  value={this.state.completeOrder}
-                  dataSelected={this.orderComplete}
-                />
+          <section className="md-toolbar-relative">
+            <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
+              <div className="md-grid">
+                <div className="md-cell md-cell--12 md-cell--bottom">
+                  <C_AutoComplete
+                    id="id"
+                    name="id"
+                    description="orderNumber"
+                    onChange={this.onChange}
+                    type="search"
+                    list={this.state.listOrders}
+                    label="Buscar Ordem de Manutenção"
+                    placeholder="Buscar Ordem de Manutenção"
+                    rightIcon={"search"}
+                    value={this.state.completeOrder}
+                    dataSelected={this.orderComplete}
+                  />
+                </div>
+                <div className="md-cell md-cell--6 md-cell--bottom">
+                  <C_TextField
+                    id="orderNumber"
+                    name="orderNumber"
+                    value={this.state.fields.orderNumber}
+                    onChange={this.onChange}
+                    type="search"
+                    label="Número da Ordem"
+                    placeholder="Número da Ordem"
+                    required={true}
+                  // css={{ width: 350, marginLeft: 30}}
+                  />
+                </div>
+                <div className="md-cell md-cell--6 md-cell--bottom">
+                  <C_AutoComplete
+                    id="orderType"
+                    name="orderType"
+                    onChange={this.onChange}
+                    type="search"
+                    list={this.state.listTypes}
+                    label="Tipo da Ordem de Manutenção"
+                    placeholder="Tipo da Ordem de Manutenção"
+                    rightIcon={"search"}
+                    value={this.state.completeOrderType}
+                    dataSelected={this.orderTypeComplete}
+                  />
+                </div>
               </div>
-              <div className="md-cell md-cell--6 md-cell--bottom">
-                <C_TextField
-                  id="orderNumber"
-                  name="orderNumber"
-                  value={this.state.fields.orderNumber}
-                  onChange={this.onChange}
-                  type="search"
-                  label="Número da Ordem"
-                  placeholder="Número da Ordem"
-                  required={true}
-                // css={{ width: 350, marginLeft: 30}}
-                />
+              <div className="md-grid">
+                <div className="md-cell md-cell--6 md-cell--bottom">
+                  <C_SelectField
+                    name="orderLayout"
+                    id="orderLayout"
+                    value={this.state.fields.orderLayout}
+                    onChange={this.onChange}
+                    type="text"
+                    labelElement="description"
+                    valueElement="id"
+                    label={"Layout da Ordem"}
+                    placeholder={"Selecione"}
+                    list={this.state.layouts}
+                    required={true}
+                    style={{ width: "100%" }}
+                  />
+                </div>
+                <div className="md-cell md-cell--6 md-cell--bottom">
+                  <C_SelectField
+                    id="priority"
+                    name="priority"
+                    value={this.state.fields.priority}
+                    onChange={this.onChange}
+                    type="text"
+                    label={"Prioridade"}
+                    placeholder={"Selecione"}
+                    list={this.state.priority}
+                    required={true}
+                    style={{ width: "100%" }}
+                  />
+                </div>
               </div>
-              <div className="md-cell md-cell--6 md-cell--bottom">
-                <C_AutoComplete
-                  id="orderType"
-                  name="orderType"
-                  onChange={this.onChange}
-                  type="search"
-                  list={this.state.listTypes}
-                  label="Tipo da Ordem de Manutenção"
-                  placeholder="Tipo da Ordem de Manutenção"
-                  rightIcon={"search"}
-                  value={this.state.completeOrderType}
-                  dataSelected={this.orderTypeComplete}
-                />
+              <div className="md-grid">
+                <div className="md-cell md-cell--6 md-cell--bottom">
+                  <C_AutoComplete
+                    id="installationArea"
+                    name="installationArea"
+                    onChange={this.onChange}
+                    type="search"
+                    list={this.state.listAreas}
+                    label="Local de Instalação"
+                    placeholder="Local de Instalação"
+                    rightIcon={"search"}
+                    value={this.state.completeArea}
+                    dataSelected={this.areaComplete}
+                  />
+                </div>
+                <div className="md-cell md-cell--6 md-cell--bottom">
+                  <C_AutoComplete
+                    id="orderClassification"
+                    name="orderClassification"
+                    onChange={this.onChange}
+                    type="search"
+                    list={this.state.classifications}
+                    label="Classificação da Ordem"
+                    placeholder="Classificação da Ordem"
+                    rightIcon={"search"}
+                    value={this.state.completeClassification}
+                    dataSelected={this.classificationComplete}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="md-grid">
-              <div className="md-cell md-cell--6 md-cell--bottom">
-                <C_SelectField
-                  name="orderLayout"
-                  id="orderLayout"
-                  value={this.state.fields.orderLayout}
-                  onChange={this.onChange}
-                  type="text"
-                  label={"Layout da Ordem"}
-                  placeholder={"Selecione"}
-                  list={this.state.orderLayout}
-                  required={true}
-                  style={{ width: "100%" }}
-                />
+              <div className="md-grid">
+                <div className="md-cell md-cell--6 md-cell--bottom">
+                  <C_AutoComplete
+                    id="workCenter"
+                    name="workCenter"
+                    onChange={this.onChange}
+                    type="search"
+                    list={this.state.listWorkcenter}
+                    label="Centro de Trabalho"
+                    placeholder="Centro de Trabalho"
+                    rightIcon={"search"}
+                    value={this.state.completeWorkcenter}
+                    dataSelected={this.workcenterComplete}
+                  />
+                </div>
+                <div className="md-cell md-cell--6 md-cell--bottom">
+                  <C_SelectField
+                    name="user"
+                    id="user"
+                    value={this.state.fields.userRequest}
+                    onChange={this.onChange}
+                    type="text"
+                    labelElement="name"
+                    valueElement="id"
+                    label={"Solicitante"}
+                    placeholder={"Selecione"}
+                    list={this.state.listUsers}
+                    required={false}
+                    style={{ width: "100%" }}
+                  />
+                </div>
               </div>
-              <div className="md-cell md-cell--6 md-cell--bottom">
-                <C_SelectField
-                  id="priority"
-                  name="priority"
-                  value={this.state.fields.priority}
-                  onChange={this.onChange}
-                  type="text"
-                  label={"Prioridade"}
-                  placeholder={"Selecione"}
-                  list={this.state.priority}
-                  required={true}
-                  style={{ width: "100%" }}
-                />
+              <div className="md-grid">
+                <div className="md-cell md-cell--12 md-cell--bottom">
+                  <C_TextField
+                    id="description"
+                    name="description"
+                    value={this.state.fields.description}
+                    onChange={this.onChange}
+                    type="text"
+                    label="Descrição do Problema"
+                    placeholder="Descrição do Problema"
+                    required={false}
+                    rows={3}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="md-grid">
-              <div className="md-cell md-cell--6 md-cell--bottom">
-                <C_AutoComplete
-                  id="installationArea"
-                  name="installationArea"
-                  onChange={this.onChange}
-                  type="search"
-                  list={this.state.listAreas}
-                  label="Local de Instalação"
-                  placeholder="Local de Instalação"
-                  rightIcon={"search"}
-                  value={this.state.completeArea}
-                  dataSelected={this.areaComplete}
-                />
-              </div>
-              <div className="md-cell md-cell--6 md-cell--bottom">
-                <C_AutoComplete
-                  id="orderClassification"
-                  name="orderClassification"
-                  onChange={this.onChange}
-                  type="search"
-                  list={this.state.classifications}
-                  label="Classificação da Ordem"
-                  placeholder="Classificação da Ordem"
-                  rightIcon={"search"}
-                  value={this.state.completeClassification}
-                  dataSelected={this.classificationComplete}
-                />
-              </div>
-            </div>
-            <div className="md-grid">
-              <div className="md-cell md-cell--6 md-cell--bottom">
-                <C_TextField
-                  id="superiorMachine"
-                  name="superiorMachine"
-                  value={this.state.fields.superiorMachine}
-                  onChange={this.onChange}
-                  type="search"
-                  label="Equipamento Superior"
-                  placeholder="Equipamento Superior"
-                  rightIcon={"search"}
-                  required={true}
-                // css={{ width: 350 }}
-                />
-              </div>
-              <div style={{ position: "relative" }} className="md-cell md-cell--6 md-cell--bottom">
-                <C_AutoComplete
-                  id="orderEquipmentId"
-                  name="orderEquipmentId"
-                  onChange={this.onChange}
-                  type="search"
-                  list={this.state.listEquipments}
-                  label="Adicionar Equipamento"
-                  placeholder="Adicionar Equipamento"
-                  rightIcon={"search"}
-                  value={this.state.completeEquipment}
-                  dataSelected={this.equipmentComplete}
-                // css={{ width: 350 }}
-                />
-
-                {orderEquipments && orderEquipments.length > 0 ?
-                  <div onClick={() => this.setState({ showModalEquipments: true })} className="slideInRight" style={{ alignItems: "center", display: "flex", left: 0, position: "absolute" }}>
-                    <div className="effectfront" style={{ cursor: "pointer", padding: 5, backgroundColor: "#A40003", color: "white", width: 30, height: 30, borderRadius: 22 }}>
-                      <div style={{ fontSize: 16, textAlign: "center" }}>{orderEquipments.length}</div>
-                    </div>
-                    <div style={{ color: "#A40003", marginLeft: 10, fontSize: 14 }}>{orderEquipments.length == 1 ? "Equipamento Adicionado!" : "Equipamentos Adicionados!"}</div>
-                  </div>
-                : undefined}
-
-                {this.state.showModalEquipments && orderEquipments.length > 0 ?
-                  <div className="zoomIn" style={{ position:"absolute", width:"100%", zIndex:2}}>
-                    <C_Icon 
-                      style={{cursor:"pointer", position:"absolute", right:0 }} 
-                      icon="close"
-                      action={() => this.setState({showModalEquipments:false})}
-                    />
-                    {orderEquipments.map((item, i ) => 
-                      <div>
-                        <div style={{ position: "relative" }}>
-                          <C_Icon
-                            iconSize={16}
-                            style={{ color:"#A40003", cursor: "pointer", position: "absolute", top: 0, margin:10 }}
-                            icon="delete"
-                            action={() => {
-                              orderEquipments.splice(i, 1);
-
-                              this.setState({ orderEquipments })
-
-                            }}
-                          />
-                        </div>
-                        <div>
-                          <C_Card
-                            icon={i+1}
-                            title={<div style={{ fontWeight: "bold" }}>{item.equipment.description}</div>}
-                            subtitle={item.equipment.machineType.description}
-                            style={{width:"100%"}}
-                          />                        
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                : undefined }
-              </div>
-            </div>
-            <div className="md-grid">
-              <div className="md-cell md-cell--6 md-cell--bottom">
-                <C_TextField
-                  id="workCenter"
-                  name="workCenter"
-                  value={this.state.fields.workCenter}
-                  onChange={this.onChange}
-                  type="search"
-                  label="Centro de Trabalho"
-                  placeholder="Centro de Trabalho"
-                  rightIcon={"search"}
-                  required={true}
-                // css={{ width: 350 }}
-                />
-              </div>
-              <div className="md-cell md-cell--6 md-cell--bottom">
-                <C_TextField
-                  id="defectComponent"
-                  name="defectComponent"
-                  value={this.state.fields.defectComponent}
-                  onChange={this.onChange}
-                  type="search"
-                  label="Componente Defeituoso"
-                  placeholder="Componente Defeituoso"
-                  rightIcon={"search"}
-                  required={true}
-                // css={{ width: 350, marginLeft: 30 }}
-                />
-              </div>
-            </div>
-            <div className="md-grid">
-              <div className="md-cell md-cell--6 md-cell--bottom">
-                <C_TextField
-                  id="defectCause"
-                  name="defectCause"
-                  value={this.state.fields.defectCause}
-                  onChange={this.onChange}
-                  type="search"
-                  label="Causa do Defeito"
-                  placeholder="Causa do Defeito"
-                  rightIcon={"search"}
-                  required={true}
-                // css={{ width: 350 }}
-                />
-              </div>
-              <div className="md-cell md-cell--6 md-cell--bottom">
-                <C_TextField
-                  id="descriptionCause"
-                  name="descriptionCause"
-                  value={this.state.fields.descriptionCause}
-                  onChange={this.onChange}
-                  label="Descrição da Causa"
-                  placeholder="Descrição da Causa"
-                  required={true}
-                // css={{ width: 350, marginLeft: 30 }}
-                />
-              </div>
-            </div>
-            <div className="md-grid">
-              <div className="md-cell md-cell--6 md-cell--bottom">
-                <C_TextField
-                  id="defectDiagnostic"
-                  name="defectDiagnostic"
-                  value={this.state.fields.defectDiagnostic}
-                  onChange={this.onChange}
-                  type="search"
-                  label="Sintoma do Defeito"
-                  placeholder="Sintoma do Defeito"
-                  rightIcon={"search"}
-                  required={true}
-                // css={{ width: 350 }}
-                />
-              </div>
-              <div className="md-cell md-cell--6 md-cell--bottom">
-                <C_TextField
-                  id="descriptionDiagnostic"
-                  name="descriptionDiagnostic"
-                  value={this.state.fields.descriptionDiagnostic}
-                  onChange={this.onChange}
-                  label="Descrição do Sintoma"
-                  placeholder="Descrição do Sintoma"
-                  required={true}
-                // css={{ width: 350, marginLeft: 30 }}
-                />
-              </div>
-            </div>
-          </form>
-        </section>
+            </form>
+          </section>
         <C_CrudButtons
           onSave={this.save}
           onClean={this.clean}
@@ -629,5 +565,138 @@ class CreateMaintenanceOrder extends Component {
     );
   }
 }
+/* <div className="md-grid">
+  <div className="md-cell md-cell--6 md-cell--bottom">
+    <C_TextField
+      id="superiorMachine"
+      name="superiorMachine"
+      value={this.state.fields.superiorMachine}
+      onChange={this.onChange}
+      type="search"
+      label="Equipamento Superior"
+      placeholder="Equipamento Superior"
+      rightIcon={"search"}
+      required={true}
+    // css={{ width: 350 }}
+    />
+  </div>
+  <div style={{ position: "relative" }} className="md-cell md-cell--6 md-cell--bottom">
+    <C_AutoComplete
+      id="orderEquipmentId"
+      name="orderEquipmentId"
+      onChange={this.onChange}
+      type="search"
+      list={this.state.listEquipments}
+      label="Adicionar Equipamento"
+      placeholder="Adicionar Equipamento"
+      rightIcon={"search"}
+      value={this.state.completeEquipment}
+      dataSelected={this.equipmentComplete}
+    // css={{ width: 350 }}
+    />
+
+    {orderEquipments && orderEquipments.length > 0 ?
+      <div onClick={() => this.setState({ showModalEquipments: true })} className="slideInRight" style={{ alignItems: "center", display: "flex", left: 0, position: "absolute" }}>
+        <div className="effectfront" style={{ cursor: "pointer", padding: 5, backgroundColor: "#A40003", color: "white", width: 30, height: 30, borderRadius: 22 }}>
+          <div style={{ fontSize: 16, textAlign: "center" }}>{orderEquipments.length}</div>
+        </div>
+        <div style={{ color: "#A40003", marginLeft: 10, fontSize: 14 }}>{orderEquipments.length == 1 ? "Equipamento Adicionado!" : "Equipamentos Adicionados!"}</div>
+      </div>
+    : undefined}
+
+    {this.state.showModalEquipments && orderEquipments.length > 0 ?
+      <div className="zoomIn" style={{ position:"absolute", width:"100%", zIndex:2}}>
+        <C_Icon 
+          style={{cursor:"pointer", position:"absolute", right:0 }} 
+          icon="close"
+          action={() => this.setState({showModalEquipments:false})}
+        />
+        {orderEquipments.map((item, i ) => 
+          <div>
+            <div style={{ position: "relative" }}>
+              <C_Icon
+                iconSize={16}
+                style={{ color:"#A40003", cursor: "pointer", position: "absolute", top: 0, margin:10 }}
+                icon="delete"
+                action={() => {
+                  orderEquipments.splice(i, 1);
+
+                  this.setState({ orderEquipments })
+
+                }}
+              />
+            </div>
+            <div>
+              <C_Card
+                icon={i+1}
+                title={<div style={{ fontWeight: "bold" }}>{item.equipment.description}</div>}
+                subtitle={item.equipment.machineType.description}
+                style={{width:"100%"}}
+              />                        
+            </div>
+          </div>
+        )}
+      </div>
+    : undefined }
+  </div>
+</div>
+<div className="md-grid">
+  <div className="md-cell md-cell--6 md-cell--bottom">
+    <C_TextField
+      id="defectCause"
+      name="defectCause"
+      value={this.state.fields.defectCause}
+      onChange={this.onChange}
+      type="search"
+      label="Causa do Defeito"
+      placeholder="Causa do Defeito"
+      rightIcon={"search"}
+      required={true}
+    // css={{ width: 350 }}
+    />
+  </div>
+  <div className="md-cell md-cell--6 md-cell--bottom">
+    <C_TextField
+      id="descriptionCause"
+      name="descriptionCause"
+      value={this.state.fields.descriptionCause}
+      onChange={this.onChange}
+      label="Descrição da Causa"
+      placeholder="Descrição da Causa"
+      required={true}
+    // css={{ width: 350, marginLeft: 30 }}
+    />
+  </div>
+</div>
+<div className="md-grid">
+  <div className="md-cell md-cell--6 md-cell--bottom">
+    <C_TextField
+      id="defectDiagnostic"
+      name="defectDiagnostic"
+      value={this.state.fields.defectDiagnostic}
+      onChange={this.onChange}
+      type="search"
+      label="Sintoma do Defeito"
+      placeholder="Sintoma do Defeito"
+      rightIcon={"search"}
+      required={true}
+    // css={{ width: 350 }}
+    />
+  </div>
+  <div className="md-cell md-cell--6 md-cell--bottom">
+    <C_TextField
+      id="descriptionDiagnostic"
+      name="descriptionDiagnostic"
+      value={this.state.fields.descriptionDiagnostic}
+      onChange={this.onChange}
+      label="Descrição do Sintoma"
+      placeholder="Descrição do Sintoma"
+      required={true}
+    // css={{ width: 350, marginLeft: 30 }}
+    />
+  </div>
+</div> */
+
+
 
 export default CreateMaintenanceOrder;

@@ -92,7 +92,7 @@ class Dashboard extends Component {
     const columns = [
       { name: "Abertura" },
       { name: "Ordem Manutenção" },
-      { name: "Tipo Layout" },
+      { name: "Tipo" },
       { name: "Equipamento" },
       { name: "Prioridade" },
       { name: "Status" },
@@ -222,7 +222,7 @@ class Dashboard extends Component {
                     <div style={{}}>
                       <div style={{ borderRadius: 5, top: 16, right: 0, position: "absolute", height: 194, width: 40, backgroundColor: HelperOM.translate("color", order.priority) }}></div>
                       <div style={{ display: "flex" }}>
-                        <strong style={{ marginRight: 5, fontSize: 16 }}>Layout:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.orderLayout.description}</p>
+                        <strong style={{ marginRight: 5, fontSize: 16 }}>Tipo:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.orderLayout.description}</p>
                       </div>
                       <div style={{ display: "flex" }}>
                         <strong style={{ marginRight: 5, fontSize: 16 }}>Equipamento:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.orderEquipment[0] ? order.orderEquipment[0].equipment.description : "Sem Equipamento"}</p>
