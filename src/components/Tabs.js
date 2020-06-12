@@ -14,16 +14,24 @@ export class C_Tabs extends React.Component {
   }
 
   render() {
+
+    const labelTabStyle = {
+      fontSize:16, 
+      fontStyle:"oblique",
+      textTransform: "capitalize"
+    }
     let tabs = this.state.tabs
     return (
-      <Tabs style={{marginTop:40}} tabId="simple-tab" >
-        {tabs.map((tab, i) => (
-          <Tab style={{ width: "50%"}} label={tab.name}>
-            {this.props.children}
-          </Tab>
-        ))
-        }
-      </Tabs>
+      <TabsContainer className="md-cell md-cell--12 md-cell--bottom" >
+          <Tabs >
+            {tabs.map((tab, i) => (
+              <Tab style={{ color: "black" }} onClick={() => this.props.onClick(tab.value)} label={<p style={labelTabStyle}>{tab.name}</p>}>
+                {this.props.children}
+              </Tab>
+            ))
+            }
+          </Tabs>
+      </TabsContainer>
     );
   }
 }

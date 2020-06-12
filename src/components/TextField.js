@@ -24,6 +24,7 @@ class C_TextField extends Component {
       <div>
         <TextField 
           id={this.props.name}
+          errorText={this.props.showError}
           label={this.props.label}
           placeholder={this.props.placeholder}
           leftIcon={this.props.icon ? <FontIcon style={{ fontSize: 25, cursor: "pointer" }}>{this.props.icon}</FontIcon> : undefined}
@@ -33,6 +34,7 @@ class C_TextField extends Component {
           className={this.props.className}
           rows={this.props.rows}
           onChange={this.onChange}
+          required={this.props.required}
           disabled={this.props.disabled}
           style={this.props.css}
           value={this.props.value}

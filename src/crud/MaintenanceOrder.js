@@ -25,7 +25,7 @@ class CreateMaintenanceOrder extends Component {
     super(props);
 
     this.state = {
-      selectedProfile: undefined, visible: true,
+      visible: true,
       completeOrder: '', completeClassification: "", completeOrderType: '', completeArea: '', completeEquipment: '', completeWorkcenter: '',
       listEquipments: [], orderEquipments: [],
       listAreas: [], classifications: [],
@@ -182,7 +182,22 @@ class CreateMaintenanceOrder extends Component {
     this.provider.delete(order.id, this.clean)
   }
 
+  checkData() {
+    const { orderType, orderClassification, orderLayout, fields } = this.state
+
+    if (!orderType) return this.setState({ errorMessage: "Informe o Tipo de Ordem" });
+    if (!orderClassification) return this.setState({ errorMessage: "Informe a Classificação da Ordem" });
+    if (!orderLayout) return this.setState({ errorMessage: "Informe o Layout da Ordem" });
+
+    return "OK";
+  }
+
   save() {
+
+    let status = this.checkData();
+
+    if (status != "OK") return
+
     let fields = this.state.fields;
 
     let orderEquipments = this.state.orderEquipments;
@@ -377,194 +392,287 @@ class CreateMaintenanceOrder extends Component {
     console.log("render -> STATE", this.state)
 
     const tabs = [
-      { name: "Capa" },
-      { name: "Equipamento" }
+      { name: "Informações Principais", value: "info_main" },
+      { name: "Equipamentos", value: "equipments" }
     ]
     var orderEquipments = this.state.orderEquipments;
 
     return (
-      <DialogContainer
-        id="simple-full-page-dialog"
-        visible={this.state.visible}
-        width="60%"
-        height="100%"
-        dialogStyle={{ borderRadius: 5 }}
-        aria-labelledby="simple-full-page-dialog-title"
-      >
-        <Toolbar
-          fixed
-          colored
-          title="Cadastrar Ordem de Manutenção"
-          style={{ borderRadius: 5 }}
-          actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
-        />
+      <div>
+        {this.state.errorMessage ? alert(this.state.errorMessage) : undefined}
+
+        <DialogContainer
+          id="simple-full-page-dialog"
+          visible={this.state.visible}
+          width="60%"
+          height="100%"
+          dialogStyle={{ borderRadius: 5 }}
+          aria-labelledby="simple-full-page-dialog-title"
+        >
+          <Toolbar
+            fixed
+            colored
+            title="Cadastrar Ordem de Manutenção"
+            style={{ borderRadius: 5 }}
+            actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
+          />
           <section className="md-toolbar-relative">
-            <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
-              <div className="md-grid">
-                <div className="md-cell md-cell--12 md-cell--bottom">
-                  <C_AutoComplete
-                    id="id"
-                    name="id"
-                    description="orderNumber"
-                    onChange={this.onChange}
-                    type="search"
-                    list={this.state.listOrders}
-                    label="Buscar Ordem de Manutenção"
-                    placeholder="Buscar Ordem de Manutenção"
-                    rightIcon={"search"}
-                    value={this.state.completeOrder}
-                    dataSelected={this.orderComplete}
-                  />
-                </div>
-                <div className="md-cell md-cell--6 md-cell--bottom">
-                  <C_TextField
-                    id="orderNumber"
-                    name="orderNumber"
-                    value={this.state.fields.orderNumber}
-                    onChange={this.onChange}
-                    type="search"
-                    label="Número da Ordem"
-                    placeholder="Número da Ordem"
-                    required={true}
-                  // css={{ width: 350, marginLeft: 30}}
-                  />
-                </div>
-                <div className="md-cell md-cell--6 md-cell--bottom">
-                  <C_AutoComplete
-                    id="orderType"
-                    name="orderType"
-                    onChange={this.onChange}
-                    type="search"
-                    list={this.state.listTypes}
-                    label="Tipo da Ordem de Manutenção"
-                    placeholder="Tipo da Ordem de Manutenção"
-                    rightIcon={"search"}
-                    value={this.state.completeOrderType}
-                    dataSelected={this.orderTypeComplete}
-                  />
-                </div>
-              </div>
-              <div className="md-grid">
-                <div className="md-cell md-cell--6 md-cell--bottom">
-                  <C_SelectField
-                    name="orderLayout"
-                    id="orderLayout"
-                    value={this.state.fields.orderLayout}
-                    onChange={this.onChange}
-                    type="text"
-                    labelElement="description"
-                    valueElement="id"
-                    label={"Layout da Ordem"}
-                    placeholder={"Selecione"}
-                    list={this.state.layouts}
-                    required={true}
-                    style={{ width: "100%" }}
-                  />
-                </div>
-                <div className="md-cell md-cell--6 md-cell--bottom">
-                  <C_SelectField
-                    id="priority"
-                    name="priority"
-                    value={this.state.fields.priority}
-                    onChange={this.onChange}
-                    type="text"
-                    label={"Prioridade"}
-                    placeholder={"Selecione"}
-                    list={this.state.priority}
-                    required={true}
-                    style={{ width: "100%" }}
-                  />
-                </div>
-              </div>
-              <div className="md-grid">
-                <div className="md-cell md-cell--6 md-cell--bottom">
-                  <C_AutoComplete
-                    id="installationArea"
-                    name="installationArea"
-                    onChange={this.onChange}
-                    type="search"
-                    list={this.state.listAreas}
-                    label="Local de Instalação"
-                    placeholder="Local de Instalação"
-                    rightIcon={"search"}
-                    value={this.state.completeArea}
-                    dataSelected={this.areaComplete}
-                  />
-                </div>
-                <div className="md-cell md-cell--6 md-cell--bottom">
-                  <C_AutoComplete
-                    id="orderClassification"
-                    name="orderClassification"
-                    onChange={this.onChange}
-                    type="search"
-                    list={this.state.classifications}
-                    label="Classificação da Ordem"
-                    placeholder="Classificação da Ordem"
-                    rightIcon={"search"}
-                    value={this.state.completeClassification}
-                    dataSelected={this.classificationComplete}
-                  />
-                </div>
-              </div>
-              <div className="md-grid">
-                <div className="md-cell md-cell--6 md-cell--bottom">
-                  <C_AutoComplete
-                    id="workCenter"
-                    name="workCenter"
-                    onChange={this.onChange}
-                    type="search"
-                    list={this.state.listWorkcenter}
-                    label="Centro de Trabalho"
-                    placeholder="Centro de Trabalho"
-                    rightIcon={"search"}
-                    value={this.state.completeWorkcenter}
-                    dataSelected={this.workcenterComplete}
-                  />
-                </div>
-                <div className="md-cell md-cell--6 md-cell--bottom">
-                  <C_SelectField
-                    name="user"
-                    id="user"
-                    value={this.state.fields.userRequest}
-                    onChange={this.onChange}
-                    type="text"
-                    labelElement="name"
-                    valueElement="id"
-                    label={"Solicitante"}
-                    placeholder={"Selecione"}
-                    list={this.state.listUsers}
-                    required={false}
-                    style={{ width: "100%" }}
-                  />
-                </div>
-              </div>
-              <div className="md-grid">
-                <div className="md-cell md-cell--12 md-cell--bottom">
-                  <C_TextField
-                    id="description"
-                    name="description"
-                    value={this.state.fields.description}
-                    onChange={this.onChange}
-                    type="text"
-                    label="Descrição do Problema"
-                    placeholder="Descrição do Problema"
-                    required={false}
-                    rows={3}
-                  />
-                </div>
-              </div>
-            </form>
+            <C_Tabs tabs={tabs} onClick={(selectedTab) => this.setState({ selectedTab })}>
+              <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
+                {!this.state.selectedTab || this.state.selectedTab == "info_main" ?
+                  <div>
+                    <div className="md-grid">
+                      <div className="md-cell md-cell--12 md-cell--bottom">
+                        <C_AutoComplete
+                          id="id"
+                          name="id"
+                          description="orderNumber"
+                          onChange={this.onChange}
+                          type="search"
+                          list={this.state.listOrders}
+                          label="Buscar Ordem de Manutenção"
+                          placeholder="Buscar Ordem de Manutenção"
+                          rightIcon={"search"}
+                          value={this.state.completeOrder}
+                          dataSelected={this.orderComplete}
+                          required={true}
+                        />
+                      </div>
+                      <div className="md-cell md-cell--6 md-cell--bottom">
+                        <C_TextField
+                          id="orderNumber"
+                          name="orderNumber"
+                          value={this.state.fields.orderNumber}
+                          onChange={this.onChange}
+                          type="search"
+                          label="Número da Ordem"
+                          placeholder="Número da Ordem"
+                          required={true}
+                        />
+                      </div>
+                      <div className="md-cell md-cell--6 md-cell--bottom">
+                        <C_AutoComplete
+                          id="orderType"
+                          name="orderType"
+                          onChange={this.onChange}
+                          type="search"
+                          list={this.state.listTypes}
+                          label="Tipo da Ordem de Manutenção"
+                          placeholder="Tipo da Ordem de Manutenção"
+                          rightIcon={"search"}
+                          value={this.state.completeOrderType}
+                          dataSelected={this.orderTypeComplete}
+                          required={true}
+                        />
+                      </div>
+                    </div>
+                    <div className="md-grid">
+                      <div className="md-cell md-cell--6 md-cell--bottom">
+                        <C_SelectField
+                          name="orderLayout"
+                          id="orderLayout"
+                          value={this.state.fields.orderLayout}
+                          onChange={this.onChange}
+                          type="text"
+                          labelElement="description"
+                          valueElement="id"
+                          label={"Layout da Ordem"}
+                          placeholder={"Selecione"}
+                          list={this.state.layouts}
+                          required={true}
+                          style={{ width: "100%" }}
+                        />
+                      </div>
+                      <div className="md-cell md-cell--6 md-cell--bottom">
+                        <C_SelectField
+                          id="priority"
+                          name="priority"
+                          value={this.state.fields.priority}
+                          onChange={this.onChange}
+                          type="text"
+                          label={"Prioridade"}
+                          placeholder={"Selecione"}
+                          list={this.state.priority}
+                          required={true}
+                          style={{ width: "100%" }}
+                        />
+                      </div>
+                    </div>
+                    <div className="md-grid">
+                      <div className="md-cell md-cell--6 md-cell--bottom">
+                        <C_AutoComplete
+                          id="installationArea"
+                          name="installationArea"
+                          onChange={this.onChange}
+                          type="search"
+                          list={this.state.listAreas}
+                          label="Local de Instalação"
+                          placeholder="Local de Instalação"
+                          rightIcon={"search"}
+                          value={this.state.completeArea}
+                          dataSelected={this.areaComplete}
+                          required={true}
+                        />
+                      </div>
+                      <div className="md-cell md-cell--6 md-cell--bottom">
+                        <C_AutoComplete
+                          id="orderClassification"
+                          name="orderClassification"
+                          onChange={this.onChange}
+                          type="search"
+                          list={this.state.classifications}
+                          label="Classificação da Ordem"
+                          placeholder="Classificação da Ordem"
+                          rightIcon={"search"}
+                          value={this.state.completeClassification}
+                          dataSelected={this.classificationComplete}
+                          required={true}
+                        />
+                      </div>
+                    </div>
+                    <div className="md-grid">
+                      <div className="md-cell md-cell--6 md-cell--bottom">
+                        <C_AutoComplete
+                          id="workCenter"
+                          name="workCenter"
+                          onChange={this.onChange}
+                          type="search"
+                          list={this.state.listWorkcenter}
+                          label="Centro de Trabalho"
+                          placeholder="Centro de Trabalho"
+                          rightIcon={"search"}
+                          value={this.state.completeWorkcenter}
+                          dataSelected={this.workcenterComplete}
+                          required={true}
+                        />
+                      </div>
+                      <div className="md-cell md-cell--6 md-cell--bottom">
+                        <C_SelectField
+                          name="user"
+                          id="user"
+                          value={this.state.fields.userRequest}
+                          onChange={this.onChange}
+                          type="text"
+                          labelElement="name"
+                          valueElement="id"
+                          label={"Solicitante"}
+                          placeholder={"Selecione"}
+                          list={this.state.listUsers}
+                          required={true}
+                          style={{ width: "100%" }}
+                        />
+                      </div>
+                    </div>
+                    <div className="md-grid">
+                      <div className="md-cell md-cell--12 md-cell--bottom">
+                        <C_TextField
+                          id="description"
+                          name="description"
+                          value={this.state.fields.description}
+                          onChange={this.onChange}
+                          type="text"
+                          label="Descrição do Problema"
+                          placeholder="Descrição do Problema"
+                          required={false}
+                          rows={3}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  : undefined}
+
+                {this.state.selectedTab == "equipments" ?
+                  <div className="md-grid">
+                    <div className="md-cell md-cell--12 md-cell--bottom">
+                      <C_AutoComplete
+                        id="orderEquipmentId"
+                        name="orderEquipmentId"
+                        onChange={this.onChange}
+                        type="search"
+                        list={this.state.listEquipments}
+                        label="Adicionar Equipamento"
+                        placeholder="Adicionar Equipamento"
+                        rightIcon={"search"}
+                        value={this.state.completeEquipment}
+                        dataSelected={this.equipmentComplete}
+                      />
+                    </div>
+                    <div style={{ height: 200, position: "relative" }} className="md-cell md-cell--12 md-cell--bottom">
+
+                      {orderEquipments && orderEquipments.length > 0 ?
+                        <div onClick={() => this.setState({ showModalEquipments: true })} className="slideInRight" style={{ alignItems: "center", display: "flex", left: 0, position: "absolute" }}>
+                          <div className="effectfront" style={{ cursor: "pointer", padding: 5, backgroundColor: "#A40003", color: "white", width: 30, height: 30, borderRadius: 22 }}>
+                            <div style={{ fontSize: 16, textAlign: "center" }}>{orderEquipments.length}</div>
+                          </div>
+                          <div style={{ color: "#A40003", marginLeft: 10, fontSize: 14 }}>{orderEquipments.length == 1 ? "Equipamento Adicionado!" : "Equipamentos Adicionados!"}</div>
+                        </div>
+                        : undefined}
+
+                      {this.state.showModalEquipments && orderEquipments.length > 0 ?
+                        <div className="zoomIn" style={{ position: "absolute", width: "100%", zIndex: 2 }}>
+                          <C_Icon
+                            style={{ cursor: "pointer", position: "absolute", right: 0 }}
+                            icon="close"
+                            action={() => this.setState({ showModalEquipments: false })}
+                          />
+                          {orderEquipments.map((item, i) =>
+                            <div>
+                              <div style={{ position: "relative" }}>
+                                <C_Icon
+                                  iconSize={16}
+                                  style={{ color: "#A40003", cursor: "pointer", position: "absolute", top: 0, margin: 10 }}
+                                  icon="delete"
+                                  action={() => {
+                                    orderEquipments.splice(i, 1);
+
+                                    this.setState({ orderEquipments })
+
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <C_Card
+                                  icon={i + 1}
+                                  title={<div style={{ fontWeight: "bold" }}>{item.equipment.description}</div>}
+                                  subtitle={item.equipment.machineType.description}
+                                  style={{ width: "100%" }}
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        : undefined}
+                    </div>
+                  </div>
+                  : undefined}
+              </form>
+            </C_Tabs>
           </section>
-        <C_CrudButtons
-          onSave={this.save}
-          onClean={this.clean}
-          onDelete={this.delete}
-          crudLevel={!!this.state.fields.id}
-        />
-      </DialogContainer>
+          <C_CrudButtons
+            onSave={this.save}
+            onClean={this.clean}
+            onDelete={this.delete}
+            crudLevel={!!this.state.fields.id}
+          />
+        </DialogContainer>
+      </div>
     );
   }
 }
+
+/* <div className="md-cell md-cell--6 md-cell--bottom">
+    <C_TextField
+      id="superiorMachine"
+      name="superiorMachine"
+      value={this.state.fields.superiorMachine}
+      onChange={this.onChange}
+      type="search"
+      label="Equipamento Superior"
+      placeholder="Equipamento Superior"
+      rightIcon={"search"}
+      required={true}
+    />
+  </div> */
 /* <div className="md-grid">
   <div className="md-cell md-cell--6 md-cell--bottom">
     <C_TextField

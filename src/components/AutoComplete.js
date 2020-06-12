@@ -74,6 +74,7 @@ class C_AutoComplete extends Component {
       <div>
         <Autocomplete
           id={this.props.name}
+          required={this.props.required}
           name={this.props.name}
           disabled={this.props.disabled}
           value={this.props.value}
