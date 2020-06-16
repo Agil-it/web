@@ -71,16 +71,7 @@ class Dashboard extends Component {
     }
 
     this.setState({ orders: list, showLoading: false })
-    // let orders = [
-    //   {
-    //     id: 1,
-    //     OrderNumber: "OM - 445588/D37",
-    //     Type: "Preventiva",
-    //     Priority: "Alta",
-    //     Equipment: "JDB388/32",
-    //     OpenDate: "09/05/2019 ás 23:53",
-    //     Status: "Aberta",
-    //   },
+
   }
 
   render() {
@@ -90,15 +81,13 @@ class Dashboard extends Component {
     // console.log("Dashboard -> render -> orders", orders)
 
     const columns = [
-      { name: "Abertura" },
-      { name: "Ordem Manutenção" },
-      { name: "Tipo" },
-      { name: "Equipamento" },
-      { name: "Prioridade" },
-      { name: "Status" },
+      { name: "Abertura", property: "openedDate", defaultValue: "Não identificado", format: (value) => DateHelper.formatDate(value) },
+      { name: "Ordem Manutenção", property:"orderNumber", defaultValue: "Sem Número" },
+      { name: "Tipo", property:"orderLayout.description", defaultValue: "Não identificado" },
+      { name: "Equipamento", property:"orderEquipment[0].equipment.description", defaultValue: "Sem Equipamento" },
+      { name: "Prioridade", property: "priority", defaultValue: "Sem Prioridade", format: (value) => HelperOM.translate("priority", value) },
+      { name: "Status", property: "orderStatus", defaultValue: "Sem Status", format: (value) => HelperOM.translate("status", value) },
     ]
-
-
 
     return (
       this.state.showOrderDetails ?
@@ -196,8 +185,8 @@ class Dashboard extends Component {
                   content={this.state.orders}
                   onClick={(event) => {
                     this.setState({ showOrderDetails: true, orderDetails: event })
-                  }
-                  }
+                  }}
+                  showEffect={true}
                 >
                 </C_Table>
               </div>

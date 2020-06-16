@@ -1,15 +1,8 @@
 import React, { PureComponent } from 'react';
-import {
-  DataTable,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableColumn,
-  TablePagination,
-} from 'react-md';
+import {DataTable,TableHeader,TableBody,TableRow,TableColumn,TablePagination} from 'react-md';
 import '../index.css';
-import { MaintenanceOrderHelper as HelperOM } from "../helpers/MaintenanceOrder"
-import { DateHelper } from "../helpers/Date"
+import { ObjectHelper } from "../helpers/Object"
+import {C_Icon} from "./Icon";
 
 
 export class C_Table extends React.Component {
@@ -25,6 +18,16 @@ export class C_Table extends React.Component {
     }
   }
 
+  getValueProperty(object = {}, {property = "", defaultValue = "", format} = {}){
+    let value = ObjectHelper.getPropertys(object, property, defaultValue)
+
+    if(value == defaultValue) return value;
+
+    if(typeof format == "function") value = format(value);
+
+    return value
+  }
+
 
   render() {
     var columns = this.state.columns;
@@ -38,10 +41,9 @@ export class C_Table extends React.Component {
     }
 
     var defaultStyleRows = {
-      textAlign: "left",
+      textAlign: this.props.textAlign ? this.props.textAlign : "left",
       fontSize: 16,
     }
-    console.log("C_Table -> render -> columns", columns);
 
     return (
       <div style={{ border: "1px solid silver", borderRadius: 5 }}>
@@ -49,23 +51,25 @@ export class C_Table extends React.Component {
           <TableHeader>
             <TableRow selectable={false}>
               {columns && columns.map((colum) => (
-                <TableColumn style={{ color: "black", textAlign: "left", fontSize: 20 }}>{colum.name ? colum.name : ""}</TableColumn>
+                <TableColumn style={{ color: "black", textAlign: this.props.textAlign ? this.props.textAlign : "left", fontSize: 20 }}>{colum.name ? colum.name : ""}</TableColumn>
               ))}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {content && content.map((content) => (
-              <TableRow style={{ cursor: "pointer" }} onClick={() => this.props.onClick(content)} className={"effectfrontSmall"} key={content.id} selectable={false}>
-                <TableColumn header={true} style={defaultStyleRows}>{DateHelper.formatDate(content.openedDate)}</TableColumn>
-                <TableColumn header={true} style={defaultStyleRows}>{content.orderNumber ? content.orderNumber : ""}</TableColumn>
-                <TableColumn header={true} style={defaultStyleRows}>{content.orderLayout.description ? content.orderLayout.description : ""}</TableColumn>
-                <TableColumn header={true} style={defaultStyleRows}>{content.orderEquipment[0] ? content.orderEquipment[0].equipment.description : "Sem Equipamento"}</TableColumn>
-                <TableColumn header={true} style={defaultStyleRows}> {HelperOM.translate("priority", content.priority)}</TableColumn>
-                <TableColumn header={true} style={defaultStyleRows}> {HelperOM.translate("status", content.orderStatus)}</TableColumn>
+            {content && content.map((content, i) => (
+              <TableRow style={{ cursor: "pointer" }} onClick={() => this.props.onClick(content)} className={this.props.showEffect ? "effectfrontSmall" : ""} key={content.id} selectable={false}>
+                {columns && columns.map((colum) => (
+                  <TableColumn header={true} style={defaultStyleRows}>
+                    {colum.icon ? 
+                      <C_Icon icon={colum.icon} action={() => colum.action(i)}/>
+                      : this.getValueProperty(content, colum)
+                    }
+                  </TableColumn>
+                ))}
               </TableRow>
             ))}
           </TableBody>
-          <TablePagination rows={1} rowsPerPageLabel={1} onPagination={this.handlePagination} />
+          {this.props.showPagination ? <TablePagination rows={1} rowsPerPageLabel={1} onPagination={this.handlePagination} /> : undefined }
         </DataTable>
       </div>
     );

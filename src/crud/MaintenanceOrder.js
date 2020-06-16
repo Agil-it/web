@@ -17,6 +17,9 @@ import { UserProvider } from '../providers/User';
 import C_Card from '../components/Card';
 import { C_Icon } from '../components/Icon';
 import { C_Tabs } from '../components/Tabs';
+import { MessageModal } from '../components/Message';
+import { C_Table } from '../components/Table';
+
 
 
 class CreateMaintenanceOrder extends Component {
@@ -39,6 +42,17 @@ class CreateMaintenanceOrder extends Component {
         { label: 'Baixa', value: 'low' },
 
       ],
+      columns: [
+        { name: "Equipamento", property: "equipment.description" },
+        { name: "Tipo de Máquina", property: "equipment.machineType.description" },
+        { name: "Excluir", icon: "delete", action: (index) => this.removeEquipment(index) },
+      ],
+
+      tabs: [
+        { name: "Informações Principais", value: "info_main" },
+        { name: "Equipamentos", value: "equipments" },
+        { name: "Operações", value: "operations" },
+      ]
     };
 
     // this.provider = new HandlerProvider(new UserProvider(), "usuário")
@@ -177,6 +191,14 @@ class CreateMaintenanceOrder extends Component {
     }, () => this.loadingData());
   }
 
+  removeEquipment(index) {
+    console.log("CreateMaintenanceOrder -> removeEquipment -> index", index)
+    let { orderEquipments } = this.state
+    orderEquipments.splice(index, 1)
+
+    this.setState({orderEquipments})
+  }
+
   delete() {
     let order = this.state.fields;
     this.provider.delete(order.id, this.clean)
@@ -184,19 +206,25 @@ class CreateMaintenanceOrder extends Component {
 
   checkData() {
     const { orderType, orderClassification, orderLayout, fields } = this.state
+    const errors = [];
 
-    if (!orderType) return this.setState({ errorMessage: "Informe o Tipo de Ordem" });
-    if (!orderClassification) return this.setState({ errorMessage: "Informe a Classificação da Ordem" });
-    if (!orderLayout) return this.setState({ errorMessage: "Informe o Layout da Ordem" });
 
-    return "OK";
+    if (!orderType) errors.push("Informe o Tipo de Ordem")
+    if (!orderClassification) errors.push("Informe a Classificação da Ordem");
+    if (!orderLayout) errors.push("Informe o Layout da Ordem");
+
+    return errors;
   }
 
   save() {
 
-    let status = this.checkData();
+    const errors = this.checkData();
 
-    if (status != "OK") return
+    if (errors.length > 0) {
+      MessageModal.informationList("Erro", "Informe os campos obrigatórios", errors, null)
+
+      return
+    }
 
     let fields = this.state.fields;
 
@@ -390,16 +418,10 @@ class CreateMaintenanceOrder extends Component {
   render() {
 
     console.log("render -> STATE", this.state)
-
-    const tabs = [
-      { name: "Informações Principais", value: "info_main" },
-      { name: "Equipamentos", value: "equipments" }
-    ]
-    var orderEquipments = this.state.orderEquipments;
+    var { orderEquipments, columns, tabs } = this.state;
 
     return (
       <div>
-        {this.state.errorMessage ? alert(this.state.errorMessage) : undefined}
 
         <DialogContainer
           id="simple-full-page-dialog"
@@ -597,51 +619,13 @@ class CreateMaintenanceOrder extends Component {
                         dataSelected={this.equipmentComplete}
                       />
                     </div>
-                    <div style={{ height: 200, position: "relative" }} className="md-cell md-cell--12 md-cell--bottom">
-
-                      {orderEquipments && orderEquipments.length > 0 ?
-                        <div onClick={() => this.setState({ showModalEquipments: true })} className="slideInRight" style={{ alignItems: "center", display: "flex", left: 0, position: "absolute" }}>
-                          <div className="effectfront" style={{ cursor: "pointer", padding: 5, backgroundColor: "#A40003", color: "white", width: 30, height: 30, borderRadius: 22 }}>
-                            <div style={{ fontSize: 16, textAlign: "center" }}>{orderEquipments.length}</div>
-                          </div>
-                          <div style={{ color: "#A40003", marginLeft: 10, fontSize: 14 }}>{orderEquipments.length == 1 ? "Equipamento Adicionado!" : "Equipamentos Adicionados!"}</div>
-                        </div>
-                        : undefined}
-
-                      {this.state.showModalEquipments && orderEquipments.length > 0 ?
-                        <div className="zoomIn" style={{ position: "absolute", width: "100%", zIndex: 2 }}>
-                          <C_Icon
-                            style={{ cursor: "pointer", position: "absolute", right: 0 }}
-                            icon="close"
-                            action={() => this.setState({ showModalEquipments: false })}
-                          />
-                          {orderEquipments.map((item, i) =>
-                            <div>
-                              <div style={{ position: "relative" }}>
-                                <C_Icon
-                                  iconSize={16}
-                                  style={{ color: "#A40003", cursor: "pointer", position: "absolute", top: 0, margin: 10 }}
-                                  icon="delete"
-                                  action={() => {
-                                    orderEquipments.splice(i, 1);
-
-                                    this.setState({ orderEquipments })
-
-                                  }}
-                                />
-                              </div>
-                              <div>
-                                <C_Card
-                                  icon={i + 1}
-                                  title={<div style={{ fontWeight: "bold" }}>{item.equipment.description}</div>}
-                                  subtitle={item.equipment.machineType.description}
-                                  style={{ width: "100%" }}
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                        : undefined}
+                    <div className="md-cell md-cell--12 md-cell--bottom">
+                      <C_Table
+                        columns={columns}
+                        content={this.state.orderEquipments}
+                        onClick={() => { return }}
+                        textAlign="center"
+                      />
                     </div>
                   </div>
                   : undefined}
