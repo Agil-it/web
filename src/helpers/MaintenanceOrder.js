@@ -6,10 +6,19 @@ export class MaintenanceOrderHelper {
     if (prop == "priority") props = this.getPriority();
     else if (prop == "status") props = this.getStatus();
     else if (prop == "color") props = this.getColorPriority();
+    else if (prop == "layout") props = this.getLayoutType();
     else return value;
 
     return props[value];
 
+  }
+
+  static getLayoutType(){
+    return {
+      default: 'Corretiva | Preventiva',
+      route: 'ROTA',
+      list: 'LISTA',
+    }
   }
 
   static getColorPriority() {

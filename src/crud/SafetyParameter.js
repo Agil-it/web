@@ -10,7 +10,7 @@ import {
 import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
 import C_SelectField from '../components/SelectField';
-import C_CheckBox from '../components/CheckBox';
+import {C_CheckBox} from '../components/CheckBox';
 import { HandlerProvider } from '../providers/handler';
 import { SafetyParameterProvider } from '../providers/SafetyParameter';
 import { ObjectHelper } from '../helpers/Object';

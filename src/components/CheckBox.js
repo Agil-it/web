@@ -3,7 +3,7 @@ import Checkbox  from 'react-md/lib/SelectionControls/Checkbox';
 import Switch from 'react-md/lib/SelectionControls/Switch';
 import '../index.css';
 
-export default class C_Checkbox extends React.Component {
+export class C_CheckBox extends React.Component {
 
   constructor(props) {
     super(props);

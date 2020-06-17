@@ -11,7 +11,7 @@ import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
 import { C_Button } from '../components/Button';
 import C_SelectField from '../components/SelectField';
-import C_CheckBox from '../components/CheckBox';
+import {C_CheckBox} from '../components/CheckBox';
 import {C_Calendar} from '../components/Calendar';
 import C_RadioGroup from '../components/RadioGroup';
 import { HandlerProvider } from '../providers/handler';

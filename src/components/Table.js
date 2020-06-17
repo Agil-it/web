@@ -42,7 +42,7 @@ export class C_Table extends React.Component {
 
     var defaultStyleRows = {
       textAlign: this.props.textAlign ? this.props.textAlign : "left",
-      fontSize: 16,
+      fontSize: this.props.fontSize ? this.props.fontSize : 16,
     }
 
     return (
@@ -51,7 +51,11 @@ export class C_Table extends React.Component {
           <TableHeader>
             <TableRow selectable={false}>
               {columns && columns.map((colum) => (
-                <TableColumn style={{ color: "black", textAlign: this.props.textAlign ? this.props.textAlign : "left", fontSize: 20 }}>{colum.name ? colum.name : ""}</TableColumn>
+                <TableColumn style={{ 
+                  color: "black", 
+                  textAlign: this.props.textAlign ? this.props.textAlign : "left", 
+                  fontSize: this.props.titleSize ? this.props.titleSize : 20 }}>{colum.name ? colum.name : ""}
+                </TableColumn>
               ))}
             </TableRow>
           </TableHeader>

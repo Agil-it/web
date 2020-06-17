@@ -5,6 +5,7 @@ import C_CrudButtons from '../components/CrudButtons';
 import C_SelectField from '../components/SelectField';
 import { HandlerProvider } from '../providers/handler';
 import { ObjectHelper } from '../helpers/Object';
+import { MaintenanceOrderHelper as HelperOM } from '../helpers/MaintenanceOrder';
 import C_AutoComplete from '../components/AutoComplete';
 import { MaintenanceOrderProvider } from '../providers/MaintenanceOrder';
 import { InstallationAreaProvider } from '../providers/InstallationArea';
@@ -14,14 +15,9 @@ import { MachineProvider } from '../providers/Machine';
 import { OrderLayoutProvider } from '../providers/OrderLayout';
 import { WorkCenterProvider } from '../providers/WorkCenter';
 import { UserProvider } from '../providers/User';
-import C_Card from '../components/Card';
-import { C_Icon } from '../components/Icon';
 import { C_Tabs } from '../components/Tabs';
 import { MessageModal } from '../components/Message';
 import { C_Table } from '../components/Table';
-
-
-
 class CreateMaintenanceOrder extends Component {
 
   constructor(props) {
@@ -49,7 +45,7 @@ class CreateMaintenanceOrder extends Component {
       ],
 
       tabs: [
-        { name: "Informações Principais", value: "info_main" },
+        { name: "Dados Gerais", value: "info_main" },
         { name: "Equipamentos", value: "equipments" },
         { name: "Operações", value: "operations" },
       ]
@@ -415,10 +411,28 @@ class CreateMaintenanceOrder extends Component {
     event.preventDefault()
   }
 
+  getOrderLayout(id, layouts){
+    var layoutId = id;
+    var layoutType = ""
+
+    for (let i = 0; i < layouts.length; i++) {
+      const layout = layouts[i];
+
+      if (layout.id == layoutId) {
+        layoutType = layout.orderLayout;
+        return layoutType;
+      }
+    }
+  }
+
   render() {
 
     console.log("render -> STATE", this.state)
-    var { orderEquipments, columns, tabs } = this.state;
+    var { layouts, fields, orderEquipments, tabs } = this.state;
+    var layoutType = undefined;
+
+    if (fields.orderLayout) layoutType = this.getOrderLayout(fields.orderLayout, layouts)
+    console.log("CreateMaintenanceOrder -> render -> layoutType", layoutType)
 
     return (
       <div>
@@ -438,7 +452,14 @@ class CreateMaintenanceOrder extends Component {
             style={{ borderRadius: 5 }}
             actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
           />
-          <section className="md-toolbar-relative">
+          <section style={{ position: "relative" }} className="md-toolbar-relative">
+            {layoutType ?
+              <div className="slideInLeft">
+                <span style={{fontWeight:"bold", fontStyle:"italic", padding:"2px 12px", minWidth:100, borderRadius: 10, top: 35, right: 0, position: "absolute", textAlign: "center", fontSize: 15, fontFamily: "sans-serif", backgroundColor: "#424242", color: "white" }}>
+                  {HelperOM.translate("layout", layoutType)}
+                </span>
+              </div>
+            : undefined}
             <C_Tabs tabs={tabs} onClick={(selectedTab) => this.setState({ selectedTab })}>
               <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
                 {!this.state.selectedTab || this.state.selectedTab == "info_main" ?
@@ -495,7 +516,6 @@ class CreateMaintenanceOrder extends Component {
                           id="orderLayout"
                           value={this.state.fields.orderLayout}
                           onChange={this.onChange}
-                          type="text"
                           labelElement="description"
                           valueElement="id"
                           label={"Layout da Ordem"}
@@ -621,8 +641,10 @@ class CreateMaintenanceOrder extends Component {
                     </div>
                     <div className="md-cell md-cell--12 md-cell--bottom">
                       <C_Table
-                        columns={columns}
-                        content={this.state.orderEquipments}
+                        titleSize={16}
+                        fontSize={14}
+                        columns={this.state.columns}
+                        content={orderEquipments}
                         onClick={() => { return }}
                         textAlign="center"
                       />
