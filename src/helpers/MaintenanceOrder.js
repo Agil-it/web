@@ -48,8 +48,9 @@ export class MaintenanceOrderHelper {
       stopped: "Parada",
       canceled: "Cancelada",
       "signature-pending": "Assinatura Pendente",
-      Signatured: "Assinada",
+      signatured: "Assinada",
       finished: "Finalizada",
+      "no_status": "Sem Status",
     }
   }
 }

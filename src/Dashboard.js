@@ -9,6 +9,7 @@ import { C_MaintenanceOrder } from './components/Order';
 import { C_Loading } from './components/Loading';
 import { MaintenanceOrderHelper as HelperOM } from './helpers/MaintenanceOrder';
 import { DateHelper } from './helpers/Date';
+import { C_ToolTip } from './components/ToolTip';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -82,8 +83,7 @@ class Dashboard extends Component {
 
     const columns = [
       { name: "Abertura", property: "openedDate", defaultValue: "Não identificado", format: (value) => DateHelper.formatDate(value) },
-      { name: "Ordem Manutenção", property:"orderNumber", defaultValue: "Sem Número" },
-      { name: "Tipo", property:"orderLayout.description", defaultValue: "Não identificado" },
+      { name: "Descrição", property:"description", defaultValue: "Sem Descrição" },
       { name: "Equipamento", property:"orderEquipment[0].equipment.description", defaultValue: "Sem Equipamento" },
       { name: "Prioridade", property: "priority", defaultValue: "Sem Prioridade", format: (value) => HelperOM.translate("priority", value) },
       { name: "Status", property: "orderStatus", defaultValue: "Sem Status", format: (value) => HelperOM.translate("status", value) },
@@ -166,15 +166,15 @@ class Dashboard extends Component {
           <div style={{ position: "relative", alignItems: "center", display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
             <div style={{ position: "absolute", top: !this.state.showOrdersList ? -5 : 10, right: 12 }}>
               {orders && orders.length > 0 ?
-                <C_ButtonFloat
-                  icon={!this.state.showOrdersList ? "reorder" : "view_module"}
-                  tooltipLabel={!this.state.showOrdersList ? "Exibir como Lista" : "Exibir como Cartões"}
-                  tooltipPosition="left"
-                  secondary
-                  style={{ width: 51, height: 51 }}
-                  iconSize={25}
-                  action={() => this.setState({ showOrdersList: !this.state.showOrdersList ? true : false })}
-                />
+                <C_ToolTip position="left" tooltip={!this.state.showOrdersList ? "Exibir como Lista" : "Exibir como Cartões"}>
+                  <C_ButtonFloat
+                    icon={!this.state.showOrdersList ? "reorder" : "view_module"}
+                    secondary
+                    style={{ width: 51, height: 51 }}
+                    iconSize={25}
+                    action={() => this.setState({ showOrdersList: !this.state.showOrdersList ? true : false })}
+                  />
+                </C_ToolTip>
                 : undefined}
             </div>
 
@@ -206,15 +206,19 @@ class Dashboard extends Component {
             {orders && !this.state.showLoading && orders.map((order, i) => {
               return (
                 !this.state.showOrdersList ?
-                  <fieldset onClick={() => { this.setState({ showOrderDetails: true, orderDetails: order }) }} className={"effectfront"} style={{ cursor: "pointer", position: "relative", width: "30%", borderRadius: 5, border: "1px solid silver", marginBottom: 20, padding: 10, marginTop: 40, marginRight: 20 }}>
+                  <fieldset onClick={() => { this.setState({ showOrderDetails: true, orderDetails: order }) }} className={"effectfront"} style={{ cursor: "pointer", position: "relative", width:"30%",minWidth: "30%", borderRadius: 5, border: "1px solid silver", marginBottom: 20, padding: 10, marginTop: 40, marginRight: 20 }}>
                     <legend style={{ width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, marginBottom: 0, color: "#666666a6", fontWeight: "bold", fontSize: 25, marginTop: 100 }}>{order.orderNumber ? order.orderNumber : "SEM TÍTULO"}</legend>
                     <div style={{}}>
                       <div style={{ borderRadius: 5, top: 16, right: 0, position: "absolute", height: 194, width: 40, backgroundColor: HelperOM.translate("color", order.priority) }}></div>
-                      <div style={{ display: "flex" }}>
-                        <strong style={{ marginRight: 5, fontSize: 16 }}>Tipo:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.orderLayout.description}</p>
+                      <div style={{ width: '90%',display: "flex" }}>
+                        <strong style={{ marginRight: 5, fontSize: 16 }}>Descrição:</strong>
+                        <p style={{ whiteSpace: "nowrap", textOverflow: "ellipsis", width: "auto", overflow: "hidden", fontSize: 15, marginTop: 1 }}>{order.description}</p>
                       </div>
-                      <div style={{ display: "flex" }}>
-                        <strong style={{ marginRight: 5, fontSize: 16 }}>Equipamento:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{order.orderEquipment[0] ? order.orderEquipment[0].equipment.description : "Sem Equipamento"}</p>
+                      <div style={{ width:'90%', display: "flex" }}>
+                        <strong style={{ marginRight: 5, fontSize: 16 }}>Equipamento:</strong>
+                        <p style={{whiteSpace:"nowrap", textOverflow:"ellipsis", overflow:"hidden", fontSize: 15, marginTop: 1 }}>
+                          {order.orderEquipment[0] ? order.orderEquipment[0].equipment.description : "Sem Equipamento"}
+                        </p>
                       </div>
                       <div style={{ display: "flex" }}>
                         <strong style={{ marginRight: 5, fontSize: 16 }}>Prioridade:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{HelperOM.translate("priority", order.priority)}</p>
@@ -223,7 +227,7 @@ class Dashboard extends Component {
                         <strong style={{ marginRight: 5, fontSize: 16 }}>Abertura:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{DateHelper.formatDate(order.openedDate)}</p>
                       </div>
                       <div style={{ display: "flex" }}>
-                        <strong style={{ marginRight: 5, fontSize: 16 }}>Status:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{HelperOM.translate("status", order.orderStatus)}</p>
+                        <strong style={{ marginRight: 5, fontSize: 16 }}>Status:</strong><p style={{ fontSize: 15, marginTop: 1 }}>{HelperOM.translate("status", order.orderStatus ? order.orderStatus : "no_status")}</p>
                       </div>
                     </div>
                   </fieldset>

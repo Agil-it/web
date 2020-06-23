@@ -55,8 +55,8 @@ class CreateMaintenanceOrder extends Component {
     this.provider = new HandlerProvider(new MaintenanceOrderProvider(), "ordem de manutenção")
     this.providerEquipment = new HandlerProvider(new MachineProvider(), "equipamento")
     this.providerArea = new HandlerProvider(new InstallationAreaProvider(), "área de instalação")
-    this.providerOrderType = new HandlerProvider(new OrderTypeProvider(), "tipo de ordem")
-    this.providerClassification = new HandlerProvider(new ClassificationProvider(), "classificação da ordem")
+    // this.providerOrderType = new HandlerProvider(new OrderTypeProvider(), "tipo de ordem")
+    // this.providerClassification = new HandlerProvider(new ClassificationProvider(), "classificação da ordem")
     this.providerLayout = new HandlerProvider(new OrderLayoutProvider(), "layout da ordem")
     this.providerUser = new HandlerProvider(new UserProvider(), "usuário")
     this.providerWorkcenter = new HandlerProvider(new WorkCenterProvider(), "centro de trabalho")
@@ -68,11 +68,9 @@ class CreateMaintenanceOrder extends Component {
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
-    this.orderTypeComplete = this.orderTypeComplete.bind(this);
     this.orderComplete = this.orderComplete.bind(this);
     this.equipmentComplete = this.equipmentComplete.bind(this);
     this.areaComplete = this.areaComplete.bind(this);
-    this.classificationComplete = this.classificationComplete.bind(this);
     this.workcenterComplete = this.workcenterComplete.bind(this);
     this.getOrder = this.getOrder.bind(this);
     this.getEquipment = this.getEquipment.bind(this);
@@ -83,8 +81,8 @@ class CreateMaintenanceOrder extends Component {
     this.loadOrders();
     this.loadEquipments();
     this.loadAreas();
-    this.loadTypes();
-    this.loadClassifications();
+    // this.loadTypes();
+    // this.loadClassifications();
     this.loadLayouts();
     this.loadUsers();
     this.loadWorkCenters();
@@ -120,25 +118,25 @@ class CreateMaintenanceOrder extends Component {
     this.setState({ layouts })
   }
 
-  async loadClassifications() {
-    let classifications = []
-    let response = await this.providerClassification.getList();
-    console.log("CreateMaintenanceOrder -> listAreas -> response", response)
-    if (response.success) {
-      classifications = response.data
-    }
-    this.setState({ classifications })
-  }
+  // async loadClassifications() {
+  //   let classifications = []
+  //   let response = await this.providerClassification.getList();
+  //   console.log("CreateMaintenanceOrder -> listAreas -> response", response)
+  //   if (response.success) {
+  //     classifications = response.data
+  //   }
+  //   this.setState({ classifications })
+  // }
 
-  async loadTypes() {
-    let listTypes = []
-    let response = await this.providerOrderType.getList();
-    console.log("CreateMaintenanceOrder -> listAreas -> response", response)
-    if (response.success) {
-      listTypes = response.data
-    }
-    this.setState({ listTypes })
-  }
+  // async loadTypes() {
+  //   let listTypes = []
+  //   let response = await this.providerOrderType.getList();
+  //   console.log("CreateMaintenanceOrder -> listAreas -> response", response)
+  //   if (response.success) {
+  //     listTypes = response.data
+  //   }
+  //   this.setState({ listTypes })
+  // }
 
   async loadAreas() {
     let listAreas = []
@@ -201,13 +199,16 @@ class CreateMaintenanceOrder extends Component {
   }
 
   checkData() {
-    const { orderType, orderClassification, orderLayout, fields } = this.state
+    const { installationArea, orderEquipments, workCenter, fields } = this.state
     const errors = [];
 
-
-    if (!orderType) errors.push("Informe o Tipo de Ordem")
-    if (!orderClassification) errors.push("Informe a Classificação da Ordem");
-    if (!orderLayout) errors.push("Informe o Layout da Ordem");
+    if (!fields.orderNumber) errors.push("Número da Ordem");
+    if (!fields.orderLayout) errors.push("Layout da Ordem");
+    if (!fields.priority) errors.push("Prioridade da Ordem");
+    if (!fields.user) errors.push("Solicitante da Ordem");
+    if (!workCenter) errors.push("Centro de Trabalho");
+    if (!installationArea) errors.push("Local de Instalação");
+    if (orderEquipments.length <= 0) errors.push("Adicione no mínimo 1 Equipamento na Ordem");
 
     return errors;
   }
@@ -234,16 +235,12 @@ class CreateMaintenanceOrder extends Component {
       orderNumber: fields.orderNumber,
       orderEquipment: orderEquipments,
       orderLayout: {
-        id: fields.orderLayout
+        id: fields.orderLayout,
+        type: fields.orderType,
+        classification: fields.orderClassification
       },
       priority: fields.priority,
       openedDate: new Date(),
-      orderType: {
-        id: this.state.orderType.id
-      },
-      orderClassification: {
-        id: this.state.orderClassification.id
-      },
       needStopping: false
     }
     this.provider.save(order, this.clean)
@@ -263,16 +260,6 @@ class CreateMaintenanceOrder extends Component {
 
     if (name === "installationArea") {
       this.setState({ completeArea: e })
-      return
-    }
-
-    if (name === "orderType") {
-      this.setState({ completeOrderType: e })
-      return
-    }
-
-    if (name === "orderClassification") {
-      this.setState({ completeClassification: e })
       return
     }
 
@@ -305,21 +292,16 @@ class CreateMaintenanceOrder extends Component {
       descriptionArea: order && order.orderEquipment[0] ? order.orderEquipment[0].installationArea.description : "",
       superiorMachine: order && order.orderEquipment[0] && order.orderEquipment[0].superiorEquipment ? order.orderEquipment[0].superiorEquipment.description : "",
       orderLayout: order.orderLayout.id,
-      descriptionClassification: order.orderClassification.description,
-      descriptionOrderType: order.orderType.description,
+      orderType: order.orderLayout.type,
+      orderClassification: order.orderLayout.classification,
+      description: order.description
     }
 
     let installationArea = order && order.orderEquipment[0] ? order.orderEquipment[0].installationArea : {}
-    let orderType = order.orderType
-    let orderClassification = order.orderClassification
-
 
     this.setState({
-      fields, installationArea, orderType, orderClassification,
-      completeOrderType: fields.descriptionOrderType,
-      completeClassification: fields.descriptionClassification,
+      fields, installationArea, orderEquipments: order.orderEquipment,
       completeArea: fields.descriptionArea,
-      orderEquipments: order.orderEquipment
     })
   }
 
@@ -347,17 +329,29 @@ class CreateMaintenanceOrder extends Component {
     return
   }
 
-  classificationComplete(id, name) {
-    if (id === undefined) {
-      this.clean()
-      return
-    }
+  // classificationComplete(id, name) {
+  //   if (id === undefined) {
+  //     this.clean()
+  //     return
+  //   }
 
-    let orderClassification = this.state.classifications.find(element => element.id === id)
+  //   let orderClassification = this.state.classifications.find(element => element.id === id)
 
-    this.setState({ orderClassification })
-    return
-  }
+  //   this.setState({ orderClassification })
+  //   return
+  // }
+
+  // orderTypeComplete(id, name) {
+  //   if (id === undefined) {
+  //     this.clean()
+  //     return
+  //   }
+
+  //   let orderType = this.state.listTypes.find(element => element.id === id)
+
+  //   this.setState({ orderType })
+  //   return
+  // }
 
   areaComplete(id, name) {
     if (id === undefined) {
@@ -368,18 +362,6 @@ class CreateMaintenanceOrder extends Component {
     let installationArea = this.state.listAreas.find(element => element.id === id)
 
     this.setState({ installationArea })
-    return
-  }
-
-  orderTypeComplete(id, name) {
-    if (id === undefined) {
-      this.clean()
-      return
-    }
-
-    let orderType = this.state.listTypes.find(element => element.id === id)
-
-    this.setState({ orderType })
     return
   }
 
@@ -494,49 +476,44 @@ class CreateMaintenanceOrder extends Component {
                         />
                       </div>
                       <div className="md-cell md-cell--6 md-cell--bottom">
-                        <C_AutoComplete
-                          id="orderType"
-                          name="orderType"
-                          onChange={this.onChange}
-                          type="search"
-                          list={this.state.listTypes}
-                          label="Tipo da Ordem de Manutenção"
-                          placeholder="Tipo da Ordem de Manutenção"
-                          rightIcon={"search"}
-                          value={this.state.completeOrderType}
-                          dataSelected={this.orderTypeComplete}
-                          required={true}
-                        />
-                      </div>
-                    </div>
-                    <div className="md-grid">
-                      <div className="md-cell md-cell--6 md-cell--bottom">
                         <C_SelectField
                           name="orderLayout"
                           id="orderLayout"
                           value={this.state.fields.orderLayout}
                           onChange={this.onChange}
-                          labelElement="description"
+                          labelElement="classification"
                           valueElement="id"
                           label={"Layout da Ordem"}
                           placeholder={"Selecione"}
                           list={this.state.layouts}
                           required={true}
                           style={{ width: "100%" }}
+                        />                        
+                      </div>
+                    </div>
+                    <div className="md-grid">
+                      <div className="md-cell md-cell--6 md-cell--bottom">
+                        <C_TextField
+                          id="orderType"
+                          name="orderType"
+                          onChange={this.onChange}
+                          type="text"
+                          label="Tipo da Ordem de Manutenção"
+                          placeholder="Tipo da Ordem de Manutenção"
+                          value={this.state.fields.orderType}
+                          disabled={true}
                         />
                       </div>
                       <div className="md-cell md-cell--6 md-cell--bottom">
-                        <C_SelectField
-                          id="priority"
-                          name="priority"
-                          value={this.state.fields.priority}
+                        <C_TextField
+                          id="orderClassification"
+                          name="orderClassification"
                           onChange={this.onChange}
                           type="text"
-                          label={"Prioridade"}
-                          placeholder={"Selecione"}
-                          list={this.state.priority}
-                          required={true}
-                          style={{ width: "100%" }}
+                          label="Classificação da Ordem"
+                          placeholder="Classificação da Ordem"
+                          value={this.state.fields.orderClassification}
+                          disabled={true}
                         />
                       </div>
                     </div>
@@ -557,19 +534,18 @@ class CreateMaintenanceOrder extends Component {
                         />
                       </div>
                       <div className="md-cell md-cell--6 md-cell--bottom">
-                        <C_AutoComplete
-                          id="orderClassification"
-                          name="orderClassification"
+                        <C_SelectField
+                          id="priority"
+                          name="priority"
+                          value={this.state.fields.priority}
                           onChange={this.onChange}
-                          type="search"
-                          list={this.state.classifications}
-                          label="Classificação da Ordem"
-                          placeholder="Classificação da Ordem"
-                          rightIcon={"search"}
-                          value={this.state.completeClassification}
-                          dataSelected={this.classificationComplete}
+                          type="text"
+                          label={"Prioridade"}
+                          placeholder={"Selecione"}
+                          list={this.state.priority}
                           required={true}
-                        />
+                          style={{ width: "100%" }}
+                        />                        
                       </div>
                     </div>
                     <div className="md-grid">

@@ -9,6 +9,7 @@ import { DateHelper } from '../helpers/Date';
 import { C_Loading } from './Loading';
 import { MenuButton } from 'react-md';
 import {C_Operations} from './Operations';
+import { C_ToolTip } from './ToolTip';
 
 export class C_MaintenanceOrder extends React.Component {
   constructor(props) {
@@ -79,15 +80,15 @@ export class C_MaintenanceOrder extends React.Component {
         :
         <div style={{ width: "100%", backgroundColor: this.state.showBackgroundColor ? "#858585" : undefined, padding: 20 }}>
           <div style={{ position: "relative", display: "flex", justifyContent: "space-between", width: "95%", margin: "auto" }}>
-            <C_ButtonFloat
-              icon={"keyboard_backspace"}
-              tooltipLabel={"Voltar"}
-              tooltipPosition="right"
-              style={{ display:"flex", width: "auto", height: "auto" }}
-              iconSize={30}
-              secondary
-              action={() => this.props.onClose()}
-            />
+            <C_ToolTip tooltip="Voltar" position="right">
+              <C_ButtonFloat
+                icon={"keyboard_backspace"}
+                style={{ display:"flex", width: "auto", height: "auto" }}
+                iconSize={30}
+                secondary
+                action={() => this.props.onClose()}
+              />
+            </C_ToolTip>
             <h1 style={{ fontSize: "3em", fontWeight: "bold" }}>{order.orderNumber}</h1>
             <C_MenuButton
               style={{ backgroundColor: '#424242', color: "white", display:"flex", width: "auto", height: "auto" }}
@@ -96,24 +97,22 @@ export class C_MaintenanceOrder extends React.Component {
               options={this.state.configOptions}
               onClickItem={(item) => this.setState({ itemSelected : item, showBackgroundColor:true})}
             />
-              
           </div>
           <div>
-            <div style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
               <C_Icon style={{ fontSize: 60, color: HelperOM.translate("color", order.priority) }} icon="bookmark" />
               <span style={{ fontSize: 18, fontWeight: "bold", color: "#424242" }}>{`Prioridade ${HelperOM.translate("priority", order.priority)}`}</span>
-              <div style={{ padding: 10, width: "25%", borderRadius: 5, border: "1px solid silver", position: "absolute", top: 0, right: "12%" }}>
-                <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
-                  <span style={{ fontWeight: "bold", fontSize: 16 }}>{`Manutenção ${order.orderLayout.description}`}</span>
-                  <span>{order.orderType.description}</span>
-                  <span>{order.orderClassification.description}</span>
+            </div>
+            <div style={{ marginTop:"2%", padding: 10, width: "100%", borderRadius: 5, border: "1px solid silver"}}>
+              <div style={{ fontStyle:'oblique', display: "flex", justifyContent: "space-around", alignItems: "center" }}>
+                <span style={{ fontWeight: "bold", fontSize: 18 }}>{`ORDEM DE MANUTENÇÃO`}</span>
+                <span style={{ fontSize: 18 }}>{order.orderLayout.classification}</span>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <span style={{ fontWeight: "bold", fontSize: 18 }}>{`STATUS:`}</span>
+                  <span style={{ fontSize: 18, marginLeft: 5 }}>{HelperOM.translate("status", order.orderStatus)}</span>
                 </div>
               </div>
             </div>
-          </div>
-          <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "baseline", width: "80%", marginTop: 10 }}>
-            <h3 style={{ fontWeight: "bold" }}>{`STATUS:`}</h3>
-            <div style={{ fontSize: 18, marginLeft: 5 }}>{HelperOM.translate("status", order.orderStatus)}</div>
           </div>
           <div className="slideInLeft" style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
             <fieldset style={{ paddingTop: 10, paddingBottom: 10, width: "50%", borderRadius: 5, border: "1px solid silver" }}>
