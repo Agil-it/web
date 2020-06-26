@@ -38,8 +38,8 @@ class Dashboard extends Component {
       ],
 
       fields: {},
-      selectedStatus: "all",
-      selectedPriority: "all",
+      selectedStatus: "created",
+      selectedPriority: "high",
       showOrdersList: false
     }
 
@@ -91,7 +91,7 @@ class Dashboard extends Component {
 
     return (
       this.state.showOrderDetails ?
-        <div id="order" style={{ width: "100%" }}>
+        <div id="order" style={{ width: "100%", marginTop:20 }}>
           <C_MaintenanceOrder
             orderId={orderDetails.id}
             onClose={() => this.setState({ showOrderDetails: false })}
@@ -99,7 +99,7 @@ class Dashboard extends Component {
         </div>
         :
         <div style={{ width: "100%" }}>
-          <div style={{ padding: "6px 0px 2px 20px", borderBottom: "2px solid silver", position: "fixed", width: "100%", backgroundColor: "#fafafa", zIndex: 2 }}>
+          <div style={{ padding: "15px 0px 2px 20px", borderBottom: "2px solid silver", position: "fixed", width: "100%", backgroundColor: "#fafafa", zIndex: 2 }}>
             <h1 style={{ width: "100%", color: "black" }}>Monitor de Ordens de Manutenção</h1>
             <div className="md-grid" style={{ padding: 0 }}>
               <div className="md-cell md-cell--2">

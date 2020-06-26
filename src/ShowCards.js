@@ -68,17 +68,18 @@ class ShowCards extends Component {
     } else if (component === "superior machine") {
       return ReactDOM.render(<CreateSuperiorMachine onClose={this.unmountModal}/>, this.getDOMToRender())
 
-    } else if (component === "classification") {
-      return ReactDOM.render(<CreateClassification onClose={this.unmountModal}/>, this.getDOMToRender())
+    // } else if (component === "classification") {
+    //   return ReactDOM.render(<CreateClassification onClose={this.unmountModal}/>, this.getDOMToRender())
 
+    // } 
     } else if (component === "defect cause") {
       return ReactDOM.render(<CreateDefectCause onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "defect diagnostic") {
       return ReactDOM.render(<CreateDefectDiagnostic onClose={this.unmountModal}/>, this.getDOMToRender())
 
-    } else if (component === "order type") {
-      return ReactDOM.render(<CreateOrderType onClose={this.unmountModal}/>, this.getDOMToRender())
+    // } else if (component === "order type") {
+    //   return ReactDOM.render(<CreateOrderType onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "default note") {
       return ReactDOM.render(<CreateDefaultNote onClose={this.unmountModal}/>, this.getDOMToRender())
@@ -111,10 +112,10 @@ class ShowCards extends Component {
   render() {
 
     return (
-      <div style={{paddingBottom: "5%"}}>
+      <div style={{paddingBottom: 20}}>
         <span id="cardList"></span>
         <div style={{ marginTop: "2%", width: "50%" }}>
-          <h1 style={{ color: "#A40003", fontWeight: "bold", textAlign: "center" }}>Geral</h1>
+          <h2 style={{ color: "#A40003", fontWeight: "bold", textAlign: "left", marginLeft:"5%"}}>GERAL</h2>
           <hr />
         </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
@@ -163,7 +164,7 @@ class ShowCards extends Component {
           <div style={{ marginLeft: 20, marginTop: "3%", width: "20%" }}></div>
         </div>
         <div style={{ marginTop: "4%", width: "50%" }}>
-          <h1 style={{ color: "#A40003", fontWeight: "bold", textAlign: "center" }}>Equipamento</h1>
+          <h2 style={{ color: "#A40003", fontWeight: "bold", textAlign: "left", marginLeft:"5%"}}>EQUIPAMENTO</h2>
           <hr />
         </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
@@ -222,7 +223,7 @@ class ShowCards extends Component {
           />
         </div>
         <div style={{ marginTop: "4%", width: "50%" }}>
-          <h1 style={{ color: "#A40003", fontWeight: "bold", textAlign: "center" }}>Ordem de Manutenção</h1>
+          <h2 style={{ color: "#A40003", fontWeight: "bold", textAlign: "left", marginLeft:"5%"}}>ORDEM DE MANUTENÇÃO</h2>
           <hr />
         </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
@@ -231,9 +232,17 @@ class ShowCards extends Component {
             style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
             title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
             className={"effectfront"}
+            subtitle={"Layout de Ordem de Manutenção"}
+            onClick={() => this.renderComponent("order layout")}
+          />
+          {/* <C_Card
+            icon={<FontIcon>open_in_new</FontIcon>}
+            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
+            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
+            className={"effectfront"}
             subtitle={"Classificação da Ordem"}
             onClick={() => this.renderComponent("classification")}
-          />
+          /> */}
           <C_Card
             icon={<FontIcon>open_in_new</FontIcon>}
             style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
@@ -258,15 +267,6 @@ class ShowCards extends Component {
             style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
             title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
             className={"effectfront"}
-            subtitle={"Tipo de Ordem"}
-            onClick={() => this.renderComponent("order type")}
-          />
-          <C_Card
-            icon={<FontIcon>open_in_new</FontIcon>}
-            avatarStyle={{ backgroundColor: "" }}
-            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-            className={"effectfront"}
             subtitle={"Observação Padrão"}
             onClick={() => this.renderComponent("default note")}
           />
@@ -279,16 +279,6 @@ class ShowCards extends Component {
             subtitle={"Operação Padrão"}
             onClick={() => this.renderComponent("default operation")}
           />
-        </div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <C_Card
-            icon={<FontIcon>open_in_new</FontIcon>}
-            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-            className={"effectfront"}
-            subtitle={"Layout de Ordem de Manutenção"}
-            onClick={() => this.renderComponent("order layout")}
-          />
           <C_Card
             icon={<FontIcon>open_in_new</FontIcon>}
             style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
@@ -297,10 +287,8 @@ class ShowCards extends Component {
             subtitle={"Ordem de Manutenção"}
             onClick={() => this.renderComponent("maintenance order")}
           />
-          <div style={{ marginLeft: 20, marginTop: "3%", width: "20%" }}></div>
         </div>
       </div>
-
     );
   }
 }

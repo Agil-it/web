@@ -72,7 +72,7 @@ export class C_MenuButton extends React.Component {
 
     options.map((item, i) => {
       var obj = {
-        primaryText: <ListItem key={item.value} onClick={() => this.props.onClickItem(item.value)} primaryText={item.name} />,
+        primaryText: <ListItem disabled={item.disabled} key={item.value} onClick={() => this.props.onClickItem(item.value)} primaryText={item.name} />,
         leftIcon: <FontIcon>{item.icon}</FontIcon>,
       } 
 

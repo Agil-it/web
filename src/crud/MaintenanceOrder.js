@@ -205,7 +205,7 @@ class CreateMaintenanceOrder extends Component {
     if (!fields.orderNumber) errors.push("Número da Ordem");
     if (!fields.orderLayout) errors.push("Layout da Ordem");
     if (!fields.priority) errors.push("Prioridade da Ordem");
-    if (!fields.user) errors.push("Solicitante da Ordem");
+    if (!fields.solicitationUser) errors.push("Solicitante da Ordem");
     if (!workCenter) errors.push("Centro de Trabalho");
     if (!installationArea) errors.push("Local de Instalação");
     if (orderEquipments.length <= 0) errors.push("Adicione no mínimo 1 Equipamento na Ordem");
@@ -234,12 +234,17 @@ class CreateMaintenanceOrder extends Component {
     let order = {
       orderNumber: fields.orderNumber,
       orderEquipment: orderEquipments,
+      workCenter: this.state.workCenter,
       orderLayout: {
         id: fields.orderLayout,
         type: fields.orderType,
         classification: fields.orderClassification
       },
+      solicitationUser: {
+        id: fields.solicitationUser
+      },
       priority: fields.priority,
+      description: fields.description,
       openedDate: new Date(),
       needStopping: false
     }
@@ -248,6 +253,7 @@ class CreateMaintenanceOrder extends Component {
 
 
   onChange(e, name) {
+
     if (name === "id") {
       this.setState({ completeOrder: e })
       return
@@ -265,6 +271,22 @@ class CreateMaintenanceOrder extends Component {
 
     if (name === "workCenter") {
       this.setState({ completeWorkcenter: e })
+      return
+    }
+
+    if (e.target.name === "orderLayout") {
+
+      const layout = this.getOrderLayout(e.target.value)
+      let layoutType = layout.orderLayout;
+
+      let fields = {
+        ...this.state.fields,
+        orderLayout: layout.id,
+        orderClassification: layout.classification,
+        orderType: layout.type
+      }
+
+      this.setState({ fields, layoutType })
       return
     }
 
@@ -294,14 +316,18 @@ class CreateMaintenanceOrder extends Component {
       orderLayout: order.orderLayout.id,
       orderType: order.orderLayout.type,
       orderClassification: order.orderLayout.classification,
-      description: order.description
+      description: order.description,
+      solicitationUser: order.solicitationUser ? order.solicitationUser.id : undefined,
+      workCenter: order.workCenter ? order.workCenter.description : "",
     }
 
     let installationArea = order && order.orderEquipment[0] ? order.orderEquipment[0].installationArea : {}
+    let layoutType = order.orderLayout.orderLayout;
 
     this.setState({
       fields, installationArea, orderEquipments: order.orderEquipment,
-      completeArea: fields.descriptionArea,
+      completeArea: fields.descriptionArea, completeWorkcenter: fields.workCenter,
+      layoutType
     })
   }
 
@@ -393,28 +419,19 @@ class CreateMaintenanceOrder extends Component {
     event.preventDefault()
   }
 
-  getOrderLayout(id, layouts){
-    var layoutId = id;
-    var layoutType = ""
+  getOrderLayout(id){
+    const  { layouts } = this.state
+    const index = layouts.findIndex(layout => id === layout.id)
 
-    for (let i = 0; i < layouts.length; i++) {
-      const layout = layouts[i];
+   if(index == -1) return {};
 
-      if (layout.id == layoutId) {
-        layoutType = layout.orderLayout;
-        return layoutType;
-      }
-    }
+   return layouts[index];
   }
 
   render() {
 
     console.log("render -> STATE", this.state)
-    var { layouts, fields, orderEquipments, tabs } = this.state;
-    var layoutType = undefined;
-
-    if (fields.orderLayout) layoutType = this.getOrderLayout(fields.orderLayout, layouts)
-    console.log("CreateMaintenanceOrder -> render -> layoutType", layoutType)
+    var { layoutType, layouts, fields, orderEquipments, tabs } = this.state;
 
     return (
       <div>
@@ -435,10 +452,10 @@ class CreateMaintenanceOrder extends Component {
             actions={<FontIcon style={{ cursor: "pointer" }} onClick={() => this.hideModal()}>close</FontIcon>}
           />
           <section style={{ position: "relative" }} className="md-toolbar-relative">
-            {layoutType ?
+            {this.state.layoutType ?
               <div className="slideInLeft">
                 <span style={{fontWeight:"bold", fontStyle:"italic", padding:"2px 12px", minWidth:100, borderRadius: 10, top: 35, right: 0, position: "absolute", textAlign: "center", fontSize: 15, fontFamily: "sans-serif", backgroundColor: "#424242", color: "white" }}>
-                  {HelperOM.translate("layout", layoutType)}
+                  {HelperOM.translate("layout", this.state.layoutType)}
                 </span>
               </div>
             : undefined}
@@ -566,9 +583,9 @@ class CreateMaintenanceOrder extends Component {
                       </div>
                       <div className="md-cell md-cell--6 md-cell--bottom">
                         <C_SelectField
-                          name="user"
-                          id="user"
-                          value={this.state.fields.userRequest}
+                          name="solicitationUser"
+                          id="solicitationUser"
+                          value={this.state.fields.solicitationUser}
                           onChange={this.onChange}
                           type="text"
                           labelElement="name"
@@ -606,7 +623,9 @@ class CreateMaintenanceOrder extends Component {
                         id="orderEquipmentId"
                         name="orderEquipmentId"
                         onChange={this.onChange}
+                        style={{ pointerEvents: layoutType === "default" && orderEquipments.length >= 1 ? "none" : undefined}}
                         type="search"
+                        disabled={layoutType === "default" && orderEquipments.length >= 1}
                         list={this.state.listEquipments}
                         label="Adicionar Equipamento"
                         placeholder="Adicionar Equipamento"

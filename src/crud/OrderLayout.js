@@ -70,7 +70,8 @@ class CreateOrderLayout extends Component {
     let fields = {
       id: item.id,
       orderLayoutType: item.orderLayout,
-      description: item.description,
+      classification: item.classification,
+      type: item.type
     }
 
     this.setState({ fields })
@@ -140,6 +141,7 @@ class CreateOrderLayout extends Component {
             <C_AutoComplete
               id="id"
               name="id"
+              description="classification"
               value={this.state.autocomplete}
               label="Buscar Layout"
               placeholder="Buscar Layout"
@@ -161,15 +163,22 @@ class CreateOrderLayout extends Component {
               style={{ width: "100%" }}
             /><br></br>
             <C_TextField
-              id="description"
-              name="description"
-              value={this.state.fields.description}
+              id="type"
+              name="type"
+              value={this.state.fields.type}
               onChange={this.onChange}
               type="text"
-              label="Descrição"
-              placeholder="Descrição"
-              block paddedBlock
-              rows={2}
+              label="Tipo"
+              placeholder="Tipo"
+            /><br></br>
+            <C_TextField
+              id="classification"
+              name="classification"
+              value={this.state.fields.classification}
+              onChange={this.onChange}
+              type="text"
+              label="Classificação"
+              placeholder="Classificação"
             />
           </form>
         </section>

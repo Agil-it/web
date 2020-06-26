@@ -21,6 +21,7 @@ class C_AutoComplete extends Component {
   }
 
   componentDidUpdate() {
+
     this.state.description = this.props.description || "description";
 
     let list = this.props.list.map((item => item[this.state.description] ))
