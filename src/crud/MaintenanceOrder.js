@@ -232,6 +232,7 @@ class CreateMaintenanceOrder extends Component {
     }
 
     let order = {
+      id: fields.id,
       orderNumber: fields.orderNumber,
       orderEquipment: orderEquipments,
       workCenter: this.state.workCenter,
@@ -308,6 +309,7 @@ class CreateMaintenanceOrder extends Component {
     }
 
     let fields = {
+      id: order.id,
       orderNumber: order.orderNumber,
       priority: order.priority,
       machine: order && order.orderEquipment[0] ? order.orderEquipment[0].equipment.description : "",

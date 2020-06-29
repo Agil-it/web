@@ -3,13 +3,14 @@ import '../index.css';
 import { C_ButtonFloat, C_MenuButton } from "./Button";
 import { C_Icon } from "./Icon";
 import { MaintenanceOrderHelper as HelperOM } from '../helpers/MaintenanceOrder';
+import {DateHelper} from '../helpers/Date';
 import { HandlerProvider } from '../providers/handler';
 import { MaintenanceOrderProvider } from '../providers/MaintenanceOrder';
 import { C_Loading } from './Loading';
 import { C_Operations } from './Operations';
 import { C_ToolTip } from './ToolTip';
-import C_ExpansiveHeader from './ExpansiveHeader';
-
+import C_Header from './Header';
+import { C_Label } from './Label';
 export class C_MaintenanceOrder extends React.Component {
   constructor(props) {
     super(props);
@@ -17,6 +18,9 @@ export class C_MaintenanceOrder extends React.Component {
     this.state = {
       orderId: this.props.orderId,
       order: undefined,
+      expandedDetails: true,
+      expandedEquipments: true,
+      expandEquipment: {}
     }
 
     this.provider = new HandlerProvider(new MaintenanceOrderProvider(), "ordem de manutenção")
@@ -51,7 +55,7 @@ export class C_MaintenanceOrder extends React.Component {
       { value: "appointments", name: "APONTAMENTOS", icon: "assignment", disabled: true },
       { value: "status_equipment", name: "STATUS EQUIPAMENTO", icon: "swap_vert", disabled: true },
       { value: "check_list", name: "CHECK-LIST ORDEM", icon: "done_all", disabled: true },
-      { value: "operations", name: "OPERAÇÕES", icon: "build", disabled: true },
+      { value: "operations", name: "OPERAÇÕES", icon: "build", disabled: false },
       { value: "sign", name: "ASSINATURA", icon: "fingerprint", disabled: true },
     ]
 
@@ -102,43 +106,70 @@ export class C_MaintenanceOrder extends React.Component {
               </div>
             </div>
           </div>
-          <C_ExpansiveHeader onClick={() => this.setState({ expandedDetails: !this.state.expandedDetails ? true : false })} icon={!this.state.expandedDetails ? "expand_less" : "expand_more"} title="Detalhes da Ordem">
-            {this.state.expandedDetails ?
-              <div style={{ borderRadius: 5, padding: 10, border: "1px solid silver" }}>
-                <div style={{ marginTop: 10 }}>
-                  <strong>{"Descrição do Problema: "}</strong>
-                  <span style={{ color: "#3a3939" }}>{order.description}</span>
-                </div>
-                <div style={{ marginTop: 10 }}>
-                  <strong>{"Centro de Trabalho: "}</strong>
-                  <span style={{ color: "#3a3939" }}>{order.workCenter.description}</span>
-                </div>
-              </div>
-              : undefined}
-          </C_ExpansiveHeader>
-
-          <C_ExpansiveHeader onClick={() => this.setState({ expandedEquipments: !this.state.expandedEquipments ? true : false })} icon={!this.state.expandedEquipments ? "expand_less" : "expand_more"} title="Equipamentos">
-            {this.state.expandedEquipments ?
-              <div style={{ borderRadius: 5, padding: 10, border: "1px solid silver" }}>
-                {order.orderEquipment.map(item => (
-                  <div>
-                    <div style={{ marginTop: 10 }}>
-                      <strong>{"Código: "}</strong>
-                      <span style={{ color: "#3a3939" }}>{item.equipment.code}</span>
-                    </div>
-                    <div style={{ marginTop: 10 }}>
-                      <strong>{"Descrição do Equipamento: "}</strong>
-                      <span style={{ color: "#3a3939" }}>{item.equipment.description}</span>
-                    </div>
-                    <div style={{ marginTop: 10 }}>
-                      <strong>{"Tipo de Máquina: "}</strong>
-                      <span style={{ color: "#3a3939" }}>{item.equipment.machineType.description}</span>
+          <div className="slideInUp">
+            <C_Header onClick={() => this.setState({ expandedDetails: !this.state.expandedDetails ? true : false })} icon={!this.state.expandedDetails ? "expand_less" : "expand_more"} title="Detalhes da Ordem">
+              {this.state.expandedDetails ?
+                <div style={{ borderRadius: 5, border: "1px solid silver" }}>
+                  <div className="md-grid">
+                    <C_Label maxWidth="80%" className="md-cell md-cell--6 md-cell--bottom" label="Descrição do Problema" value={order.description}/>
+                    <C_Label className="md-cell md-cell--2 md-cell--bottom" label="Solicitante" value={order.solicitationUser.name} />
+                    <C_Label className="md-cell md-cell--3 md-cell--bottom" label="Centro de Trabalho" value={order.workCenter.description} />
+                    <C_Label className="md-cell md-cell--1 md-cell--bottom" label="Tipo" value={order.orderLayout.type} />
+                    <div style={{ margin: 10, position: "absolute", right: 0 }}>
+                      <C_ToolTip position="left" 
+                      tooltip={
+                        <div>                          
+                          <div>Aberto em:</div>
+                          <div>{DateHelper.formatDateTime(order.openedDate)}</div>
+                        </div>
+                      }>
+                        <C_Icon style={{cursor:"pointer", fontSize: 30, color:"#3177e8"}} icon="access_time" />
+                      </C_ToolTip>
                     </div>
                   </div>
-                ))}
-              </div>
-            : undefined}
-          </C_ExpansiveHeader>
+                </div>
+                : undefined}
+            </C_Header>
+
+            <C_Header onClick={() => this.setState({ expandedEquipments: !this.state.expandedEquipments ? true : false })} icon={!this.state.expandedEquipments ? "expand_less" : "expand_more"} title="Equipamentos">
+              {this.state.expandedEquipments ?
+                <div style={{ borderRadius: 5, padding: 10, border: "1px solid silver" }}>
+                  {order.orderEquipment && order.orderEquipment.length > 0 && order.orderEquipment.map((item, i) => (
+                    <C_Header backgroundColor="#847f7f" icon={!this.state.expandEquipment[i] ? "expand_less" : "expand_more"} title={item.equipment.code} noMargin={true}
+                      onClick={() => {
+                        let expandEquipment = this.state.expandEquipment;
+                        expandEquipment[i] = !expandEquipment[i];
+                        this.setState({ expandEquipment })
+                      }} 
+                    >
+                      {this.state.expandEquipment[i] ? 
+                      <div key={i}>
+                        <div className="md-grid" >
+                          <C_Label className="md-cell md-cell--5 md-cell--bottom" label="Equipamento Superior" value={item.superiorEquipment ? item.superiorEquipment.description : ""} />
+                          <C_Label className="md-cell md-cell--5 md-cell--bottom" label="Equipamento" value={item.equipment.description} />
+                          <C_Label className="md-cell md-cell--2 md-cell--bottom" 
+                            iconStyle={{ cursor: "pointer", fontSize: 30, marginLeft: 20, color: item.isStopped ? "#ff7700" : "#03a140"}}
+                            label="Status" icon={item.isStopped ? "error" : "check_circle"} 
+                            tooltip={item.isStopped ? "Parado" : "Em Execução"} 
+                          />
+                        </div>
+                        <div className="md-grid" >
+                          <C_Label className="md-cell md-cell--5 md-cell--bottom" label="Local de Instalação" value={item.installationArea.description} />
+                          <C_Label className="md-cell md-cell--5 md-cell--bottom" label="Tipo de Máquina" value={item.equipment.machineType.description} />   
+                          <C_Label className="md-cell md-cell--2 md-cell--bottom" label="Requer Parada?" value={item.needStopping ? "SIM" : "NÃO"} />                        
+                        </div>
+                        <div className="md-grid" >
+                          <C_Label className="md-cell md-cell--5 md-cell--bottom" label="Causa do Defeito" value={item.defectOrigin ? item.defectOrigin.description : ""} />
+                          <C_Label className="md-cell md-cell--7 md-cell--bottom" label="Sintoma do Defeito" value={item.defectSymptom ? item.defectSymptom.description: ""} />
+                        </div>
+                      </div>
+                      : undefined }
+                    </C_Header>
+                  ))}
+                </div>
+              : undefined}
+            </C_Header>
+          </div>
 
           {this.state.itemSelected == "operations" ?
             <div style={{ width: "97%", display: "flex", justifyContent: "center", position: "fixed", top: "10%", right: 0 }}>
