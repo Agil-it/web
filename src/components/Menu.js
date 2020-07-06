@@ -101,7 +101,7 @@ class C_Menu extends Component {
     );
 
     return (
-      <div>
+      <div id="nav-menu">
         <div style={{
           marginLeft: expanded ? 240 : 64,
           paddingRight: '20px'

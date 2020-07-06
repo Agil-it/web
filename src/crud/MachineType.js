@@ -12,6 +12,7 @@ import C_CrudButtons from '../components/CrudButtons';
 import { HandlerProvider } from '../providers/handler';
 import { MachineTypeProvider } from '../providers/MachineType';
 import { ObjectHelper } from '../helpers/Object';
+import { machineTypeColumns } from '../helpers/SearchModel';
 import C_AutoComplete from '../components/AutoComplete';
 
 class CreateMachineType extends Component {
@@ -23,7 +24,8 @@ class CreateMachineType extends Component {
       visible: true,
       fields: {},
       list: [],
-      autocomplete : ''
+      autocomplete : '',
+      searchColumns: machineTypeColumns(),
     };
 
     this.provider = new HandlerProvider(new MachineTypeProvider(), "tipo de máquina")
@@ -136,6 +138,7 @@ class CreateMachineType extends Component {
               label="Tipo de Máquina"
               placeholder="Tipo de Máquina"
               rightIcon={"search"}
+              searchColumns={this.state.searchColumns}
             /><br></br>
             <C_TextField
               id="description"
