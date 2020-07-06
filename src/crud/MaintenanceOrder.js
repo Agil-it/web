@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { DialogContainer, Toolbar, FontIcon } from 'react-md';
 import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
@@ -18,7 +18,8 @@ import { UserProvider } from '../providers/User';
 import { C_Tabs } from '../components/Tabs';
 import { MessageModal } from '../components/Message';
 import { C_Table } from '../components/Table';
-class CreateMaintenanceOrder extends Component {
+
+export default class CreateMaintenanceOrder extends React.Component {
 
   constructor(props) {
     super(props);
@@ -663,6 +664,17 @@ class CreateMaintenanceOrder extends Component {
   }
 }
 
+
+export class AddEquipments extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+
+    }
+  }
+}
+
 /* <div className="md-cell md-cell--6 md-cell--bottom">
     <C_TextField
       id="superiorMachine"
@@ -807,7 +819,3 @@ class CreateMaintenanceOrder extends Component {
     />
   </div>
 </div> */
-
-
-
-export default CreateMaintenanceOrder;

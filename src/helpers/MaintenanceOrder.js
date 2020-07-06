@@ -1,3 +1,4 @@
+import { DateHelper } from './Date';
 export class MaintenanceOrderHelper {
 
   static translate(prop, value) {
@@ -13,7 +14,7 @@ export class MaintenanceOrderHelper {
 
   }
 
-  static getLayoutType(){
+  static getLayoutType() {
     return {
       default: 'Corretiva | Preventiva',
       route: 'ROTA',
@@ -51,6 +52,32 @@ export class MaintenanceOrderHelper {
       signatured: "Assinada",
       finished: "Finalizada",
       "no_status": "Sem Status",
+    }
+  }
+
+  static sortOrders(list) {
+    var ordenatedPriority = this.ordenatedPriority();
+
+    return list.sort((a, b) => {
+      if (ordenatedPriority[a.priority] > ordenatedPriority[b.priority]) return -1;
+      else if (ordenatedPriority[a.priority] < ordenatedPriority[b.priority]) return 1;
+
+      var dateTimeA = DateHelper.getDate(a.openedDate).getTime();
+      var dateTimeB = DateHelper.getDate(b.openedDate).getTime();
+
+      if (dateTimeA > dateTimeB) return 1;
+      else if (dateTimeA == dateTimeB) return 0;
+      else return -1;
+
+    })
+  }
+
+  static ordenatedPriority() {
+    return {
+      urgent: 3,
+      high: 2,
+      medium: 1,
+      low: 0,
     }
   }
 }

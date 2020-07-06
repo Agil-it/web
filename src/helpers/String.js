@@ -35,7 +35,5 @@ export class StringHelper {
     if(queryString != "") queryString = `?${queryString}`;
 
     return queryString;
-
-
   }
 }

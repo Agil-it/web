@@ -8,6 +8,7 @@ import { C_Table } from './components/Table';
 import { C_MaintenanceOrder } from './components/Order';
 import { C_Loading } from './components/Loading';
 import { MaintenanceOrderHelper as HelperOM } from './helpers/MaintenanceOrder';
+import { StringHelper } from './helpers/String';
 import { DateHelper } from './helpers/Date';
 import { C_ToolTip } from './components/ToolTip';
 
@@ -39,7 +40,7 @@ class Dashboard extends Component {
 
       fields: {},
       selectedStatus: "created",
-      selectedPriority: "high",
+      selectedPriority: "all",
       showOrdersList: false
     }
 
@@ -68,10 +69,12 @@ class Dashboard extends Component {
     console.log("Dashboard -> listOrders -> response", response)
     if (response.success) {
       list = response.data
-
     }
 
-    this.setState({ orders: list, showLoading: false })
+    var orders = HelperOM.sortOrders(list) 
+    // console.log("Dashboard -> listOrders -> orders", orders)
+
+    this.setState({ orders , showLoading: false })
 
   }
 
@@ -91,7 +94,7 @@ class Dashboard extends Component {
 
     return (
       this.state.showOrderDetails ?
-        <div id="order" style={{ width: "100%", marginTop:20 }}>
+        <div id="order" style={{ width: "100%" }}>
           <C_MaintenanceOrder
             orderId={orderDetails.id}
             onClose={() => this.setState({ showOrderDetails: false })}

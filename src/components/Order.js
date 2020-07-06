@@ -20,7 +20,20 @@ export class C_MaintenanceOrder extends React.Component {
       order: undefined,
       expandedDetails: true,
       expandedEquipments: true,
-      expandEquipment: {}
+      expandEquipment: {},
+      backgroundModal: {
+        backgroundColor: "rgba(0, 0, 0, 0.78)",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0, 
+        bottom: 0,
+        "zIndex": 10,
+      },
+      backgroundDefault: {
+        width: "100%", 
+        padding: 20
+      }
     }
 
     this.provider = new HandlerProvider(new MaintenanceOrderProvider(), "ordem de manutenção")
@@ -70,7 +83,7 @@ export class C_MaintenanceOrder extends React.Component {
           />
         </div>
         :
-        <div style={{ width: "100%", backgroundColor: this.state.showBackgroundColor ? "#858585" : undefined, padding: 20 }}>
+        <div style={this.state.backgroundDefault}>
           <div style={{ position: "relative", display: "flex", justifyContent: "space-between", width: "95%", margin: "auto" }}>
             <C_ToolTip tooltip="Voltar" position="right">
               <C_ButtonFloat
@@ -172,16 +185,18 @@ export class C_MaintenanceOrder extends React.Component {
           </div>
 
           {this.state.itemSelected == "operations" ?
-            <div style={{ width: "97%", display: "flex", justifyContent: "center", position: "fixed", top: "10%", right: 0 }}>
-              <C_Operations
-                style={{ width: "50%", padding: 20 }}
-                orderId={order.id}
-                equipments={order.orderEquipment}
-                title="OPERAÇÕES"
-                onClose={() => this.setState({ itemSelected: "", showBackgroundColor: false })}
-              />
+            <div style={this.state.backgroundModal}>
+              <div style={{ width: "97%", display: "flex", justifyContent: "center", position: "fixed", top: "10%", right: 0 }}>
+                <C_Operations
+                  style={{ width: "50%", padding: 20, borderRadius:5 }}
+                  orderId={order.id}
+                  equipments={order.orderEquipment}
+                  title="OPERAÇÕES"
+                  onClose={() => this.setState({ itemSelected: "", showBackgroundColor: false })}
+                />
+              </div>
             </div>
-            : undefined}
+          : undefined}
         </div>
     );
   }
