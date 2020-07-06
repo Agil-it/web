@@ -89,8 +89,8 @@ class C_AutoComplete extends Component {
     const value = objectValue[this.state.description]
     this.setState({ value })
     
-    this.props.onChange(value, this.props.name)
-    this.props.dataSelected(objectValue.id, this.props.name)
+    //this.props.onChange(value, this.props.name)
+    //this.props.dataSelected(item.id, this.props.name)
 
     this.onClickIcon();
   }
@@ -99,16 +99,6 @@ class C_AutoComplete extends Component {
 
     return (
       <div>
-        
-        { this.state.toggleIcon && this.props.searchColumns ?
-          <div id="searchTable" style={{ width: 900, height: 900, top: 0, left: 0, backgroundColor: "black", color: "white", zIndex: 100, position: "absolute" }}>
-            <C_SearchTable
-              columns={this.props.searchColumns}
-              content={this.props.list}
-              onClick={this.tableSelected}
-            />
-          </div>
-          :
         <Autocomplete
           id={this.props.name}
           required={this.props.required}
@@ -137,6 +127,15 @@ class C_AutoComplete extends Component {
           description={this.props.description}
         />
         
+        { this.state.toggleIcon && this.props.searchColumns ?
+          <div id="searchTable" style={{ width: "100%", marginTop:20, zIndex: -10 }}>
+            <C_SearchTable
+              columns={this.props.searchColumns}
+              content={this.props.list}
+              onClick={this.tableSelected}
+            />
+          </div>
+          :undefined
         }
 
       </div>
