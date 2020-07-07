@@ -77,7 +77,7 @@ class Dashboard extends Component {
     
     let response = await this.provider.getList(sendData);
     let list = []
-    console.log("Dashboard -> listOrders -> response", response)
+    // console.log("Dashboard -> listOrders -> response", response)
     if (response.success) {
       list = response.data
     }
@@ -90,7 +90,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    console.log("Dashboard -> render -> fields", this.state)
+    // console.log("Dashboard -> render -> fields", this.state)
     var orders = this.state.orders
     var orderDetails = this.state.orderDetails;
     // console.log("Dashboard -> render -> orders", orders)

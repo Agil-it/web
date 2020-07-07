@@ -95,7 +95,7 @@ class ShowCards extends Component {
       return ReactDOM.render(<CreateMaintenanceOrder onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else {
-      console.log("TCL: ShowCards -> renderComponent -> else -> component", component)
+      // console.log("TCL: ShowCards -> renderComponent -> else -> component", component)
       this.unmountModal()
     }
     

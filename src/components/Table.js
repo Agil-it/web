@@ -11,6 +11,8 @@ export class C_Table extends React.Component {
     super(props);
 
     this.state = {
+      fontSize: this.props.fontSize,
+      titleSize: this.props.titleSize,
       content: this.props.content,
       columns: this.props.columns,
       hasFilter: this.props.hasFilter,
@@ -18,25 +20,29 @@ export class C_Table extends React.Component {
       showEffect: this.props.showEffect,
       filter: '',
       paginatedData: [],
+      textAlign: this.props.textAlign,
       pagination: 0,
+      rowsPerPage: this.props.rowsPerPage,
       currentRowsPerPage: this.props.rowsPerPage || this.props.content.length,
     }
 
+    
     this.handlePagination = this.handlePagination.bind(this);
   }
 
   componentDidUpdate() {
-    let { paginatedData, currentRowsPerPage } = this.state;
-    if (paginatedData.length) return;
-
+    let { content, rowsPerPage, paginatedData, currentRowsPerPage } = this.state;
+   
+    if (paginatedData.length || content.length == 0) return;
+    
     if (this.state.showPagination) {
-      if (this.state.rowsPerPage)
-        currentRowsPerPage = this.state.rowsPerPage
-        paginatedData = this.filterData().slice(0, currentRowsPerPage);
-    } else {
-      paginatedData = this.filterData();
-    }
+      if (!rowsPerPage) return;
+      
+      currentRowsPerPage = rowsPerPage
+      paginatedData = this.filterData().slice(0, currentRowsPerPage);
 
+    } else paginatedData = this.filterData();
+    
     this.setState({ paginatedData, currentRowsPerPage });
   }
 
@@ -47,9 +53,7 @@ export class C_Table extends React.Component {
   filterData() {
     const { content, filter } = this.state;
 
-    if(!filter || filter == '') {
-      return content;
-    }
+    if(!filter || filter == '') return content;
 
     const filtered = content.filter(field => this.filterField(field, filter))
 
@@ -70,9 +74,8 @@ export class C_Table extends React.Component {
 
       return isValid;
       
-    } else {
-      return this.filterValue(field.toString(), filter.toString());
-    }
+    } else return this.filterValue(field.toString(), filter.toString());
+    
   }
 
   filterValue(contentRaw, filterRaw) {
@@ -108,6 +111,7 @@ export class C_Table extends React.Component {
   };
 
   render() {
+    
     var columns = this.state.columns;
     var content = this.getPaginatedData();
 

@@ -13,6 +13,7 @@ export class C_Button extends React.Component {
     return (
       <Button raised
         primary={this.props.primary}
+        className={this.props.className}
         secondary={this.props.secondary}
         label={this.props.label}
         style={this.props.style}

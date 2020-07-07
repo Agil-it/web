@@ -3,6 +3,7 @@ import '../index.css';
 import { C_ButtonFloat, C_MenuButton } from "./Button";
 import { C_Icon } from "./Icon";
 import { MaintenanceOrderHelper as HelperOM } from '../helpers/MaintenanceOrder';
+import { StringHelper } from '../helpers/String';
 import {DateHelper} from '../helpers/Date';
 import { HandlerProvider } from '../providers/handler';
 import { MaintenanceOrderProvider } from '../providers/MaintenanceOrder';
@@ -21,15 +22,7 @@ export class C_MaintenanceOrder extends React.Component {
       expandedDetails: true,
       expandedEquipments: true,
       expandEquipment: {},
-      backgroundModal: {
-        backgroundColor: "rgba(0, 0, 0, 0.78)",
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0, 
-        bottom: 0,
-        "zIndex": 10,
-      },
+      backgroundModal: StringHelper.backgroundModal(),
       backgroundDefault: {
         width: "100%", 
         padding: 20
@@ -186,7 +179,7 @@ export class C_MaintenanceOrder extends React.Component {
 
           {this.state.itemSelected == "operations" ?
             <div style={this.state.backgroundModal}>
-              <div style={{ width: "97%", display: "flex", justifyContent: "center", position: "fixed", top: "10%", right: 0 }}>
+              <div style={{ width: "100%", display: "flex", justifyContent: "center", position: "fixed", top: "10%"}}>
                 <C_Operations
                   style={{ width: "50%", padding: 20, borderRadius:5 }}
                   orderId={order.id}

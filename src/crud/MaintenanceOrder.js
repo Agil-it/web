@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { DialogContainer, Toolbar, FontIcon } from 'react-md';
+import { DialogContainer, Toolbar, FontIcon, Card } from 'react-md';
 import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
 import C_SelectField from '../components/SelectField';
@@ -18,6 +18,8 @@ import { UserProvider } from '../providers/User';
 import { C_Tabs } from '../components/Tabs';
 import { MessageModal } from '../components/Message';
 import { C_Table } from '../components/Table';
+import { C_Button } from '../components/Button'
+import { StringHelper } from '../helpers/String';
 
 export default class CreateMaintenanceOrder extends React.Component {
 
@@ -25,6 +27,7 @@ export default class CreateMaintenanceOrder extends React.Component {
     super(props);
 
     this.state = {
+      backgroundModal: StringHelper.backgroundModal(),
       visible: true,
       completeOrder: '', completeClassification: "", completeOrderType: '', completeArea: '', completeEquipment: '', completeWorkcenter: '',
       listEquipments: [], orderEquipments: [],
@@ -92,7 +95,7 @@ export default class CreateMaintenanceOrder extends React.Component {
   async loadWorkCenters() {
     let listWorkcenter = this.state.listWorkcenter
     let response = await this.providerWorkcenter.getList();
-    console.log("CreateMaintenanceOrder -> layouts -> response", response)
+    // console.log("CreateMaintenanceOrder -> layouts -> response", response)
     if (response.success) {
       listWorkcenter = response.data
     }
@@ -102,7 +105,7 @@ export default class CreateMaintenanceOrder extends React.Component {
   async loadUsers() {
     let listUsers = this.state.listUsers
     let response = await this.providerUser.getList();
-    console.log("CreateMaintenanceOrder -> layouts -> response", response)
+    // console.log("CreateMaintenanceOrder -> layouts -> response", response)
     if (response.success) {
       listUsers = response.data
     }
@@ -112,7 +115,7 @@ export default class CreateMaintenanceOrder extends React.Component {
   async loadLayouts() {
     let layouts = this.state.layouts;
     let response = await this.providerLayout.getList();
-    console.log("CreateMaintenanceOrder -> layouts -> response", response)
+    // console.log("CreateMaintenanceOrder -> layouts -> response", response)
     if (response.success) {
       layouts = response.data
     }
@@ -142,7 +145,7 @@ export default class CreateMaintenanceOrder extends React.Component {
   async loadAreas() {
     let listAreas = []
     let response = await this.providerArea.getList();
-    console.log("CreateMaintenanceOrder -> listAreas -> response", response)
+    // console.log("CreateMaintenanceOrder -> listAreas -> response", response)
     if (response.success) {
       listAreas = response.data
     }
@@ -152,7 +155,7 @@ export default class CreateMaintenanceOrder extends React.Component {
   async loadEquipments() {
     let listEquipments = []
     let response = await this.providerEquipment.getList();
-    console.log("CreateMaintenanceOrder -> loadEquipments -> response", response)
+    // console.log("CreateMaintenanceOrder -> loadEquipments -> response", response)
     if (response.success) {
       listEquipments = response.data
     }
@@ -187,7 +190,7 @@ export default class CreateMaintenanceOrder extends React.Component {
   }
 
   removeEquipment(index) {
-    console.log("CreateMaintenanceOrder -> removeEquipment -> index", index)
+    // console.log("CreateMaintenanceOrder -> removeEquipment -> index", index)
     let { orderEquipments } = this.state
     orderEquipments.splice(index, 1)
 
@@ -306,7 +309,7 @@ export default class CreateMaintenanceOrder extends React.Component {
 
     if (response.success) {
       order = response.data
-      console.log("CreateMaintenanceOrder -> getOrder -> order", order)
+      // console.log("CreateMaintenanceOrder -> getOrder -> order", order)
     }
 
     let fields = {
@@ -406,7 +409,7 @@ export default class CreateMaintenanceOrder extends React.Component {
   }
 
   orderComplete(id, name) {
-    console.log("CreateMaintenanceOrder -> orderComplete -> id", id)
+    // console.log("CreateMaintenanceOrder -> orderComplete -> id", id)
 
     if (id === undefined) {
       this.clean()
@@ -433,7 +436,7 @@ export default class CreateMaintenanceOrder extends React.Component {
 
   render() {
 
-    console.log("render -> STATE", this.state)
+    // console.log("render -> STATE", this.state)
     var { layoutType, layouts, fields, orderEquipments, tabs } = this.state;
 
     return (
@@ -621,20 +624,13 @@ export default class CreateMaintenanceOrder extends React.Component {
 
                 {this.state.selectedTab == "equipments" ?
                   <div className="md-grid">
-                    <div className="md-cell md-cell--12 md-cell--bottom">
-                      <C_AutoComplete
-                        id="orderEquipmentId"
-                        name="orderEquipmentId"
-                        onChange={this.onChange}
-                        style={{ pointerEvents: layoutType === "default" && orderEquipments.length >= 1 ? "none" : undefined}}
-                        type="search"
-                        disabled={layoutType === "default" && orderEquipments.length >= 1}
-                        list={this.state.listEquipments}
-                        label="Adicionar Equipamento"
-                        placeholder="Adicionar Equipamento"
-                        rightIcon={"search"}
-                        value={this.state.completeEquipment}
-                        dataSelected={this.equipmentComplete}
+                    <div className="md-cell md-cell--6 md-cell--bottom">
+                      <C_Button
+                        secondary={true}
+                        label="Adicionar Equipamentos"
+                        action={() => {
+                          this.setState({ addEquiments: true })
+                        }}
                       />
                     </div>
                     <div className="md-cell md-cell--12 md-cell--bottom">
@@ -642,13 +638,15 @@ export default class CreateMaintenanceOrder extends React.Component {
                         titleSize={16}
                         fontSize={14}
                         columns={this.state.columns}
+                        showPagination={true}
+                        rowsPerPage={5}
                         content={orderEquipments}
                         onClick={() => { return }}
                         textAlign="center"
                       />
                     </div>
                   </div>
-                  : undefined}
+                : undefined}
               </form>
             </C_Tabs>
           </section>
@@ -658,7 +656,19 @@ export default class CreateMaintenanceOrder extends React.Component {
             onDelete={this.delete}
             crudLevel={!!this.state.fields.id}
           />
+
+          {this.state.addEquiments ?
+            <div style={this.state.backgroundModal}>
+              <div style={{width:"100%", display: "flex", justifyContent: "center", position: "fixed", top: "20%", right: 0 }}>
+                <AddEquipments
+
+                />
+              </div>
+            </div>
+          : undefined}
         </DialogContainer>
+
+    
       </div>
     );
   }
@@ -670,8 +680,19 @@ export class AddEquipments extends React.Component {
     super(props);
 
     this.state = {
-
     }
+  }
+
+  render(){
+    console.log("Chamou o AddEquipments");
+    
+    return (
+      <Card style={{width:"90%", padding: 20, borderRadius: 5}}>
+        <div style={{ position: "relative" }}>
+          <span style={{ fontSize: 24, fontWeight: "bold" }}>{'Equipamentos'}</span>
+        </div>
+      </Card>
+    )
   }
 }
 
@@ -704,19 +725,22 @@ export class AddEquipments extends React.Component {
     />
   </div>
   <div style={{ position: "relative" }} className="md-cell md-cell--6 md-cell--bottom">
-    <C_AutoComplete
-      id="orderEquipmentId"
-      name="orderEquipmentId"
-      onChange={this.onChange}
-      type="search"
-      list={this.state.listEquipments}
-      label="Adicionar Equipamento"
-      placeholder="Adicionar Equipamento"
-      rightIcon={"search"}
-      value={this.state.completeEquipment}
-      dataSelected={this.equipmentComplete}
-    // css={{ width: 350 }}
-    />
+    <div className="md-cell md-cell--12 md-cell--bottom">
+      <C_AutoComplete
+        id="orderEquipmentId"
+        name="orderEquipmentId"
+        onChange={this.onChange}
+        style={{ pointerEvents: layoutType === "default" && orderEquipments.length >= 1 ? "none" : undefined}}
+        type="search"
+        disabled={layoutType === "default" && orderEquipments.length >= 1}
+        list={this.state.listEquipments}
+        label="Adicionar Equipamento"
+        placeholder="Adicionar Equipamento"
+        rightIcon={"search"}
+        value={this.state.completeEquipment}
+        dataSelected={this.equipmentComplete}
+      />
+    </div>
 
     {orderEquipments && orderEquipments.length > 0 ?
       <div onClick={() => this.setState({ showModalEquipments: true })} className="slideInRight" style={{ alignItems: "center", display: "flex", left: 0, position: "absolute" }}>

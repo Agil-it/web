@@ -35,7 +35,6 @@ class C_AutoComplete extends Component {
     let list = this.props.list.map((item => item[this.state.description] ))
   
     if (JSON.stringify(list) !== JSON.stringify(this.state.list)) {
-      console.log("C_AutoComplete -> componentDidUpdate -> list", list)
       this.setState({ list })
     }
       
@@ -93,7 +92,7 @@ class C_AutoComplete extends Component {
   }
 
   tableSelected(objectValue) {
-    console.log('tableSelected', objectValue);
+    // console.log('tableSelected', objectValue);
 
     if (!objectValue) return
 
