@@ -46,7 +46,18 @@ class Dashboard extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.listOrders = this.listOrders.bind(this);
+    this.calculateHeight = this.calculateHeight.bind(this);
     this.provider = new HandlerProvider(new MaintenanceOrderProvider(), "ordem de manutenção")
+  }
+
+  calculateHeight() {
+    const height = document.getElementById('searchTable').clientHeight;
+
+    const rowsPerPage = Math.round(height/60)-2;
+
+    // this.setState({ height, rowsPerPage });
+
+    return rowsPerPage;
   }
 
   onChange(e, name) {
@@ -182,7 +193,7 @@ class Dashboard extends Component {
             </div>
 
             {this.state.showOrdersList && !this.state.showLoading ?
-              <div style={{ marginTop: 40, width: "100%", boxShadow: "1px 3px 12px 1px #918f8e" }}>
+              <div id="searchTable" style={{ marginTop: 40, width: "100%", boxShadow: "1px 3px 12px 1px #918f8e" }}>
                 <C_Table
                   columns={columns}
                   content={this.state.orders}
@@ -190,6 +201,9 @@ class Dashboard extends Component {
                     this.setState({ showOrderDetails: true, orderDetails: event })
                   }}
                   showEffect={true}
+                  showPagination={true}
+                  hasFilter={true}
+                  rowsPerPage={10}
                 >
                 </C_Table>
               </div>

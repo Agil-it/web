@@ -13,6 +13,7 @@ import { HandlerProvider } from '../providers/handler';
 import { MachineProvider } from '../providers/Machine';
 import { MachineTypeProvider } from '../providers/MachineType';
 import { ObjectHelper } from '../helpers/Object';
+import { machineTypeColumns, equipmentColumns } from '../helpers/SearchModel';
 import C_AutoComplete from '../components/AutoComplete';
 
 
@@ -27,7 +28,9 @@ class CreateMachine extends Component {
       machineType: '',
       fields: {},
       list: [],
-      machineTypeList: []
+      machineTypeList: [],
+      equipmentColumns: equipmentColumns(),
+      machineTypeColumns: machineTypeColumns(),
     };
 
     this.provider = new HandlerProvider(new MachineProvider(), "equipamento")
@@ -187,6 +190,7 @@ class CreateMachine extends Component {
               list={this.state.list}
               dataSelected={this.autocompleteSelect}
               onChange={this.onChange}
+              searchColumns={this.state.equipmentColumns}
             /><br></br>
             <C_AutoComplete
               id="machineType"
@@ -199,6 +203,7 @@ class CreateMachine extends Component {
               list={this.state.machineTypeList}
               dataSelected={this.autocompleteSelect}
               onChange={this.onChange}
+              searchColumns={this.state.machineTypeColumns}
             /><br></br>
             <C_TextField
               id="description"

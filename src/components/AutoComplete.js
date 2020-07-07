@@ -3,6 +3,9 @@ import { FontIcon, Autocomplete } from 'react-md';
 import Fuse from 'fuse.js';
 import '../index.css';
 
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
 import C_SearchTable from './SearchTable';
 
 class C_AutoComplete extends Component {
@@ -75,10 +78,18 @@ class C_AutoComplete extends Component {
   }
 
   onClickIcon() {
-    let { toggleIcon } = this.state;
-    toggleIcon = !toggleIcon
+    if (!Array.isArray(this.props.searchColumns)) return;
 
-    this.setState({ toggleIcon });
+    confirmAlert({
+      customUI: ({ onClose }) => (
+        <C_SearchTable
+          columns={this.props.searchColumns}
+          content={this.props.list}
+          onClick={this.tableSelected}
+          extraFunction={onClose}
+        />
+      )
+    });
   }
 
   tableSelected(objectValue) {
@@ -89,10 +100,10 @@ class C_AutoComplete extends Component {
     const value = objectValue[this.state.description]
     this.setState({ value })
     
-    //this.props.onChange(value, this.props.name)
-    //this.props.dataSelected(item.id, this.props.name)
+    this.props.onChange(value, this.props.name)
+    this.props.dataSelected(objectValue.id, this.props.name)
 
-    this.onClickIcon();
+    // this.onClickIcon();
   }
 
   render() {
@@ -126,18 +137,6 @@ class C_AutoComplete extends Component {
           }
           description={this.props.description}
         />
-        
-        { this.state.toggleIcon && this.props.searchColumns ?
-          <div id="searchTable" style={{ width: "100%", marginTop:20, zIndex: -10 }}>
-            <C_SearchTable
-              columns={this.props.searchColumns}
-              content={this.props.list}
-              onClick={this.tableSelected}
-            />
-          </div>
-          :undefined
-        }
-
       </div>
 
     );
