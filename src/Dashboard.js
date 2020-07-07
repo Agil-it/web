@@ -38,7 +38,10 @@ class Dashboard extends Component {
         { label: "BAIXA", value: "low" },
       ],
 
-      fields: {},
+      fields: {
+        to: new Date(),
+        from: new Date()
+      },
       selectedStatus: "created",
       selectedPriority: "all",
       showOrdersList: false
@@ -120,10 +123,9 @@ class Dashboard extends Component {
                 <C_Calendar
                   id="from"
                   name="from"
-                  value={new Date()}
+                  value={this.state.fields.from}
                   onChange={this.onChange}
                   label={"De"}
-                  allDay
                   inputStyle={{ width: 200, }}
                 />
               </div>
@@ -131,10 +133,9 @@ class Dashboard extends Component {
                 <C_Calendar
                   id="to"
                   name="to"
-                  value={new Date()}
+                  value={this.state.fields.to}
                   onChange={this.onChange}
                   label={"Até"}
-                  allDay
                   inputStyle={{ width: 200 }}
                 />
               </div>

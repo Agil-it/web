@@ -12,7 +12,7 @@ export class C_Calendar extends React.Component {
     this.onChange = this.onChange.bind(this);
   }
 
-  onChange(pValue) {
+  onChange(stringV, pValue) {
 
     if (this.props.onChange)
       this.props.onChange({ target: { name: this.props.name, value: pValue } });
@@ -29,24 +29,20 @@ export class C_Calendar extends React.Component {
     return (
       <DatePicker
         id={this.props.name}
+        displayMode={this.props.displayMode}
         name={this.props.name}
         label={this.props.label}
+        inline={this.props.notInline ? undefined : true}
+        lineDirection={this.props.lineDirection ? this.props.lineDirection : "center"}
         className={this.props.className}
-        showAllDays={this.props.allDays}
         inputStyle={this.props.inputStyle}
-        rightIcon={this.props.rightIcon}
         cancelLabel={this.props.cancelLabel}
         onChange={this.onChange}
         style={this.props.style}
         value={this.props.value}
         fullWidth={this.props.fullWidth}
-        icon={false}
-        yearsDisplayed={239}
-        portal
-        lastChild
+        autoOk={true}
         locales="pt-BR"
-        renderNode={null}
-        disableScrollLocking
         defaultValue={this.props.defaultValue}
       />
     );

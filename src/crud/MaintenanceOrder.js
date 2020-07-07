@@ -20,6 +20,7 @@ import { MessageModal } from '../components/Message';
 import { C_Table } from '../components/Table';
 import { C_Button } from '../components/Button'
 import { StringHelper } from '../helpers/String';
+import {C_Icon} from '../components/Icon';
 
 export default class CreateMaintenanceOrder extends React.Component {
 
@@ -620,7 +621,7 @@ export default class CreateMaintenanceOrder extends React.Component {
                       </div>
                     </div>
                   </div>
-                  : undefined}
+                : undefined}
 
                 {this.state.selectedTab == "equipments" ?
                   <div className="md-grid">
@@ -661,20 +662,16 @@ export default class CreateMaintenanceOrder extends React.Component {
             <div style={this.state.backgroundModal}>
               <div style={{width:"100%", display: "flex", justifyContent: "center", position: "fixed", top: "20%", right: 0 }}>
                 <AddEquipments
-
+                  onClose={() => this.setState({addEquiments:false})}
                 />
               </div>
             </div>
           : undefined}
         </DialogContainer>
-
-    
       </div>
     );
   }
 }
-
-
 export class AddEquipments extends React.Component {
   constructor(props) {
     super(props);
@@ -689,7 +686,16 @@ export class AddEquipments extends React.Component {
     return (
       <Card style={{width:"90%", padding: 20, borderRadius: 5}}>
         <div style={{ position: "relative" }}>
-          <span style={{ fontSize: 24, fontWeight: "bold" }}>{'Equipamentos'}</span>
+          <div>
+            <C_Icon
+              style={{ cursor: "pointer", position: "absolute", right: 0 }}
+              icon="close" iconSize={25}
+              action={() => this.props.onClose()}
+            />
+          </div>
+          <div>
+            <span style={{ fontSize: 24, fontWeight: "bold" }}>{'EQUIPAMENTOS'}</span>
+          </div>
         </div>
       </Card>
     )

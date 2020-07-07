@@ -341,12 +341,12 @@ class CreateUser extends Component {
             <div className="md-grid">
               <div className="md-cell md-cell--6">
                 <C_Calendar
+                  fullWidth={true}
                   id="birthDate"
                   name="birthDate"
                   value={this.state.fields.birthDate}
                   onChange={this.onChange}
                   label={"Data de Nascimento"}
-                  allDay
                   cancelLabel={"Cancelar"}
                 />
               </div>
