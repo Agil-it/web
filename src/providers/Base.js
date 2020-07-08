@@ -72,4 +72,22 @@ export class BaseProvider {
       }
     }
   }
+
+  mountBetweenDate(dateFrom,dateTo, keepValues = false) {
+    let dateTimeFrom,dateTimeTo;
+
+    if (!keepValues) {
+      dateTimeFrom = `${new Date(dateFrom).toISOString().split('T')[0]}T00:00:00`
+      dateTimeTo = `${new Date(dateTo).toISOString().split('T')[0]}T23:59:59`
+    } else {
+      dateTimeFrom = dateFrom
+      dateTimeTo = dateTo
+    }
+
+    return this.mountBetweenSetence(dateTimeFrom,dateTimeTo);
+  }
+
+  mountBetweenSetence(valueFrom,valueTo) {
+    return `between(${valueFrom}, ${valueTo})`;
+  }
 }

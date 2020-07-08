@@ -37,17 +37,13 @@ class Dashboard extends Component {
         { label: "MÉDIA", value: "medium" },
         { label: "BAIXA", value: "low" },
       ],
-
-      fields: {
-        to: new Date(),
-        from: new Date()
-      },
+      to: new Date(),
+      from: new Date(),
       selectedStatus: "created",
       selectedPriority: "all",
       showOrdersList: false
     }
 
-    this.onChange = this.onChange.bind(this);
     this.listOrders = this.listOrders.bind(this);
     this.calculateHeight = this.calculateHeight.bind(this);
     this.provider = new HandlerProvider(new MaintenanceOrderProvider(), "ordem de manutenção")
@@ -63,30 +59,24 @@ class Dashboard extends Component {
     return rowsPerPage;
   }
 
-  onChange(e, name) {
-
-    let fields = this.state.fields;
-
-    fields[e.target.name] = e.target.value;
-
-    this.setState({ fields })
-  }
-
   async listOrders() {
+    const { selectedPriority, selectedStatus, from, to } = this.state
+
     let sendData = {}
 
     if (this.state.selectedPriority != "all") sendData.priority = this.state.selectedPriority;
     if (this.state.selectedStatus != "all") sendData.orderStatus  = this.state.selectedStatus;
     
+    sendData.openedDate = this.provider.provider.mountBetweenDate(from,to, false)
+
     let response = await this.provider.getList(sendData);
     let list = []
-    // console.log("Dashboard -> listOrders -> response", response)
+    
     if (response.success) {
       list = response.data
     }
 
-    var orders = HelperOM.sortOrders(list) 
-    // console.log("Dashboard -> listOrders -> orders", orders)
+    var orders = HelperOM.sortOrders(list)
 
     this.setState({ orders , showLoading: false })
 
@@ -121,43 +111,46 @@ class Dashboard extends Component {
             <div className="md-grid" style={{ padding: 0 }}>
                 <C_Calendar className="md-cell md-cell--2"
                   id="from" name="from"
-                  value={this.state.fields.from} onChange={this.onChange}
-                  label={"De"} inputStyle={{ width: 200, }}
+                  value={this.state.from} onChange={(e) => this.setState({from: e.target.value})}
+                  label={"De"} 
                 />
                 <C_Calendar
                   className="md-cell md-cell--2"
                   id="to" name="to"
-                  value={this.state.fields.to} onChange={this.onChange}
-                  label={"Até"} inputStyle={{ width: 200 }}
+                  value={this.state.to} onChange={(e) => this.setState({to: e.target.value})}
+                  label={"Até"}
                 />
-                <C_SelectField
-                  id="orderStatus" name="orderStatus"
-                  onChange={(e) => this.setState({selectedStatus: e.target.value})}
-                  value={this.state.selectedStatus} label={"Status"}
-                  list={this.state.listStatus}
-                  labelElement="label" valueElement="value"
-                  style={{ width: 200 }} className="md-cell md-cell--2 md-cell--bottom"
+                <div className="md-cell md-cell--2 md-cell--bottom">
+                  <C_SelectField
+                    id="orderStatus" name="orderStatus"
+                    onChange={(e) => this.setState({selectedStatus: e.target.value})}
+                    value={this.state.selectedStatus} label={"Status"}
+                    list={this.state.listStatus}
+                    labelElement="label" valueElement="value"
+                    style={{ width: "100%" }} 
+                  />
+                </div>
+                <div className="md-cell md-cell--2 md-cell--bottom">
+                  <C_SelectField
+                    id="priority" name="priority"
+                    onChange={(e) => this.setState({selectedPriority: e.target.value})}
+                    value={this.state.selectedPriority}
+                    label={"Prioridade"}
+                    list={this.state.listPriority}
+                    labelElement="label" valueElement="value"
+                    style={{ width: "100%"}} 
+                  />
+                </div>
+                <C_Button 
+                  secondary={true}
+                  className="md-cell md-cell--middle md-cell--2"
+                  style={{ width: "10%", marginTop:15}}
+                  label={"LISTAR"}
+                  action={() => {
+                    this.listOrders();
+                    this.setState({ showLoading: true })
+                  }}
                 />
-
-                <C_SelectField
-                  id="priority" name="priority"
-                  onChange={(e) => this.setState({selectedPriority: e.target.value})}
-                  value={this.state.selectedPriority}
-                  label={"Prioridade"}
-                  list={this.state.listPriority}
-                  labelElement="label" valueElement="value"
-                  style={{ width: 200 }} className="md-cell md-cell--3 md-cell--bottom"
-                />
-              <C_Button
-                secondary={true}
-                className="md-cell md-cell--middle md-cell--2"
-                style={{ width: 130, marginTop: 30, fontSize: 16 }}
-                label={"LISTAR"}
-                action={() => {
-                  this.listOrders();
-                  this.setState({ showLoading: true })
-                }}
-              />
             </div>
           </div>
           <div style={{ width: "100%", paddingBottom: !this.state.showOrdersList ? 160 : 150 }}> </div>
