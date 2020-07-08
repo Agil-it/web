@@ -37,17 +37,13 @@ class Dashboard extends Component {
         { label: "MÉDIA", value: "medium" },
         { label: "BAIXA", value: "low" },
       ],
-
-      fields: {
-        to: new Date(),
-        from: new Date()
-      },
+      to: new Date(),
+      from: new Date(),
       selectedStatus: "created",
       selectedPriority: "all",
       showOrdersList: false
     }
 
-    this.onChange = this.onChange.bind(this);
     this.listOrders = this.listOrders.bind(this);
     this.calculateHeight = this.calculateHeight.bind(this);
     this.provider = new HandlerProvider(new MaintenanceOrderProvider(), "ordem de manutenção")
@@ -63,30 +59,24 @@ class Dashboard extends Component {
     return rowsPerPage;
   }
 
-  onChange(e, name) {
-
-    let fields = this.state.fields;
-
-    fields[e.target.name] = e.target.value;
-
-    this.setState({ fields })
-  }
-
   async listOrders() {
+    const { selectedPriority, selectedStatus, from, to } = this.state
+
     let sendData = {}
 
     if (this.state.selectedPriority != "all") sendData.priority = this.state.selectedPriority;
     if (this.state.selectedStatus != "all") sendData.orderStatus  = this.state.selectedStatus;
     
+    sendData.openedDate = this.provider.provider.mountBetweenDate(from,to, false)
+
     let response = await this.provider.getList(sendData);
     let list = []
-    // console.log("Dashboard -> listOrders -> response", response)
+    
     if (response.success) {
       list = response.data
     }
 
-    var orders = HelperOM.sortOrders(list) 
-    // console.log("Dashboard -> listOrders -> orders", orders)
+    var orders = HelperOM.sortOrders(list)
 
     this.setState({ orders , showLoading: false })
 
@@ -123,8 +113,8 @@ class Dashboard extends Component {
                 <C_Calendar
                   id="from"
                   name="from"
-                  value={this.state.fields.from}
-                  onChange={this.onChange}
+                  value={this.state.from}
+                  onChange={(e) => this.setState({from: e.target.value})}
                   label={"De"}
                   inputStyle={{ width: 200, }}
                 />
@@ -133,8 +123,8 @@ class Dashboard extends Component {
                 <C_Calendar
                   id="to"
                   name="to"
-                  value={this.state.fields.to}
-                  onChange={this.onChange}
+                  value={this.state.to}
+                  onChange={(e) => this.setState({to: e.target.value})}
                   label={"Até"}
                   inputStyle={{ width: 200 }}
                 />
