@@ -32,16 +32,18 @@ export class C_Calendar extends React.Component {
         displayMode={this.props.displayMode}
         name={this.props.name}
         label={this.props.label}
-        inline={this.props.notInline ? undefined : true}
+        inline={this.props.notInline && this.props.fullWidth ? undefined : true}
         lineDirection={this.props.lineDirection ? this.props.lineDirection : "center"}
         className={this.props.className}
         inputStyle={this.props.inputStyle}
+        rightIcon={this.props.rightIcon}
         cancelLabel={this.props.cancelLabel}
         onChange={this.onChange}
         style={this.props.style}
         value={this.props.value}
         fullWidth={this.props.fullWidth}
         autoOk={true}
+        disableScrollLocking
         locales="pt-BR"
         defaultValue={this.props.defaultValue}
       />

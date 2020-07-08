@@ -119,52 +119,35 @@ class Dashboard extends Component {
           <div style={{ padding: "15px 0px 2px 20px", borderBottom: "2px solid silver", position: "fixed", width: "100%", backgroundColor: "#fafafa", zIndex: 2 }}>
             <h1 style={{ width: "100%", color: "black" }}>Monitor de Ordens de Manutenção</h1>
             <div className="md-grid" style={{ padding: 0 }}>
-              <div className="md-cell md-cell--2">
-                <C_Calendar
-                  id="from"
-                  name="from"
-                  value={this.state.fields.from}
-                  onChange={this.onChange}
-                  label={"De"}
-                  inputStyle={{ width: 200, }}
+                <C_Calendar className="md-cell md-cell--2"
+                  id="from" name="from"
+                  value={this.state.fields.from} onChange={this.onChange}
+                  label={"De"} inputStyle={{ width: 200, }}
                 />
-              </div>
-              <div className="md-cell md-cell--2">
                 <C_Calendar
-                  id="to"
-                  name="to"
-                  value={this.state.fields.to}
-                  onChange={this.onChange}
-                  label={"Até"}
-                  inputStyle={{ width: 200 }}
+                  className="md-cell md-cell--2"
+                  id="to" name="to"
+                  value={this.state.fields.to} onChange={this.onChange}
+                  label={"Até"} inputStyle={{ width: 200 }}
                 />
-              </div>
-              <div className="md-cell md-cell--2 md-cell--bottom">
                 <C_SelectField
-                  id="orderStatus"
-                  name="orderStatus"
+                  id="orderStatus" name="orderStatus"
                   onChange={(e) => this.setState({selectedStatus: e.target.value})}
-                  value={this.state.selectedStatus}
-                  label={"Status"}
+                  value={this.state.selectedStatus} label={"Status"}
                   list={this.state.listStatus}
-                  labelElement="label"
-                  valueElement="value"
-                  style={{ width: 200 }}
+                  labelElement="label" valueElement="value"
+                  style={{ width: 200 }} className="md-cell md-cell--2 md-cell--bottom"
                 />
-              </div>
-              <div className="md-cell md-cell--3 md-cell--bottom">
+
                 <C_SelectField
-                  id="priority"
-                  name="priority"
+                  id="priority" name="priority"
                   onChange={(e) => this.setState({selectedPriority: e.target.value})}
                   value={this.state.selectedPriority}
                   label={"Prioridade"}
                   list={this.state.listPriority}
-                  labelElement="label"
-                  valueElement="value"
-                  style={{ width: 200}}
+                  labelElement="label" valueElement="value"
+                  style={{ width: 200 }} className="md-cell md-cell--3 md-cell--bottom"
                 />
-              </div>
               <C_Button
                 secondary={true}
                 className="md-cell md-cell--middle md-cell--2"

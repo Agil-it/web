@@ -342,6 +342,7 @@ class CreateUser extends Component {
               <div className="md-cell md-cell--6">
                 <C_Calendar
                   fullWidth={true}
+                  notInline={true}
                   id="birthDate"
                   name="birthDate"
                   value={this.state.fields.birthDate}
@@ -357,7 +358,7 @@ class CreateUser extends Component {
                   onChange={this.onChange}
                   label="Telefone de Contato"
                   placeholder="Telefone de Contato"
-                  required={true}
+                  fullWidth={true}
                   onChange={this.onChange}
                 />
               </div>
