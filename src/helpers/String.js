@@ -39,7 +39,7 @@ export class StringHelper {
 
   static backgroundModal() {
     return {
-      backgroundColor: "rgba(0, 0, 0, 0.78)",
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
       position: "fixed",
       top: 0,
       left: 0,

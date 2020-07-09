@@ -38,7 +38,7 @@ class Dashboard extends Component {
         { label: "BAIXA", value: "low" },
       ],
       to: new Date(),
-      from: new Date(),
+      from: new Date("2020-05-01"),
       selectedStatus: "created",
       selectedPriority: "all",
       showOrdersList: false
@@ -195,9 +195,12 @@ class Dashboard extends Component {
                   message={"Carregando Ordens..."}
                 />
               </div>
-              : undefined}
+            : undefined}
 
-            {orders && !this.state.showLoading && orders.map((order, i) => {
+            {orders && !this.state.showLoading && orders.length == 0 ?
+              <h1 style={{marginTop:"10%"}} className="slideInLeft">{"Nenhum registro encontrado..."}</h1>
+            :
+            orders && !this.state.showLoading && orders.map((order, i) => {
               return (
                 !this.state.showOrdersList ?
                   <fieldset onClick={() => { this.setState({ showOrderDetails: true, orderDetails: order }) }} className={"effectfront"} style={{ cursor: "pointer", position: "relative", width:"30%",minWidth: "30%", borderRadius: 5, border: "1px solid silver", marginBottom: 20, padding: 10, marginTop: 40, marginRight: 20 }}>
@@ -225,7 +228,7 @@ class Dashboard extends Component {
                       </div>
                     </div>
                   </fieldset>
-                  : undefined
+                : undefined
               )
             })
             }

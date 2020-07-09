@@ -21,6 +21,7 @@ import { C_Table } from '../components/Table';
 import { C_Button } from '../components/Button'
 import { StringHelper } from '../helpers/String';
 import {C_Icon} from '../components/Icon';
+import { C_Modal } from './Modal';
 
 export default class CreateMaintenanceOrder extends React.Component {
 
@@ -56,12 +57,8 @@ export default class CreateMaintenanceOrder extends React.Component {
       ]
     };
 
-    // this.provider = new HandlerProvider(new UserProvider(), "usuário")
     this.provider = new HandlerProvider(new MaintenanceOrderProvider(), "ordem de manutenção")
-    this.providerEquipment = new HandlerProvider(new MachineProvider(), "equipamento")
     this.providerArea = new HandlerProvider(new InstallationAreaProvider(), "área de instalação")
-    // this.providerOrderType = new HandlerProvider(new OrderTypeProvider(), "tipo de ordem")
-    // this.providerClassification = new HandlerProvider(new ClassificationProvider(), "classificação da ordem")
     this.providerLayout = new HandlerProvider(new OrderLayoutProvider(), "layout da ordem")
     this.providerUser = new HandlerProvider(new UserProvider(), "usuário")
     this.providerWorkcenter = new HandlerProvider(new WorkCenterProvider(), "centro de trabalho")
@@ -74,20 +71,15 @@ export default class CreateMaintenanceOrder extends React.Component {
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
     this.orderComplete = this.orderComplete.bind(this);
-    this.equipmentComplete = this.equipmentComplete.bind(this);
     this.areaComplete = this.areaComplete.bind(this);
     this.workcenterComplete = this.workcenterComplete.bind(this);
     this.getOrder = this.getOrder.bind(this);
-    this.getEquipment = this.getEquipment.bind(this);
 
   }
 
   async loadingData() {
     this.loadOrders();
-    this.loadEquipments();
     this.loadAreas();
-    // this.loadTypes();
-    // this.loadClassifications();
     this.loadLayouts();
     this.loadUsers();
     this.loadWorkCenters();
@@ -123,26 +115,6 @@ export default class CreateMaintenanceOrder extends React.Component {
     this.setState({ layouts })
   }
 
-  // async loadClassifications() {
-  //   let classifications = []
-  //   let response = await this.providerClassification.getList();
-  //   console.log("CreateMaintenanceOrder -> listAreas -> response", response)
-  //   if (response.success) {
-  //     classifications = response.data
-  //   }
-  //   this.setState({ classifications })
-  // }
-
-  // async loadTypes() {
-  //   let listTypes = []
-  //   let response = await this.providerOrderType.getList();
-  //   console.log("CreateMaintenanceOrder -> listAreas -> response", response)
-  //   if (response.success) {
-  //     listTypes = response.data
-  //   }
-  //   this.setState({ listTypes })
-  // }
-
   async loadAreas() {
     let listAreas = []
     let response = await this.providerArea.getList();
@@ -151,16 +123,6 @@ export default class CreateMaintenanceOrder extends React.Component {
       listAreas = response.data
     }
     this.setState({ listAreas })
-  }
-
-  async loadEquipments() {
-    let listEquipments = []
-    let response = await this.providerEquipment.getList();
-    // console.log("CreateMaintenanceOrder -> loadEquipments -> response", response)
-    if (response.success) {
-      listEquipments = response.data
-    }
-    this.setState({ listEquipments })
   }
 
 
@@ -338,18 +300,6 @@ export default class CreateMaintenanceOrder extends React.Component {
     })
   }
 
-  async getEquipment(id) {
-    let orderEquipments = this.state.orderEquipments;
-
-    let response = await this.providerEquipment.get(id);
-
-    if (response.success) {
-      orderEquipments.push({ equipment: response.data, createdBy: 1, updatedBy: 1 })
-    }
-
-    this.setState({ orderEquipments });
-  }
-
   workcenterComplete(id, name) {
     if (id === undefined) {
       this.clean()
@@ -362,30 +312,6 @@ export default class CreateMaintenanceOrder extends React.Component {
     return
   }
 
-  // classificationComplete(id, name) {
-  //   if (id === undefined) {
-  //     this.clean()
-  //     return
-  //   }
-
-  //   let orderClassification = this.state.classifications.find(element => element.id === id)
-
-  //   this.setState({ orderClassification })
-  //   return
-  // }
-
-  // orderTypeComplete(id, name) {
-  //   if (id === undefined) {
-  //     this.clean()
-  //     return
-  //   }
-
-  //   let orderType = this.state.listTypes.find(element => element.id === id)
-
-  //   this.setState({ orderType })
-  //   return
-  // }
-
   areaComplete(id, name) {
     if (id === undefined) {
       this.clean()
@@ -396,17 +322,6 @@ export default class CreateMaintenanceOrder extends React.Component {
 
     this.setState({ installationArea })
     return
-  }
-
-  equipmentComplete(id, name) {
-    if (id === undefined) {
-      this.clean()
-      return
-    }
-
-    let equipment = this.state.listEquipments.find(element => element.id === id)
-
-    this.getEquipment(equipment.id)
   }
 
   orderComplete(id, name) {
@@ -677,27 +592,103 @@ export class AddEquipments extends React.Component {
     super(props);
 
     this.state = {
+      listEquipments: this.props.equipments,
+      layoutType: this.props.layoutType,
+      orderEquipments: [],
+      completeEquipment: ''
     }
+
+    this.providerEquipment = new HandlerProvider(new MachineProvider(), "equipamento")
+    this.equipmentComplete = this.equipmentComplete.bind(this);
+    this.getEquipment = this.getEquipment.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.loadingData();
+  }
+
+  async loadingData(){
+    this.loadEquipments();
+  }
+
+  async loadEquipments() {
+    let listEquipments = []
+    let response = await this.providerEquipment.getList();
+    // console.log("CreateMaintenanceOrder -> loadEquipments -> response", response)
+    if (response.success) {
+      listEquipments = response.data
+    }
+    this.setState({ listEquipments })
+  }
+
+  async getEquipment(id) {
+    let orderEquipments = this.state.orderEquipments;
+
+    let response = await this.providerEquipment.get(id);
+
+    if (response.success) {
+      orderEquipments.push({ equipment: response.data, createdBy: 1, updatedBy: 1 })
+    }
+
+    this.setState({ orderEquipments });
+  }
+
+
+  equipmentComplete(id, name) {
+    if (id === undefined) {
+      // this.clean()
+      return
+    }
+
+    let equipment = this.state.listEquipments.find(element => element.id === id)
+
+    this.getEquipment(equipment.id)
+  }
+
+  onChange(e, name) {
+
+    if (name === "orderEquipmentId") {
+      this.setState({ completeEquipment: e })
+      return
+    }
+
+    // let fields = this.state.fields;
+
+    // fields[e.target.name] = e.target.value;
+    // this.setState({ fields })
+
   }
 
   render(){
     console.log("Chamou o AddEquipments");
+    const { orderEquipments, layoutType } = this.state
     
     return (
-      <Card style={{width:"90%", padding: 20, borderRadius: 5}}>
-        <div style={{ position: "relative" }}>
-          <div>
-            <C_Icon
-              style={{ cursor: "pointer", position: "absolute", right: 0 }}
-              icon="close" iconSize={25}
-              action={() => this.props.onClose()}
-            />
-          </div>
-          <div>
-            <span style={{ fontSize: 24, fontWeight: "bold" }}>{'EQUIPAMENTOS'}</span>
-          </div>
-        </div>
-      </Card>
+      <C_Modal style={{ width: "90%", padding: 20, borderRadius: 5 }} titleSize={20} title="EQUIPAMENTOS" onClose={() => this.props.onClose()}>
+        <C_AutoComplete
+          className="md-cell md-cell--12 md-cell--bottom"
+          id="orderEquipmentId"
+          name="orderEquipmentId"
+          onChange={this.onChange}
+          style={{ pointerEvents: layoutType === "default" && orderEquipments.length >= 1 ? "none" : undefined }}
+          type="search"
+          disabled={layoutType === "default" && orderEquipments.length >= 1}
+          list={this.state.listEquipments}
+          label="Adicionar Equipamento"
+          placeholder="Adicionar Equipamento"
+          rightIcon={"search"}
+          value={this.state.completeEquipment}
+          dataSelected={this.equipmentComplete}
+        />
+        <C_TextField
+          className="md-cell md-cell--12 md-cell--bottom"
+          id="machineType"
+          name="machineType"
+          type="text"
+          label="Tipo de Máquina"
+          placeholder="Tipo de Máquina"
+          value={this.state.orderEquipments.length > 0 ? this.state.orderEquipments[0].equipment.machineType.description : undefined}
+          disabled={true}
+        />
+      </C_Modal>
     )
   }
 }
