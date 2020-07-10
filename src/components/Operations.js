@@ -273,26 +273,22 @@ export class CrudOperation extends React.Component {
           />
         </div>
         <div style={{ margin: 0, paddingTop: 20 }} className="md-grid">
-          <div className="md-cell md-cell--8 md-cell--bottom">
-            <C_Switch id="executed" name="executed"
-              value={this.state.operation.executed} onChange={this.onChange}
-              type="switch" label="Marcar como Executado" checked={this.state.operation.executed}
-            />
-          </div>
-          <div className="md-cell md-cell--2 md-cell--bottom">
-            <C_Button
-              secondary={true}
-              label="CANCELAR"
-              action={() => { this.props.showOperations() }}
-            />
-          </div>
-          <div className="md-cell md-cell--2 md-cell--bottom">
-            <C_Button
-              primary={true}
-              label="SALVAR"
-              action={() => this.sendOperation()}
-            />
-          </div>
+          <C_Switch id="executed" name="executed" className="md-cell md-cell--6"
+            value={this.state.operation.executed} onChange={this.onChange}
+            type="switch" label="Marcar como Executado" checked={this.state.operation.executed}
+          />
+          <C_Button
+            secondary={true}
+            label="CANCELAR"
+            className="md-cell md-cell--3 md-cell--bottom"
+            action={() => { this.props.showOperations() }}
+          />
+          <C_Button
+            className="md-cell md-cell--3 md-cell--bottom"
+            primary={true}
+            label="SALVAR"
+            action={() => this.sendOperation()}
+          />
         </div>
       </div>
     );

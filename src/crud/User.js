@@ -297,7 +297,7 @@ class CreateUser extends Component {
             <div className="md-grid">
               <div className="md-cell md-cell--3 md-cell--bottom">
                 <C_Button
-                  style={{ width: "100%" }}
+                  style={{ width: 180 }}
                   primary={true}
                   label={<div style={{textAlign:"center"}}>Gerar senha</div>}
                   icon={<FontIcon>lock</FontIcon>}

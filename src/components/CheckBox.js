@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import Checkbox  from 'react-md/lib/SelectionControls/Checkbox';
+import Checkbox from 'react-md/lib/SelectionControls/Checkbox';
 import Switch from 'react-md/lib/SelectionControls/Switch';
 import '../index.css';
 
@@ -13,7 +13,7 @@ export class C_CheckBox extends React.Component {
   }
 
   onChange(pValue) {
-    console.log("pValue",pValue);
+    console.log("pValue", pValue);
 
     if (this.props.onChange)
       this.props.onChange({ target: { name: this.props.name, value: pValue } });
@@ -24,18 +24,18 @@ export class C_CheckBox extends React.Component {
     return (
       <div>
         <Checkbox
-            label={this.props.label}
-            onChange={this.onChange}
-            onClick={this.props.action}
-            style={this.props.style}
-            id={this.props.name}
-            className={this.props.className}
-            disabled={this.props.disabled}
-            checked={this.props.checked}
-            type={this.props.type}
+          label={this.props.label}
+          onChange={this.onChange}
+          onClick={this.props.action}
+          style={this.props.style}
+          id={this.props.name}
+          className={this.props.className}
+          disabled={this.props.disabled}
+          checked={this.props.checked}
+          type={this.props.type}
         />
       </div>
-      
+
     );
   }
 }
@@ -59,19 +59,17 @@ export class C_Switch extends React.Component {
   render() {
 
     return (
-      <div>
-        <Switch
-          id={this.props.name}
-          type={this.props.type}
-          label={<div style={{ color: '#0000008a' }}>{this.props.label}</div>}
-          name={this.props.name}
-          value={this.props.value}
-          className={this.props.className}
-          checked={this.props.checked}
-          onChange={this.onChange}
-          style={this.props.style}
-        />
-      </div>
+      <Switch
+        id={this.props.name}
+        type={this.props.type}
+        label={<div style={{ color: '#0000008a' }}>{this.props.label}</div>}
+        name={this.props.name}
+        value={this.props.value}
+        className={this.props.className}
+        checked={this.props.checked}
+        onChange={this.onChange}
+        style={this.props.style}
+      />
 
     );
   }

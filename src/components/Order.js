@@ -179,7 +179,7 @@ export class C_MaintenanceOrder extends React.Component {
 
           {this.state.itemSelected == "operations" ?
             <div style={this.state.backgroundModal}>
-              <div style={{ width: "100%", display: "flex", justifyContent: "center", position: "fixed", top: "10%"}}>
+              <div style={{ width: "100%", display: "flex", justifyContent: "center", position: "fixed", top: "5%"}}>
                 <C_Operations
                   style={{ width: "50%", padding: 20, borderRadius:5 }}
                   orderId={order.id}

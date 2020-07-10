@@ -63,6 +63,8 @@ class C_AutoComplete extends Component {
   onBlur() {
     let value = this.state.value
     let item = this.props.list.find(element => element[this.state.description] === value)
+    // console.log("onBlur -> item", item)
+    // console.log("onBlur -> this.props", this.props)
 
     if( item === undefined) {
       value = ""
