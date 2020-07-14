@@ -8,6 +8,7 @@ import { ObjectHelper } from '../helpers/Object';
 import { MaintenanceOrderHelper as HelperOM } from '../helpers/MaintenanceOrder';
 import C_AutoComplete from '../components/AutoComplete';
 import { CauseProvider } from '../providers/Cause';
+import { DiagnosticProvider } from '../providers/Diagnostic';
 import { MaintenanceOrderProvider } from '../providers/MaintenanceOrder';
 import { InstallationAreaProvider } from '../providers/InstallationArea';
 import { SuperiorMachineProvider } from '../providers/SuperiorMachine';
@@ -42,7 +43,9 @@ export default class CreateMaintenanceOrder extends React.Component {
       ],
       columns: [
         { name: "Equipamento", property: "equipment.description" },
-        { name: "Tipo de Máquina", property: "equipment.machineType.description" },
+        { name: "Tipo Máquina", property: "equipment.machineType.description" },
+        { name: "Local Inst.", property: "installationArea.description" },
+        { name: "Setor.", property: "installationArea.sector.description" },
         { name: "Excluir", icon: "delete", action: (index) => this.removeEquipment(index) },
       ],
 
@@ -120,16 +123,22 @@ export default class CreateMaintenanceOrder extends React.Component {
     this.provider.delete(order.id, this.clean)
   }
 
-  checkData() {
+  checkData(params) {
     const { installationArea, orderEquipments, workCenter, fields } = this.state
     const errors = [];
 
-    if (!fields.orderNumber) errors.push("Número da Ordem");
-    if (!fields.orderLayout) errors.push("Layout da Ordem");
-    if (!fields.priority) errors.push("Prioridade da Ordem");
-    if (!fields.solicitationUser) errors.push("Solicitante da Ordem");
-    if (!workCenter) errors.push("Centro de Trabalho");
-    if (orderEquipments.length <= 0) errors.push("Adicione no mínimo 1 Equipamento na Ordem");
+    if (params) {
+      console.log("CreateMaintenanceOrder -> checkData -> params", params)
+      if (!params.equipment) errors.push("Equipamento");
+      if (params.equipment && !params.installationArea) errors.push("Local de Instalação");
+    }
+    else {
+      if (!fields.orderNumber) errors.push("Número da Ordem");
+      if (!fields.orderLayout) errors.push("Layout da Ordem");
+      if (!fields.priority) errors.push("Prioridade da Ordem");
+      if (!fields.solicitationUser) errors.push("Solicitante da Ordem");
+      if (!workCenter) errors.push("Centro de Trabalho");
+    }
 
     return errors;
   }
@@ -175,10 +184,12 @@ export default class CreateMaintenanceOrder extends React.Component {
 
 
   onChange(e, name) {
+  console.log("CreateMaintenanceOrder -> onChange -> e", e)
+  console.log("CreateMaintenanceOrder -> onChange -> name", name)
 
     if (name === "id") this.setState({ completeOrder: e })
     else if (name === "workCenter") this.setState({ completeWorkcenter: e })
-    else if (name === "orderLayout") {
+    else if (e.target.name === "orderLayout") {
 
       const layout = this.getOrderLayout(e.target.value)
       let layoutType = layout.orderLayout;
@@ -477,6 +488,26 @@ export default class CreateMaintenanceOrder extends React.Component {
             <div style={this.state.backgroundModal}>
               <div style={{ width: "100%", display: "flex", justifyContent: "center", position: "fixed", top: "15%", right: 0 }}>
                 <AddEquipments
+                  pushEquipment={(equipment) => {
+                    console.log("CreateMaintenanceOrder -> render -> equipment", equipment)
+                    if (!equipment) return 
+
+                    const errors = this.checkData(equipment);
+
+                    if (errors.length > 0) {
+                      MessageModal.informationList("Erro", "Informe os campos obrigatórios", errors, null)
+                      return
+                    }
+                    
+                    let orderEquipments = this.state.orderEquipments
+                    console.log("CreateMaintenanceOrder -> render -> orderEquipments", orderEquipments)
+
+                    orderEquipments.push(equipment);
+                     
+                    this.setState({orderEquipments})
+                  }}
+                  
+                  checkData={() => this.checkData()}
                   onClose={() => this.setState({ addEquiments: false })}
                 />
               </div>
@@ -492,9 +523,9 @@ export class AddEquipments extends React.Component {
     super(props);
 
     this.state = {
-      listEquipments: this.props.equipments,
       layoutType: this.props.layoutType,
       orderEquipment: {},
+      completeSymptom: '',
       completeCause: '',
       completeEquipment: '',
       completeSuperiorEquipment: '',
@@ -505,9 +536,11 @@ export class AddEquipments extends React.Component {
     this.providerSuperiorEquipment = new HandlerProvider(new (SuperiorMachineProvider), "equipamento superior")
     this.providerArea = new HandlerProvider(new (InstallationAreaProvider), "área de instalação")
     this.providerCause = new HandlerProvider(new (CauseProvider), "Causa do Defeito")
+    this.providerSypmtom = new HandlerProvider(new (DiagnosticProvider), "Sintoma do Defeito")
     this.completeField = this.completeField.bind(this);
     this.getEquipment = this.getEquipment.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.clean = this.clean.bind(this);
     this.loadingData();
   }
 
@@ -516,6 +549,7 @@ export class AddEquipments extends React.Component {
     let listSuperiorEquipments = []
     let listAreas = []
     let listCauses = []
+    let listSymptoms = []
 
     let res = await this.providerEquipment.getList();
     if (res.success) listEquipments = res.data
@@ -529,7 +563,10 @@ export class AddEquipments extends React.Component {
     let res4 = await this.providerCause.getList();
     if (res4.success) listCauses = res4.data
 
-    this.setState({ listEquipments, listSuperiorEquipments, listAreas, listCauses }) 
+    let res5 = await this.providerSypmtom.getList();
+    if (res5.success) listSymptoms = res5.data
+
+    this.setState({ listEquipments, listSuperiorEquipments, listAreas, listCauses, listSymptoms }) 
   }
 
   async getEquipment(id) {
@@ -548,7 +585,7 @@ export class AddEquipments extends React.Component {
 
     const { orderEquipment } = this.state
     if (id === undefined) {
-      // this.clean()
+      this.clean()
       return
     }
 
@@ -577,7 +614,16 @@ export class AddEquipments extends React.Component {
       orderEquipment.defectOrigin = defectOrigin;
       this.setState({ orderEquipment })
     }
+
+    if (name == "defectSypmtom") {
+      let defectSypmtom = this.state.listSymptoms.find(element => element.id === id)
+
+      orderEquipment.defectSypmtom = defectSypmtom;
+      this.setState({ orderEquipment })
+    }
   }
+
+  clean() {}
 
   onChange(e, name) {
 
@@ -585,6 +631,7 @@ export class AddEquipments extends React.Component {
     else if (name === "superiorEquipment") this.setState({ completeSuperiorEquipment: e })
     else if (name === "installationArea") this.setState({ completeArea: e })
     else if (name === "defectOrigin") this.setState({ completeCause: e })
+    else if (name === "defectSymptom") this.setState({ completeSymptom: e })
     else {
       let orderEquipment = this.state.orderEquipment;
   
@@ -598,7 +645,7 @@ export class AddEquipments extends React.Component {
     console.log("AddEquipments -> render -> this.state", this.state)
 
     return (
-      <C_Modal style={{ width: "90%", padding: 20, borderRadius: 5 }} titleSize={20} title="EQUIPAMENTOS" onClose={() => this.props.onClose()}>
+      <C_Modal style={{ maxHeight: "36vw", overflowX: "hidden", width: "90%", padding: 20, borderRadius: 5 }} titleSize={20} title="EQUIPAMENTOS" onClose={() => this.props.onClose()}>
         <C_AutoComplete
           className="md-cell md-cell--12 md-cell--bottom"
           id="superiorEquipment"
@@ -691,18 +738,41 @@ export class AddEquipments extends React.Component {
           placeholder="Obs. Causa do Defeito"
           value={orderEquipment.defectOriginNote}
         />
+        <C_AutoComplete
+          className="md-cell md-cell--12 md-cell--bottom"
+          id="defectSymptom"
+          name="defectSymptom"
+          onChange={this.onChange}
+          type="search"
+          list={this.state.listSymptoms}
+          label="Sintoma do Defeito"
+          placeholder="Sintoma do Defeito"
+          rightIcon={"search"}
+          value={this.state.completeSymptom}
+          dataSelected={this.completeField}
+        />
+        <C_TextField
+          className="md-cell md-cell--12 md-cell--bottom"
+          id="defectSymptomNote"
+          name="defectSymptomNote"
+          onChange={this.onChange}
+          type="text"
+          label="Obs. Sintoma do Defeito"
+          placeholder="Obs. Sintoma do Defeito"
+          value={orderEquipment.defectSypmtomNote}
+        />
         <div style={{ marginTop: "5%"}}>
           <C_Button
             className="md-cell md-cell--6 md-cell--bottom"
-            label="LIMPAR"
+            label="FECHAR"
             secondary={true}
-            action={() => this.clean()}
+            action={() => this.props.onClose()}
           />
           <C_Button
             className="md-cell md-cell--6 md-cell--bottom"
             primary={true}
             label="ADICIONAR"
-            action={() => this.addEquiment(orderEquipment)}
+            action={() => this.props.pushEquipment(orderEquipment)}
           />
         </div>
       </C_Modal>
