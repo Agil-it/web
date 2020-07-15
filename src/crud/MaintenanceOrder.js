@@ -157,10 +157,6 @@ export default class CreateMaintenanceOrder extends React.Component {
 
     let orderEquipments = this.state.orderEquipments;
 
-    for (let i = 0; i < orderEquipments.length; i++) {
-      orderEquipments[i].installationArea = { id: this.state.installationArea.id }
-    }
-
     let order = {
       id: fields.id,
       orderNumber: fields.orderNumber,
@@ -615,10 +611,10 @@ export class AddEquipments extends React.Component {
       this.setState({ orderEquipment })
     }
 
-    if (name == "defectSypmtom") {
-      let defectSypmtom = this.state.listSymptoms.find(element => element.id === id)
+    if (name == "defectSymptom") {
+      let defectSymptom = this.state.listSymptoms.find(element => element.id === id)
 
-      orderEquipment.defectSypmtom = defectSypmtom;
+      orderEquipment.defectSymptom = defectSymptom;
       this.setState({ orderEquipment })
     }
   }
@@ -759,7 +755,7 @@ export class AddEquipments extends React.Component {
           type="text"
           label="Obs. Sintoma do Defeito"
           placeholder="Obs. Sintoma do Defeito"
-          value={orderEquipment.defectSypmtomNote}
+          value={orderEquipment.defectSymptomNote}
         />
         <div style={{ marginTop: "5%"}}>
           <C_Button

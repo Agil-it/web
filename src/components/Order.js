@@ -161,12 +161,14 @@ export class C_MaintenanceOrder extends React.Component {
                         </div>
                         <div className="md-grid" >
                           <C_Label className="md-cell md-cell--5 md-cell--bottom" label="Local de Instalação" value={item.installationArea.description} />
-                          <C_Label className="md-cell md-cell--5 md-cell--bottom" label="Tipo de Máquina" value={item.equipment.machineType.description} />   
-                          <C_Label className="md-cell md-cell--2 md-cell--bottom" label="Requer Parada?" value={item.needStopping ? "SIM" : "NÃO"} />                        
+                          <C_Label className="md-cell md-cell--5 md-cell--bottom" label="Setor" value={item.installationArea.sector.description} />   
+                          <C_Label className="md-cell md-cell--2 md-cell--bottom" label="Tipo de Máquina" value={item.equipment.machineType.description} />   
+                                                
                         </div>
                         <div className="md-grid" >
                           <C_Label className="md-cell md-cell--5 md-cell--bottom" label="Causa do Defeito" value={item.defectOrigin ? item.defectOrigin.description : ""} />
-                          <C_Label className="md-cell md-cell--7 md-cell--bottom" label="Sintoma do Defeito" value={item.defectSymptom ? item.defectSymptom.description: ""} />
+                          <C_Label className="md-cell md-cell--5 md-cell--bottom" label="Sintoma do Defeito" value={item.defectSymptom ? item.defectSymptom.description: ""} />
+                          <C_Label className="md-cell md-cell--2 md-cell--bottom" label="Requer Parada?" value={item.needStopping ? "SIM" : "NÃO"} />  
                         </div>
                       </div>
                       : undefined }
