@@ -504,6 +504,12 @@ export default class CreateMaintenanceOrder extends React.Component {
                     orderEquipments.push(equipment);
 
                     this.setState({ orderEquipments, showSuccess })
+
+                    if (showSuccess) {
+                      setTimeout(() => {
+                        this.setState({ showSuccess: false })
+                      }, 1000);
+                    }
                   }}
                   
 
