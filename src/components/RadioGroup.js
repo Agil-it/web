@@ -31,7 +31,7 @@ class C_RadioGroup extends Component {
             id={this.props.name + "_" + i}
             value={option.value}
             label={option.label ? option.label : ""}
-            checked={this.props.value === option.value}
+            checked={this.props.value == option.value}
             disabled={this.props.disabled}
             onChange={this.onChange}
           />

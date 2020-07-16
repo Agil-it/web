@@ -15,7 +15,7 @@ export class C_Modal extends React.Component {
 
   render() {
     return (
-      <Card style={this.props.style}>
+      <Card className={this.props.className} style={this.props.style}>
         <div>
           <div style={{ position: "relative" }}>
             <div>

@@ -48,4 +48,22 @@ export class StringHelper {
       zIndex: 10,
     }
   }
+
+  static styleMessage() {
+    return {
+      backgroundColor: "#424242",
+      position: "absolute",
+      zIndex:10,
+      right: "-30%",
+      width:"25%",
+      padding:5,
+      color: "white",
+      textAlign:'center',
+      bottom: 0,
+      zIndex: 10,
+      fontSize: "1vw",
+      height:50,
+      borderRadius:5
+    }
+  }
 }
