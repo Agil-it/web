@@ -113,7 +113,7 @@ export class HandlerProvider {
       
     } else {
       title = '✔ Sucesso'
-      MessageModal.information(title, StringHelper.FirstLetterUpperCase(`${this.entityName} ${action} com sucesso!`), successCallBack)
+      MessageModal.information(title, StringHelper.FirstLetterUpperCase(`${this.entityName} ${action} com sucesso!`), successCallBack(response.data))
     }
   }
 }

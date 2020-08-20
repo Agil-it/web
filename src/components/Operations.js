@@ -20,26 +20,15 @@ export class C_Operations extends React.Component {
       operations: [],
     }
 
-    this.createOperation = this.createOperation.bind(this);
-    // this.updateOperatio
+    // this.createOperation = this.createOperation.bind(this);
+    // this.updateOperation = this.updateOperation.bind(this);
   }
 
-  componentDidMount() {
-
-  }
-
-  createOperation(operation) {
-    var operations = this.state.operations;
-
-    operations.push(operation);
-
-    this.setState({ operations, operation })
-  }
+  componentDidMount() {}
 
   render() {
 
     console.log("state", this.state)
-
 
     return (
 
@@ -86,7 +75,7 @@ export class C_Operations extends React.Component {
               equipments={this.props.equipments}
               edit={this.state.isEditing}
               operation={this.state.operation}
-              save={(operation) => this.state.isEditing ? this.createOperation(operation) : this.createOperation(operation)}
+              save={(operation) => this.state.isEditing ? this.props.save(operation) : this.props.save(operation)}
             />
           }
         </div>
@@ -170,8 +159,8 @@ export class CrudOperation extends React.Component {
     super(props);
 
     this.state = {
-      selectedEquipment: this.props.equipments[0].equipment.id,
-      equipments: this.props.equipments,
+      selectedEquipment: this.props.equipments[0].id,
+      orderEquipments: this.props.equipments,
       operation: this.props.edit ? this.props.operation : {},
     }
 
@@ -185,16 +174,9 @@ export class CrudOperation extends React.Component {
     let operation = this.state.operation;
     let listEquipments = this.state.listEquipments
     console.log("CreateOperation -> sendOperation -> listEquipments", listEquipments)
-    let descriptionEquipment = "";
-
-    for (let i = 0; i < listEquipments.length; i++) {
-      if (listEquipments[i].value == this.state.selectedEquipment)
-        descriptionEquipment = listEquipments[i].label
-    }
 
     operation.orderEquipment = {
-      id: this.state.selectedEquipment,
-      description: descriptionEquipment
+      id: this.state.selectedEquipment
     }
 
     this.props.save(operation);
@@ -204,17 +186,13 @@ export class CrudOperation extends React.Component {
   }
 
   componentDidMount() {
+    let orderEquipments = this.state.orderEquipments;
 
-    let listEquipments = [];
-    let equipments = this.state.equipments;
+    let listEquipments = orderEquipments.map((item) => ({
+      label: item.equipment.description,
+      value: item.id 
+    }))
 
-    for (let i = 0; i < equipments.length; i++) {
-      var equipment = {
-        label: equipments[i].equipment.description,
-        value: equipments[i].equipment.id
-      }
-      listEquipments.push(equipment)
-    }
     console.log("C_Operations -> componentDidMount -> listEquipments", listEquipments)
 
     this.setState({ listEquipments })

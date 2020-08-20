@@ -61,7 +61,7 @@ export class StringHelper {
       textAlign:'center',
       bottom: 0,
       zIndex: 10,
-      fontSize: "1vw",
+      fontSize: "16px",
       height:50,
       borderRadius:5
     }

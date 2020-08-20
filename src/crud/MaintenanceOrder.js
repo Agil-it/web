@@ -16,8 +16,10 @@ import { MachineProvider } from '../providers/Machine';
 import { OrderLayoutProvider } from '../providers/OrderLayout';
 import { WorkCenterProvider } from '../providers/WorkCenter';
 import { UserProvider } from '../providers/User';
+import { OrderOperationProvider } from '../providers/OrderOperation';
 import { C_Tabs } from '../components/Tabs';
 import { MessageModal } from '../components/Message';
+import { C_Operations } from '../components/Operations';
 import { C_Table } from '../components/Table';
 import { C_Button } from '../components/Button'
 import { StringHelper } from '../helpers/String';
@@ -62,6 +64,7 @@ export default class CreateMaintenanceOrder extends React.Component {
     this.providerLayout = new HandlerProvider(new OrderLayoutProvider(), "layout da ordem")
     this.providerUser = new HandlerProvider(new UserProvider(), "usuário")
     this.providerWorkcenter = new HandlerProvider(new WorkCenterProvider(), "centro de trabalho")
+    this.providerOperation = new HandlerProvider(new OrderOperationProvider(), "operações");
 
     this.loadingData();
 
@@ -273,10 +276,29 @@ export default class CreateMaintenanceOrder extends React.Component {
     return layouts[index];
   }
 
+  saveOperation(operation) {
+    const { orderEquipments } = this.state;
+
+    var equipmentIndex = orderEquipments.findIndex(equipment => equipment.id == operation.orderEquipment.id)
+
+    if (equipmentIndex == -1) return
+
+    var orderEquipment = orderEquipments[equipmentIndex];
+
+    if (!Array.isArray(orderEquipment.orderOperation)) orderEquipment.orderOperation = [];
+
+    orderEquipment.orderOperation.push(operation)
+    orderEquipments.splice(equipmentIndex, 1, orderEquipment);
+    console.log("CreateMaintenanceOrder -> saveOperation -> orderEquipments", orderEquipments)
+    console.log("CreateMaintenanceOrder -> saveOperation -> operation", operation)
+
+    this.setState({ orderEquipments })
+  }
+
   render() {
 
     console.log("render -> STATE", this.state)
-    var {addEquiment, showSuccess, layoutType, layouts, fields, orderEquipments, tabs } = this.state;
+    var {addOperation, addEquiment, showSuccess, layoutType, layouts, fields, orderEquipments, tabs } = this.state;
 
     return (
       <div>
@@ -471,6 +493,20 @@ export default class CreateMaintenanceOrder extends React.Component {
                     </div>
                   </div>
                   : undefined}
+
+                {this.state.selectedTab == "operations" ?
+                  <div className="md-grid">
+                    <div className="md-cell md-cell--6 md-cell--bottom">
+                      <C_Button
+                        secondary={true}
+                        label="Inserir Operações"
+                        action={() => {
+                          this.setState({ addOperation: true })
+                        }}
+                      />
+                    </div>
+                  </div>
+                : undefined}
               </form>
             </C_Tabs>
           </section>
@@ -519,6 +555,21 @@ export default class CreateMaintenanceOrder extends React.Component {
               </div>
             </div>
           : undefined}
+
+          { addOperation ? 
+            <div style={this.state.backgroundModal}>
+              <div style={{ width: "100%", display: "flex", justifyContent: "center", position: "fixed", top: "5%" }}>
+                <C_Operations
+                  style={{ width: "50%", marginTop:30, padding: 20, borderRadius: 5 }}
+                  orderId={fields.id}
+                  equipments={orderEquipments}
+                  save={(operation) => this.saveOperation(operation)}
+                  title="OPERAÇÕES"
+                  onClose={() => this.setState({ addOperation: false })}
+                />
+              </div>
+            </div>
+          : undefined }
 
           {showSuccess ?
             <div className="slideInLeft" style={this.state.styleMessage}>
