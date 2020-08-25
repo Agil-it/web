@@ -185,6 +185,7 @@ export class C_MaintenanceOrder extends React.Component {
                 <C_Operations
                   style={{ width: "50%", padding: 20, borderRadius:5 }}
                   orderId={order.id}
+                  order={order}
                   equipments={order.orderEquipment}
                   title="OPERAÇÕES"
                   onClose={() => this.setState({ itemSelected: "", showBackgroundColor: false })}

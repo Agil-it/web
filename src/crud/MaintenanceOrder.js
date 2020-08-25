@@ -242,7 +242,7 @@ export default class CreateMaintenanceOrder extends React.Component {
     this.setState({
       fields, orderEquipments: order.orderEquipment,
       completeWorkcenter: fields.workCenter,
-      layoutType
+      layoutType, order
     })
   }
 
@@ -563,6 +563,7 @@ export default class CreateMaintenanceOrder extends React.Component {
                   style={{ width: "50%", marginTop:30, padding: 20, borderRadius: 5 }}
                   orderId={fields.id}
                   equipments={orderEquipments}
+                  order={this.state.order}
                   save={(operation) => this.saveOperation(operation)}
                   title="OPERAÇÕES"
                   onClose={() => this.setState({ addOperation: false })}

@@ -17,7 +17,7 @@ export class C_Operations extends React.Component {
     this.state = {
       viewOperations: true,
       orderId: this.props.orderId,
-      operations: [],
+      order: this.props.order,
     }
 
     // this.createOperation = this.createOperation.bind(this);
@@ -66,7 +66,7 @@ export class C_Operations extends React.Component {
           {this.state.viewOperations ?
             <ViewOperations
               orderId={this.state.orderId}
-              operations={this.state.operations}
+              order={this.state.order}
               isEditing={(item) => this.setState({ isEditing: true, viewOperations: false, operation : item})}
             />
             :
@@ -74,7 +74,7 @@ export class C_Operations extends React.Component {
               showOperations={() => this.setState({viewOperations:true})}
               equipments={this.props.equipments}
               edit={this.state.isEditing}
-              operation={this.state.operation}
+              order={this.state.order}
               save={(operation) => this.state.isEditing ? this.props.save(operation) : this.props.save(operation)}
             />
           }
@@ -90,15 +90,30 @@ export class ViewOperations extends React.Component {
     super(props);
 
     this.state = {
-      operations: this.props.operations ? this.props.operations : undefined,
+      order: this.props.order ? this.props.order : {},
       orderId: this.props.orderId
     }
     console.log("ViewOperations -> constructor -> this.props", this.props)
   }
 
   componentDidMount() {
+    const { order } = this.state;
+    const orderEquipment = order.orderEquipment;
+    let operations = [];
 
+    for (let i = 0; i < orderEquipment.length; i++) {
+      const equipment = orderEquipment[i];
 
+      for (let j = 0; j < equipment.orderOperation.length; j++) {
+        const operation = equipment.orderOperation[j];
+
+        operations.push(operation)
+        
+      }
+      
+    }
+
+    this.setState({operations})
   }
 
 
@@ -159,7 +174,6 @@ export class CrudOperation extends React.Component {
     super(props);
 
     this.state = {
-      selectedEquipment: this.props.equipments[0].id,
       orderEquipments: this.props.equipments,
       operation: this.props.edit ? this.props.operation : {},
     }
@@ -186,16 +200,21 @@ export class CrudOperation extends React.Component {
   }
 
   componentDidMount() {
-    let orderEquipments = this.state.orderEquipments;
+
+    const { orderEquipments } = this.state;
+
+    let selectedEquipment = undefined;
 
     let listEquipments = orderEquipments.map((item) => ({
       label: item.equipment.description,
       value: item.id 
     }))
 
+    selectedEquipment = listEquipments[0] && listEquipments[0].value ? listEquipments[0].value : undefined
+
     console.log("C_Operations -> componentDidMount -> listEquipments", listEquipments)
 
-    this.setState({ listEquipments })
+    this.setState({ listEquipments, selectedEquipment })
   }
 
   onChange(e, name) {

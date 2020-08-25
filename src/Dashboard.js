@@ -39,8 +39,8 @@ class Dashboard extends Component {
       ],
       to: new Date(),
       from: new Date("2020-05-01"),
-      selectedStatus: "created",
-      selectedPriority: "all",
+      selectedStatus: "assumed",
+      selectedPriority: "urgent",
       showOrdersList: false
     }
 
