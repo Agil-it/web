@@ -3,7 +3,8 @@ import React, { PureComponent } from 'react';
 import '../index.css';
 import C_SelectField from './SelectField';
 import C_TextField from './TextField';
-import { C_TimePicker } from "./Calendar"
+import { OrderOperationProvider } from '../providers/OrderOperation'
+import { HandlerProvider } from '../providers/handler';
 import { C_Icon } from './Icon';
 import { C_Switch } from './CheckBox'
 import { C_Button, C_ButtonFloat } from './Button'
@@ -19,9 +20,6 @@ export class C_Operations extends React.Component {
       orderId: this.props.orderId,
       order: this.props.order,
     }
-
-    // this.createOperation = this.createOperation.bind(this);
-    // this.updateOperation = this.updateOperation.bind(this);
   }
 
   componentDidMount() {}
@@ -67,6 +65,8 @@ export class C_Operations extends React.Component {
             <ViewOperations
               orderId={this.state.orderId}
               order={this.state.order}
+              onUpdate={(order) => this.props.updateOrder(order)}
+              onDelete={(item) => this.props.delete(item)}
               isEditing={(item) => this.setState({ isEditing: true, viewOperations: false, operation : item})}
             />
             :
@@ -74,6 +74,7 @@ export class C_Operations extends React.Component {
               showOperations={() => this.setState({viewOperations:true})}
               equipments={this.props.equipments}
               edit={this.state.isEditing}
+              operation={this.state.operation}
               order={this.state.order}
               save={(operation) => this.state.isEditing ? this.props.save(operation) : this.props.save(operation)}
             />
@@ -93,12 +94,13 @@ export class ViewOperations extends React.Component {
       order: this.props.order ? this.props.order : {},
       orderId: this.props.orderId
     }
-    console.log("ViewOperations -> constructor -> this.props", this.props)
+    
+    this.providerOperation = new HandlerProvider(new OrderOperationProvider(), "operação da ordem");
   }
 
   componentDidMount() {
     const { order } = this.state;
-    const orderEquipment = order.orderEquipment;
+    const orderEquipment = order && order.orderEquipment ? order.orderEquipment : [];
     let operations = [];
 
     for (let i = 0; i < orderEquipment.length; i++) {
@@ -114,6 +116,29 @@ export class ViewOperations extends React.Component {
     }
 
     this.setState({operations})
+  }
+
+  delete(operation){
+    const id = operation.id;
+    const { operations, order} = this.state;
+
+    let index = operations.findIndex(op => op.id === id)
+    if (index == -1) return {};
+
+    let orderOperation = operations[index];
+    
+    if (orderOperation.id){
+      let comp = this;
+      this.providerOperation.delete(id, ()=> {
+        operations.splice(index, 1);
+        comp.setState({ operations, order })
+        comp.props.onUpdate(order)
+      })
+    } else {
+      operations.splice(index, 1);
+      this.setState({ operations, order })
+      this.props.onUpdate(order)
+    }
   }
 
 
@@ -152,10 +177,7 @@ export class ViewOperations extends React.Component {
                   </div>
                   <div>
                     <C_Icon style={{ cursor: "pointer", fontSize: 25, }} icon="delete" 
-                      action={() => {
-                          this.props.delete(operation)
-                        }
-                      }
+                      action={() => this.delete(operation)}
                     />
                   </div>
                 </div>
@@ -186,8 +208,6 @@ export class CrudOperation extends React.Component {
 
   sendOperation() {
     let operation = this.state.operation;
-    let listEquipments = this.state.listEquipments
-    console.log("CreateOperation -> sendOperation -> listEquipments", listEquipments)
 
     operation.orderEquipment = {
       id: this.state.selectedEquipment
@@ -228,7 +248,7 @@ export class CrudOperation extends React.Component {
 
   render() {
 
-    console.log("list de operações", this.state.listOperations);
+    console.log("list de operações", this.state.operation);
 
 
     return (
@@ -239,6 +259,13 @@ export class CrudOperation extends React.Component {
             label={"Selecione o Equipamento"} placeholder={"Selecionar"}
             list={this.state.listEquipments} required={true}
             style={{ width: "100%" }} disabled={this.props.edit}
+          />
+        </div>
+        <div className="md-cell md-cell--12 md-cell--bottom">
+          <C_TextField id="operationNumber" name="operationNumber"
+            value={this.state.operation.operationNumber} onChange={this.onChange}
+            type="number" label="Número Operação" placeholder="Número Operação" required={false}
+            icon="keyboard_arrow_right"
           />
         </div>
         <div className="md-cell md-cell--12 md-cell--bottom">

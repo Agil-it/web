@@ -7,6 +7,7 @@ import { StringHelper } from '../helpers/String';
 import {DateHelper} from '../helpers/Date';
 import { HandlerProvider } from '../providers/handler';
 import { MaintenanceOrderProvider } from '../providers/MaintenanceOrder';
+import { OrderOperationProvider } from '../providers/OrderOperation';
 import { C_Loading } from './Loading';
 import { C_Operations } from './Operations';
 import { C_ToolTip } from './ToolTip';
@@ -30,6 +31,8 @@ export class C_MaintenanceOrder extends React.Component {
     }
 
     this.provider = new HandlerProvider(new MaintenanceOrderProvider(), "ordem de manutenção")
+    this.providerOperation = new HandlerProvider(new OrderOperationProvider(), "operação da ordem")
+
     this.getOrder();
   }
 
@@ -44,6 +47,30 @@ export class C_MaintenanceOrder extends React.Component {
     }
 
     this.setState({ order })
+  }
+
+  saveOperation(operation){
+
+    const { order } = this.state;
+    console.log("C_MaintenanceOrder -> saveOperation -> order", order)
+
+    var equipmentIndex = order.orderEquipment.findIndex(equipment => equipment.id == operation.orderEquipment.id)
+
+    if (equipmentIndex == -1) return
+
+    var orderEquipment = order.orderEquipment[equipmentIndex];
+    var component = this;
+
+    this.providerOperation.save(operation, (newOperation) => {
+
+      if (!Array.isArray(orderEquipment.orderOperation)) orderEquipment.orderOperation = [];
+  
+      orderEquipment.orderOperation.push(newOperation)
+      order.orderEquipment.splice(equipmentIndex, 1, orderEquipment);
+    
+  
+      component.setState({ order })
+    })
   }
 
   render() {
@@ -186,6 +213,8 @@ export class C_MaintenanceOrder extends React.Component {
                   style={{ width: "50%", padding: 20, borderRadius:5 }}
                   orderId={order.id}
                   order={order}
+                  updateOrder={(orderUpdated) => this.setState({order: orderUpdated})}
+                  save={(operation) => this.saveOperation(operation)}
                   equipments={order.orderEquipment}
                   title="OPERAÇÕES"
                   onClose={() => this.setState({ itemSelected: "", showBackgroundColor: false })}
