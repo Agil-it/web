@@ -41,27 +41,6 @@ class CreateUser extends Component {
         name: 'Admin',
         id: 'administrator',
       }],
-
-      types: [{
-        label: 'Componente',
-        value: 'A',
-      },
-      {
-        label: 'Setor',
-        value: 'B',
-      },
-      {
-        label: 'Equipamento',
-        value: 'C',
-      },
-      {
-        label: 'Tipo de Máquina',
-        value: 'D',
-      },
-      {
-        label: 'Equipamento Superior',
-        value: 'E',
-      }]
     };
 
     this.provider = new HandlerProvider(new UserProvider(), "usuário")
