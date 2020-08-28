@@ -28,6 +28,10 @@ class C_AutoComplete extends Component {
     this.tableSelected = this.tableSelected.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.value) this.setState({ value: '' });
+  }
+
   componentDidUpdate() {
 
     this.state.description = this.props.description || "description";
@@ -79,6 +83,7 @@ class C_AutoComplete extends Component {
   }
 
   onClickIcon() {
+    console.log('onClickIcon -> ', this.props.searchColumns)
     if (!Array.isArray(this.props.searchColumns)) return;
 
     confirmAlert({

@@ -9,12 +9,27 @@ import {
 
 import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
+import C_AutoComplete from '../components/AutoComplete';
 import C_SelectField from '../components/SelectField';
 import {C_CheckBox} from '../components/CheckBox';
 import { HandlerProvider } from '../providers/handler';
 import { SafetyParameterProvider } from '../providers/SafetyParameter';
+import { SectorProvider } from '../providers/Sector';
+import { MachineProvider } from '../providers/Machine';
+import { MachineTypeProvider } from '../providers/MachineType';
+import { WorkCenterProvider } from '../providers/WorkCenter';
+import { InstallationAreaProvider } from '../providers/InstallationArea';
+import { SuperiorMachineProvider } from '../providers/SuperiorMachine';
 import { ObjectHelper } from '../helpers/Object';
-
+import {
+  sectorColumns,
+  equipmentColumns,
+  workCenterColumns,
+  machineTypeColumns,
+  installationAreaColumns,
+  superiorEquipmentColumns,
+  safetyParametersColumns,
+} from '../helpers/SearchModel';
 
 class CreateSafetyParameter extends Component {
 
@@ -24,35 +39,69 @@ class CreateSafetyParameter extends Component {
     this.state = {
       visible: true,
       types: [{
-        label: 'Componente',
-        value: 'A',
+        label: 'Local de Instalação',
+        value: 'instalation-area',
       },
       {
         label: 'Setor',
-        value: 'B',
+        value: 'sector',
       },
       {
         label: 'Equipamento',
-        value: 'C',
+        value: 'equipment',
       },
       {
         label: 'Tipo de Máquina',
-        value: 'D',
+        value: 'machine-type',
       },
       {
         label: 'Equipamento Superior',
-        value: 'E',
+        value: 'superior-equipment',
+      },
+      {
+        label: 'Centro de Trabalho',
+        value: 'work-center',
       }],
-      fields: {}
+      fields: {},
+      entityLists: [],
+      entityColumns: [],
+      safetyParametersColumns: safetyParametersColumns(),
+      safetyParametersList: [],
     };
 
-    this.provider = new HandlerProvider(new SafetyParameterProvider(), "parametro de segurança")
+    this.provider = new HandlerProvider(new SafetyParameterProvider(), "Parâmetro de segurança");
+
+    this.entityProviders = {
+      'sector': new HandlerProvider(new SectorProvider(), "Setor"),
+      'equipment': new HandlerProvider(new MachineProvider(), "Equipamento"),
+      'machine-type': new HandlerProvider(new MachineTypeProvider(), "Tipo de Máquina"),
+      'work-center': new HandlerProvider(new WorkCenterProvider(), "Centro de Trabalho"),
+      'instalation-area': new HandlerProvider(new InstallationAreaProvider(), "Centro de Trabalho"),
+      'superior-equipment': new HandlerProvider(new SuperiorMachineProvider(), "Equipamento Superior"),
+    };
+
+    this.entityColumnsConfig = {
+      'sector': sectorColumns(),
+      'equipment': equipmentColumns(),
+      'machine-type': machineTypeColumns(),
+      'work-center': workCenterColumns(),
+      'instalation-area': installationAreaColumns(),
+      'superior-equipment': superiorEquipmentColumns(),
+    };
 
     this.hideModal = this.hideModal.bind(this);
     this.onChange = this.onChange.bind(this);
     this.save = this.save.bind(this);
     this.clean = this.clean.bind(this);
     this.delete = this.delete.bind(this);
+    this.completeField = this.completeField.bind(this);
+
+    this.loadList();
+  }
+
+  async loadList() {
+    let { data } = await this.provider.getList();
+    this.setState({ safetyParametersList: Array.isArray(data) ? data : [] })
   }
 
   hideModal() {
@@ -78,18 +127,78 @@ class CreateSafetyParameter extends Component {
   }
 
   onChange(e) {
-    let fields = this.state.fields;
+    const { name, value } = e.target;
+    const { fields } = this.state;
 
-    fields[e.target.name] = e.target.value;
+    fields[name] = value;
     this.setState({ fields })
+
+    if (name === 'entityClass')
+      this.updateEntityIdField(value);
+    else if (name === 'useAlways')
+      this.clearEntityFields();
+
   }
 
   formPreventDefault(event) {
     event.preventDefault()
   }
 
-  render() {
+  async updateEntityIdField(value) {
+    let data;
+    try {
+      ({ data } = await this.entityProviders[value].getList());
+    } catch(err) {
+      data = [];
+    }
+
     const { fields } = this.state;
+
+    fields.entityId = '';
+
+    this.setState({
+      entityLists: data,
+      entityColumns: this.entityColumnsConfig[value],
+      fields,
+    });
+  }
+
+  completeField(id, name) {
+    const { fields } = this.state;
+
+    fields[name] = id;
+
+    this.setState({ fields })
+
+    if (name === 'id')
+      this.loadFields(id)
+  }
+
+  loadFields(safetyId) {
+    const data = this.state.safetyParametersList.find(({ id }) => id === safetyId);
+    if (!data) return;
+
+    const fields = {
+      useAlways: data.useAlways,
+      entityClass: data.entityClass,
+      entityId: data.entityId,
+      description: data.description,
+    }
+
+    this.setState({ fields })
+  }
+
+  clearEntityFields() {
+    const fields = {
+      ...this.state.fields,
+      entityId: '',
+      entityClass: '',
+    }
+
+    this.setState({ fields });
+  }
+
+  render() {
     return (
       <DialogContainer
         id="simple-full-page-dialog"
@@ -108,18 +217,20 @@ class CreateSafetyParameter extends Component {
         />
         <section className="md-toolbar-relative">
           <form ref={(el) => this.form = el} onSubmit={this.formPreventDefault}>
-            <C_TextField
+            
+          <C_AutoComplete
               id="id"
               name="id"
-              value={this.state.fields.id}
-              onChange={this.onChange}
               type="search"
+              list={this.state.safetyParametersList}
               label="Status de Segurança"
               placeholder="Status de Segurança"
               rightIcon={"search"}
               block paddedBlock
-              required={true}
-              onChange={this.onChange}
+              value={this.state.fields.id}
+              dataSelected={this.completeField}
+              searchColumns={this.state.safetyParametersColumns}
+              onChange={(val, name) => {}}
             /><br/>
             <C_CheckBox
               id="useAlways"
@@ -129,7 +240,6 @@ class CreateSafetyParameter extends Component {
               label={<div style={{ fontSize: 15, color: "#616161d9" }}>Usar em todas as Ordens de Manutenção</div>}
               type="checkbox"
               style={{}}
-              onChange={this.onChange}
             />
             <C_SelectField
               id="entityClass"
@@ -143,18 +253,22 @@ class CreateSafetyParameter extends Component {
               disabled={this.state.fields.useAlways}
               onChange={this.onChange}
             /><br></br>
-            <C_TextField
+            <C_AutoComplete
               id="entityId"
               name="entityId"
-              value={this.state.fields.entityId}
               type="search"
+              list={this.state.entityLists}
               label="Registro"
               placeholder="Registro"
               rightIcon={"search"}
               block paddedBlock
+              value={this.state.fields.entityId}
+              dataSelected={this.completeField}
+              searchColumns={this.state.entityColumns}
+              onChange={(val, name) => {}}
               disabled={this.state.fields.useAlways}
-              onChange={this.onChange}
-            /><br></br>
+            />
+            <br></br>
             <C_TextField
               id="description"
               name="description"
