@@ -277,6 +277,7 @@ export default class CreateMaintenanceOrder extends React.Component {
   }
 
   saveOperation(operation) {
+    console.log("CreateMaintenanceOrder -> saveOperation -> operation", operation)
     const { orderEquipments } = this.state;
 
     var equipmentIndex = orderEquipments.findIndex(equipment => equipment.id == operation.orderEquipment.id)
@@ -290,7 +291,7 @@ export default class CreateMaintenanceOrder extends React.Component {
     orderEquipment.orderOperation.push(operation)
     orderEquipments.splice(equipmentIndex, 1, orderEquipment);
     console.log("CreateMaintenanceOrder -> saveOperation -> orderEquipments", orderEquipments)
-    console.log("CreateMaintenanceOrder -> saveOperation -> operation", operation)
+    console.log("CreateMaintenanceOrder -> afterPush -> operation", operation)
 
     this.setState({ orderEquipments })
   }

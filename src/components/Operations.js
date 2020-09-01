@@ -26,7 +26,7 @@ export class C_Operations extends React.Component {
 
   render() {
 
-    console.log("state", this.state)
+    console.log("C_Operations state", this.state)
 
     return (
 
@@ -108,11 +108,9 @@ export class ViewOperations extends React.Component {
 
       for (let j = 0; j < equipment.orderOperation.length; j++) {
         const operation = equipment.orderOperation[j];
-
-        operations.push(operation)
-        
+        operation.orderEquipmentIndex = i;
+        operations.push(operation) 
       }
-      
     }
 
     this.setState({operations})
@@ -120,6 +118,7 @@ export class ViewOperations extends React.Component {
 
   delete(operation){
     const id = operation.id;
+    const orderEquipmentIndex = operation.orderEquipmentIndex;
     const { operations, order} = this.state;
 
     let index = operations.findIndex(op => op.id === id)
@@ -131,6 +130,7 @@ export class ViewOperations extends React.Component {
       let comp = this;
       this.providerOperation.delete(id, ()=> {
         operations.splice(index, 1);
+        order.orderEquipment[orderEquipmentIndex].orderOperation = operations;
         comp.setState({ operations, order })
         comp.props.onUpdate(order)
       })
@@ -145,6 +145,7 @@ export class ViewOperations extends React.Component {
   render() {
 
     let operations = this.state.operations;
+    console.log("ViewOperations -> render -> this.state", this.state)
 
     return (
       <div>
@@ -203,7 +204,6 @@ export class CrudOperation extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.sendOperation = this.sendOperation.bind(this);
 
-    console.log("CrudOperation -> constructor -> this.props", this.props)
   }
 
   sendOperation() {
@@ -232,8 +232,6 @@ export class CrudOperation extends React.Component {
 
     selectedEquipment = listEquipments[0] && listEquipments[0].value ? listEquipments[0].value : undefined
 
-    console.log("C_Operations -> componentDidMount -> listEquipments", listEquipments)
-
     this.setState({ listEquipments, selectedEquipment })
   }
 
@@ -248,7 +246,7 @@ export class CrudOperation extends React.Component {
 
   render() {
 
-    console.log("list de operações", this.state.operation);
+    console.log("state CrudOperation", this.state);
 
 
     return (

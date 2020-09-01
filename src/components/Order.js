@@ -40,7 +40,6 @@ export class C_MaintenanceOrder extends React.Component {
 
     let order = {};
     let response = await this.provider.get(this.state.orderId);
-    console.log("C_MaintenanceOrder -> getOrder -> response", response)
 
     if (response.success) {
       order = response.data
@@ -52,7 +51,6 @@ export class C_MaintenanceOrder extends React.Component {
   saveOperation(operation){
 
     const { order } = this.state;
-    console.log("C_MaintenanceOrder -> saveOperation -> order", order)
 
     var equipmentIndex = order.orderEquipment.findIndex(equipment => equipment.id == operation.orderEquipment.id)
 
@@ -76,7 +74,7 @@ export class C_MaintenanceOrder extends React.Component {
   render() {
 
     var order = this.state.order;
-    console.log("C_MaintenanceOrder -> render -> order", order)
+    console.log("C_MaintenanceOrder -> render -> order", this.state)
 
     const configOptions = [
       { value: "assume", name: "ASSUMIR ORDEM", icon: "touch_app", disabled: false },
