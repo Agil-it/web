@@ -6,9 +6,11 @@ import C_TextField from './TextField';
 import { OrderOperationProvider } from '../providers/OrderOperation'
 import { HandlerProvider } from '../providers/handler';
 import { C_Icon } from './Icon';
+import { C_Label } from './Label';
 import { C_Switch } from './CheckBox'
 import { C_Button, C_ButtonFloat } from './Button'
 import { C_ToolTip } from './ToolTip'
+import { MessageModal } from './Message'
 
 export class C_Operations extends React.Component {
 
@@ -17,7 +19,6 @@ export class C_Operations extends React.Component {
 
     this.state = {
       viewOperations: true,
-      orderId: this.props.orderId,
       order: this.props.order,
     }
   }
@@ -40,7 +41,7 @@ export class C_Operations extends React.Component {
             <C_Icon
               style={{ cursor: "pointer", position: "absolute", right: 0 }}
               icon="close" iconSize={25}
-              action={() => this.props.onClose()}
+              action={() => this.props.onCloseOperation()}
             />
           </div>
           <div style={{ width: "80%", justifyContent: "space-between", display: "flex", alignItems: "center" }}>
@@ -63,11 +64,9 @@ export class C_Operations extends React.Component {
           </div>
           {this.state.viewOperations ?
             <ViewOperations
-              orderId={this.state.orderId}
-              order={this.state.order}
-              onUpdate={(order) => this.props.updateOrder(order)}
-              onDelete={(item) => this.props.delete(item)}
-              isEditing={(item) => this.setState({ isEditing: true, viewOperations: false, operation : item})}
+              equipments={this.props.equipments}
+              onUpdate={(index, orderEquipment) => this.props.saveEquipment(index, orderEquipment)}
+              isEditing={(index, item) => this.setState({ isEditing: true, viewOperations: false, operation : item, indexOperation: index})}
             />
             :
             <CrudOperation
@@ -75,8 +74,7 @@ export class C_Operations extends React.Component {
               equipments={this.props.equipments}
               edit={this.state.isEditing}
               operation={this.state.operation}
-              order={this.state.order}
-              save={(operation) => this.state.isEditing ? this.props.save(operation) : this.props.save(operation)}
+              save={(operation, equipmentIndex) => this.props.saveOperation(equipmentIndex, this.state.isEditing ? this.state.indexOperation : -1, operation)}
             />
           }
         </div>
@@ -91,98 +89,119 @@ export class ViewOperations extends React.Component {
     super(props);
 
     this.state = {
-      order: this.props.order ? this.props.order : {},
-      orderId: this.props.orderId
+      orderEquipment: this.props.equipments || [],
+      hasOperations: false,
+      equipments: [],
     }
     
     this.providerOperation = new HandlerProvider(new OrderOperationProvider(), "operação da ordem");
+    this.delete = this.delete.bind(this);
   }
 
   componentDidMount() {
-    const { order } = this.state;
-    const orderEquipment = order && order.orderEquipment ? order.orderEquipment : [];
-    let operations = [];
+    this.refreshEquipments();
+  }
 
-    for (let i = 0; i < orderEquipment.length; i++) {
-      const equipment = orderEquipment[i];
+  refreshEquipments() {
+    const { orderEquipment } = this.state;
+    let hasOperations = false;
 
-      for (let j = 0; j < equipment.orderOperation.length; j++) {
-        const operation = equipment.orderOperation[j];
-        operation.orderEquipmentIndex = i;
-        operations.push(operation) 
+    
+    const equipments = orderEquipment.reduce((acc, equipment, index) => {
+      const operations = equipment.orderOperation || [];
+      acc[index] = [...operations];
+      if (operations.length) hasOperations = true;
+
+      return acc;
+    }, {});
+    
+    this.setState({ equipments, hasOperations });
+  }
+
+  async delete(seqEquipment, seqOperation, operation) {
+    const { orderEquipment } = this.state;
+
+    if (operation.id){
+      const deleted = await this.providerOperation.deleteObject(operation.id)
+
+      if (!deleted) {
+        MessageModal.information('Informativo',"Ocorreu um erro! se persistir fazer entrar em contato com o departamento de TI.",() => console.log('error!'))
+        return;
       }
     }
 
-    this.setState({operations})
-  }
+    orderEquipment[seqEquipment].orderOperation.splice(seqOperation, 1);
 
-  delete(operation){
-    const id = operation.id;
-    const orderEquipmentIndex = operation.orderEquipmentIndex;
-    const { operations, order} = this.state;
-
-    let index = operations.findIndex(op => op.id === id)
-    if (index == -1) return {};
-
-    let orderOperation = operations[index];
-    
-    if (orderOperation.id){
-      let comp = this;
-      this.providerOperation.delete(id, ()=> {
-        operations.splice(index, 1);
-        order.orderEquipment[orderEquipmentIndex].orderOperation = operations;
-        comp.setState({ operations, order })
-        comp.props.onUpdate(order)
-      })
-    } else {
-      operations.splice(index, 1);
-      this.setState({ operations, order })
-      this.props.onUpdate(order)
-    }
+    this.setState({ orderEquipment }, () => {
+      this.props.onUpdate(seqEquipment, orderEquipment);
+      this.refreshEquipments();
+    });
   }
 
 
   render() {
+    const { equipments, hasOperations, orderEquipment } = this.state;
+    const equipmentEntries = Object.entries(equipments || {});
 
-    let operations = this.state.operations;
     console.log("ViewOperations -> render -> this.state", this.state)
 
     return (
       <div>
 
-        {!operations || operations.length == 0 ?
+        {!hasOperations ?
           <div style={{ textAlign: "center", marginTop: 50 }}>
             <h1>Nenhuma Operação Realizada.</h1>
           </div>
           : undefined}
 
         <div style={{ marginTop: 20 }}>
-          {operations && operations.map((operation, i) =>
+          {hasOperations && equipmentEntries.map(([seqEquipment, operations]) =>
             <div>
-              <div className="md-grid">
-                <div className="effectfront" style={{ marginRight: 20, cursor: "pointer", padding: 5, backgroundColor: "#A40003", color: "white", width: 30, height: 30, borderRadius: 22 }}>
-                  <div style={{ fontSize: 16, textAlign: "center" }}>{i + 1}</div>
-                </div>
-                <div className="md-cell md-cell--10 md-cell--bottom">
-                  <C_TextField id="description" name="description"
-                    value={operation.description} onChange={this.onChange}
-                    type="text" label="Descrição" required={false}
-                    icon="description" disabled={true}
-                  />
-                </div>
-                <div style={{ display: "flex", position:"absolute", right:0, margin:20, alignItems: "center" }}>
-                  <div>
-                    <C_Icon style={{ cursor: "pointer", fontSize: 25, paddingRight: 20 }} icon="edit"
-                      action={() => this.props.isEditing(operation)}
-                    />
+              
+              <C_Label
+                icon="info_outline"
+                iconDescription={orderEquipment[seqEquipment].equipment.description}
+                tooltip="Equipamento"
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontWeight: 'bold',
+                }}
+                iconStyle={{
+                  cursor: "pointer",
+                  color: '#3177E8',
+                  fontSize: 25,
+                  display: 'flex',
+                }}
+              />
+              { operations.map((operation, seqOperation) => 
+                <div>
+                  <div className="md-grid">
+                    <div className="effectfront" style={{ marginRight: 20, cursor: "pointer", padding: 5, backgroundColor: "#A40003", color: "white", width: 30, height: 30, borderRadius: 22 }}>
+                      <div style={{ fontSize: 16, textAlign: "center" }}>{seqOperation + 1}</div>
+                    </div>
+                    <div className="md-cell md-cell--10 md-cell--bottom">
+                      <C_TextField id="description" name="description"
+                        value={operation.description} onChange={this.onChange}
+                        type="text" label="Descrição" required={false}
+                        icon="description" disabled={true}
+                      />
+                    </div>
+                    <div style={{ display: "flex", position:"absolute", right:0, margin:20, alignItems: "center" }}>
+                      <div>
+                        <C_Icon style={{ cursor: "pointer", fontSize: 25, paddingRight: 20 }} icon="edit"
+                          action={() => this.props.isEditing(seqOperation, operation)}
+                        />
+                      </div>
+                      <div>
+                        <C_Icon style={{ cursor: "pointer", fontSize: 25, }} icon="delete" 
+                          action={() => this.delete(seqEquipment, seqOperation, operation)}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <C_Icon style={{ cursor: "pointer", fontSize: 25, }} icon="delete" 
-                      action={() => this.delete(operation)}
-                    />
-                  </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
         </div>
@@ -190,44 +209,35 @@ export class ViewOperations extends React.Component {
     );
   }
 }
-
-
 export class CrudOperation extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      orderEquipments: this.props.equipments,
+      orderEquipments: this.props.equipments || [],
       operation: this.props.edit ? this.props.operation : {},
     }
 
     this.onChange = this.onChange.bind(this);
     this.sendOperation = this.sendOperation.bind(this);
-
   }
 
   sendOperation() {
     let operation = this.state.operation;
 
-    operation.orderEquipment = {
-      id: this.state.selectedEquipment
-    }
+    this.props.save(operation, this.state.selectedEquipment);
 
-    this.props.save(operation);
-
-    this.setState({operation:{}})
-
+    this.setState({ operation: {} })
   }
 
   componentDidMount() {
-
     const { orderEquipments } = this.state;
 
     let selectedEquipment = undefined;
 
-    let listEquipments = orderEquipments.map((item) => ({
+    let listEquipments = orderEquipments.map((item, i) => ({
       label: item.equipment.description,
-      value: item.id 
+      value: i,
     }))
 
     selectedEquipment = listEquipments[0] && listEquipments[0].value ? listEquipments[0].value : undefined
@@ -248,14 +258,17 @@ export class CrudOperation extends React.Component {
 
     console.log("state CrudOperation", this.state);
 
-
     return (
       <div>
         <div className="md-cell md-cell--12 md-cell--bottom">
           <C_SelectField name="orderEquipament" id="orderEquipament"
-            value={this.state.selectedEquipment} onChange={(e) => this.setState({ selectedEquipment: e.target.value })} type="text"
-            label={"Selecione o Equipamento"} placeholder={"Selecionar"}
-            list={this.state.listEquipments} required={true}
+            type="text"
+            label={"Selecione o Equipamento"}
+            placeholder={"Selecionar"}
+            list={this.state.listEquipments}
+            required={true}
+            value={this.state.selectedEquipment}
+            onChange={(e) => this.setState({ selectedEquipment: e.target.value })}
             style={{ width: "100%" }} disabled={this.props.edit}
           />
         </div>

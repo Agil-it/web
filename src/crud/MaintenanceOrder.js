@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import '../index.css';
 import { DialogContainer, Toolbar, FontIcon, Card } from 'react-md';
 import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
@@ -35,9 +36,13 @@ export default class CreateMaintenanceOrder extends React.Component {
       backgroundModal: StringHelper.backgroundModal(),
       styleMessage: StringHelper.styleMessage(),
       visible: true,
-      completeOrder: '', completeWorkcenter: '',
-      orderEquipments: [], listWorkcenter: [], listOrders: [],
-      fields: {},
+      completeOrder: '',
+      completeWorkcenter: '',
+      listWorkcenter: [],
+      listOrders: [],
+      fields: {
+        orderEquipment: [],
+      },
       priority: [
         { label: 'Urgente', value: 'urgent' },
         { label: 'Alta', value: 'high' },
@@ -75,6 +80,8 @@ export default class CreateMaintenanceOrder extends React.Component {
     this.delete = this.delete.bind(this);
     this.completeField = this.completeField.bind(this);
     this.getOrder = this.getOrder.bind(this);
+    this.saveOperation = this.saveOperation.bind(this);
+    this.saveEquipment = this.saveEquipment.bind(this);
 
   }
 
@@ -108,28 +115,33 @@ export default class CreateMaintenanceOrder extends React.Component {
     var fields = this.state.fields;
 
     ObjectHelper.clearFields(fields);
+    fields.orderEquipment = [];
+
     this.setState({
       fields,
-      order: {}, orderEquipments: [],
-      completeEquipment: "", completeOrder: "", completeWorkcenter: ""
+      order: {},
+      completeOrder: "",
+      completeEquipment: "",
+      completeWorkcenter: "",
     }, () => this.loadingData());
   }
 
   removeEquipment(index) {
     // console.log("CreateMaintenanceOrder -> removeEquipment -> index", index)
-    let { orderEquipments } = this.state
-    orderEquipments.splice(index, 1)
+    let { fields } = this.state
 
-    this.setState({ orderEquipments })
+    fields.orderEquipment.splice(index, 1)
+
+    this.setState({ fields })
   }
 
   delete() {
-    let order = this.state.fields;
-    this.provider.delete(order.id, this.clean)
+    let { id } = this.state.order;
+    this.provider.delete(id, this.clean)
   }
 
   checkData(params) {
-    const { installationArea, orderEquipments, workCenter, fields } = this.state
+    const { workCenter, fields } = this.state
     const errors = [];
 
     if (params) {
@@ -160,12 +172,10 @@ export default class CreateMaintenanceOrder extends React.Component {
 
     let fields = this.state.fields;
 
-    let orderEquipments = this.state.orderEquipments;
-
     let order = {
       id: fields.id,
       orderNumber: fields.orderNumber,
-      orderEquipment: orderEquipments,
+      orderEquipment: fields.orderEquipment,
       workCenter: this.state.workCenter,
       orderLayout: {
         id: fields.orderLayout,
@@ -226,6 +236,7 @@ export default class CreateMaintenanceOrder extends React.Component {
     let fields = {
       id: order.id,
       orderNumber: order.orderNumber,
+      orderEquipment: order.orderEquipment || [],
       priority: order.priority,
       machine: order && order.orderEquipment[0] ? order.orderEquipment[0].equipment.description : "",
       superiorMachine: order && order.orderEquipment[0] && order.orderEquipment[0].superiorEquipment ? order.orderEquipment[0].superiorEquipment.description : "",
@@ -240,9 +251,10 @@ export default class CreateMaintenanceOrder extends React.Component {
     let layoutType = order.orderLayout.orderLayout;
 
     this.setState({
-      fields, orderEquipments: order.orderEquipment,
+      order,
+      fields,
+      layoutType,
       completeWorkcenter: fields.workCenter,
-      layoutType, order
     })
   }
 
@@ -275,31 +287,41 @@ export default class CreateMaintenanceOrder extends React.Component {
 
     return layouts[index];
   }
+  
+  saveEquipment(index, orderEquipment) {
+    const { fields } = this.state;
 
-  saveOperation(operation) {
-    console.log("CreateMaintenanceOrder -> saveOperation -> operation", operation)
-    const { orderEquipments } = this.state;
+    fields.orderEquipment.splice(index, 1, orderEquipment);
 
-    var equipmentIndex = orderEquipments.findIndex(equipment => equipment.id == operation.orderEquipment.id)
+    this.setState({ fields });
+  }
 
-    if (equipmentIndex == -1) return
+  saveOperation(indexEquipment, indexOperation, operation) {
+    const { fields } = this.state;
+    const { orderEquipment: orderEquipments } = fields;
 
-    var orderEquipment = orderEquipments[equipmentIndex];
+    var orderEquipment = orderEquipments[indexEquipment];
+    if (!orderEquipment) return;
 
     if (!Array.isArray(orderEquipment.orderOperation)) orderEquipment.orderOperation = [];
 
-    orderEquipment.orderOperation.push(operation)
-    orderEquipments.splice(equipmentIndex, 1, orderEquipment);
-    console.log("CreateMaintenanceOrder -> saveOperation -> orderEquipments", orderEquipments)
-    console.log("CreateMaintenanceOrder -> afterPush -> operation", operation)
+    if (indexOperation >= 0) {
+      orderEquipment.orderOperation.splice(indexOperation, 1, operation);
+    } else {
+      orderEquipment.orderOperation.push(operation);
+    }
 
-    this.setState({ orderEquipments })
+    orderEquipments.splice(indexEquipment, 1, orderEquipment);
+
+    fields.orderEquipment = orderEquipments;
+    this.setState({ fields });
   }
 
   render() {
 
     console.log("render -> STATE", this.state)
-    var {addOperation, addEquiment, showSuccess, layoutType, layouts, fields, orderEquipments, tabs } = this.state;
+    console.log("render -> STATE -> orderEquipment", this.state.fields.orderEquipment)
+    var {addOperation, addEquiment, showSuccess, layoutType, layouts, fields, tabs } = this.state;
 
     return (
       <div>
@@ -487,7 +509,7 @@ export default class CreateMaintenanceOrder extends React.Component {
                         columns={this.state.columns}
                         showPagination={true}
                         rowsPerPage={5}
-                        content={orderEquipments}
+                        content={fields.orderEquipment}
                         onClick={() => { return }}
                         textAlign="center"
                       />
@@ -535,12 +557,11 @@ export default class CreateMaintenanceOrder extends React.Component {
                       return
                     }
 
-                    let orderEquipments = this.state.orderEquipments
-                    console.log("CreateMaintenanceOrder -> render -> orderEquipments", orderEquipments)
+                    const { fields } = this.state;
+                    console.log("CreateMaintenanceOrder -> render -> fields", fields)
+                    fields.orderEquipment.push(equipment);
 
-                    orderEquipments.push(equipment);
-
-                    this.setState({ orderEquipments, showSuccess })
+                    this.setState({ fields, showSuccess })
 
                     if (showSuccess) {
                       setTimeout(() => {
@@ -551,7 +572,7 @@ export default class CreateMaintenanceOrder extends React.Component {
                   
 
                   checkData={() => this.checkData()}
-                  onClose={() => this.setState({ addEquiment: false })}
+                  onCloseEquipment={() => this.setState({ addEquiment: false })}
                 />
               </div>
             </div>
@@ -561,13 +582,12 @@ export default class CreateMaintenanceOrder extends React.Component {
             <div style={this.state.backgroundModal}>
               <div style={{ width: "100%", display: "flex", justifyContent: "center", position: "fixed", top: "5%" }}>
                 <C_Operations
-                  style={{ width: "50%", marginTop:30, padding: 20, borderRadius: 5 }}
-                  orderId={fields.id}
-                  equipments={orderEquipments}
-                  order={this.state.order}
-                  save={(operation) => this.saveOperation(operation)}
+                  style={{ width: "50%", maxHeight: '80vh', overflowY: 'scroll', marginTop:30, padding: 20, borderRadius: 5 }}
+                  equipments={fields.orderEquipment}
+                  saveEquipment={(index, orderEquipment) => this.saveEquipment(index, orderEquipment)}
+                  saveOperation={(indexEquipment, indexOperation, operation) => this.saveOperation(indexEquipment, indexOperation, operation)}
                   title="OPERAÇÕES"
-                  onClose={() => this.setState({ addOperation: false })}
+                  onCloseOperation={() => this.setState({ addOperation: false })}
                 />
               </div>
             </div>
@@ -713,7 +733,7 @@ export class AddEquipments extends React.Component {
     console.log("AddEquipments -> render -> this.state", this.state)
 
     return (
-      <C_Modal style={{ maxHeight: "36vw", overflowX: "hidden", width: "90%", padding: 20, borderRadius: 5 }} titleSize={20} title="EQUIPAMENTOS" onClose={() => this.props.onClose()}>
+      <C_Modal style={{ maxHeight: "36vw", overflowX: "hidden", width: "90%", padding: 20, borderRadius: 5 }} titleSize={20} title="EQUIPAMENTOS" onClose={() => this.props.onCloseEquipment()}>
         <div className="md-grid">
           <div className="md-cell md-cell--6 md-cell--bottom">
             <C_AutoComplete
@@ -876,7 +896,7 @@ export class AddEquipments extends React.Component {
           </div>
           <div className="md-cell md-cell--12 md-cell--bottom" style={{ marginTop: 30 }}>
             <C_Button className="md-cell md-cell--6 md-cell--bottom" label="FECHAR"
-              secondary={true}  action={() => this.props.onClose()}
+              secondary={true}  action={() => this.props.onCloseEquipment()}
             />
             <C_Button className="md-cell md-cell--6 md-cell--bottom" primary={true}
               label="ADICIONAR" action={() => this.props.pushEquipment(orderEquipment, true)}

@@ -33,6 +33,8 @@ export class C_MaintenanceOrder extends React.Component {
     this.provider = new HandlerProvider(new MaintenanceOrderProvider(), "ordem de manutenção")
     this.providerOperation = new HandlerProvider(new OrderOperationProvider(), "operação da ordem")
 
+    this.saveEquipment = this.saveEquipment.bind(this);
+    this.saveOperation = this.saveOperation.bind(this);
     this.getOrder();
   }
 
@@ -48,27 +50,36 @@ export class C_MaintenanceOrder extends React.Component {
     this.setState({ order })
   }
 
-  saveOperation(operation){
-
+  saveOperation(indexEquipment, indexOpeartion, operation) {
     const { order } = this.state;
 
-    var equipmentIndex = order.orderEquipment.findIndex(equipment => equipment.id == operation.orderEquipment.id)
+    var orderEquipment = order.orderEquipment[indexEquipment];
+    if (!orderEquipment) return;
 
-    if (equipmentIndex == -1) return
-
-    var orderEquipment = order.orderEquipment[equipmentIndex];
     var component = this;
 
     this.providerOperation.save(operation, (newOperation) => {
 
       if (!Array.isArray(orderEquipment.orderOperation)) orderEquipment.orderOperation = [];
-  
-      orderEquipment.orderOperation.push(newOperation)
-      order.orderEquipment.splice(equipmentIndex, 1, orderEquipment);
-    
-  
+
+      if (indexOpeartion >= 0) {
+        orderEquipment.orderOperation.splice(indexOpeartion, 1, newOperation);
+      } else {
+        orderEquipment.orderOperation.push(newOperation);
+      }
+
+      order.orderEquipment.splice(indexEquipment, 1, orderEquipment);
+
       component.setState({ order })
     })
+  }
+
+  saveEquipment(index, orderEquipment) {
+    const { order } = this.state;
+
+    order.orderEquipment.splice(index, 1, orderEquipment);
+
+    this.setState({ order });
   }
 
   render() {
@@ -209,10 +220,8 @@ export class C_MaintenanceOrder extends React.Component {
               <div style={{ width: "100%", display: "flex", justifyContent: "center", position: "fixed", top: "5%"}}>
                 <C_Operations
                   style={{ width: "50%", padding: 20, borderRadius:5 }}
-                  orderId={order.id}
-                  order={order}
-                  updateOrder={(orderUpdated) => this.setState({order: orderUpdated})}
-                  save={(operation) => this.saveOperation(operation)}
+                  saveEquipment={(index, orderEquipment) => this.saveEquipment(index, orderEquipment)}
+                  saveOperation={(indexEquipment, indexOperation, operation) => this.saveOperation(indexEquipment, indexOperation, operation)}
                   equipments={order.orderEquipment}
                   title="OPERAÇÕES"
                   onClose={() => this.setState({ itemSelected: "", showBackgroundColor: false })}
