@@ -26,9 +26,14 @@ export class C_Label extends React.Component {
       <div className={this.props.className}>
         <CardTitle subtitle={this.props.label}/>
         {this.props.icon ?
-          <C_ToolTip position="right" tooltip={this.props.tooltip}>
-            <C_Icon style={this.props.iconStyle} icon={this.props.icon}/>
-          </C_ToolTip>
+          <div style={{ display: 'flex', ...style }}>
+            <C_ToolTip position="right" tooltip={this.props.tooltip}>
+              <C_Icon style={this.props.iconStyle} icon={this.props.icon} iconSize={this.props.iconSize}/>
+            </C_ToolTip>
+            <span
+              style={{ marginLeft: 10 }}
+            >{this.props.iconDescription}</span>
+          </div>
         : <span style={style}>{this.props.value}</span>
         }
       </div>  

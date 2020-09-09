@@ -61,6 +61,25 @@ export class HandlerProvider {
     MessageModal.confirmation(title, "Confirma a ação?", async() => {this.execute(this.provider.delete(id), "deletar", successCallBack)})
   }
 
+  async deleteObject(id) {
+    
+    id = Number(id);
+
+    if (typeof id !== "number" || id < 1) {
+      throw Error('ID Inválido!')
+    }
+    
+    try {
+      const response = await this.provider.delete(id);
+      if (!response.success)
+        throw response.error;
+
+      return true;
+    } catch(err) {
+      return false;
+    }
+  }
+
   async getList(data){
 
     try {
