@@ -13,7 +13,6 @@ class C_SelectField extends Component {
   }
 
   onChange(pValue) {
-    console.log("pValue",pValue);
 
     if (this.props.onChange)
       this.props.onChange({ target: { name: this.props.name, value: pValue } });

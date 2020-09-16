@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import Button from 'react-md/lib/Buttons/Button';
 import { TabsContainer, Tabs, Tab } from 'react-md'
 import '../index.css';
 // import './Button.css';
@@ -9,23 +8,24 @@ export class C_Tabs extends React.Component {
     super(props);
 
     this.state = {
-      tabs: this.props.tabs
     }
   }
 
   render() {
 
     const labelTabStyle = {
+      userSelect: "none",
       fontSize:16, 
       fontStyle:"oblique",
       textTransform: "capitalize"
     }
-    let tabs = this.state.tabs
+    let tabs = this.props.tabs
+
     return (
       <TabsContainer className="md-cell md-cell--12 md-cell--bottom" >
           <Tabs >
             {tabs.map((tab, i) => (
-              <Tab style={{ color: "black" }} onClick={() => this.props.onClick(tab.value)} label={<p style={labelTabStyle}>{tab.name}</p>}>
+              <Tab style={{ color: "black" }} disabled={tab.disabled} onClick={() => this.props.onClick(tab.value)} label={<p style={{...labelTabStyle, ...(tab.labelStyle || {})}}>{tab.name}</p>}>
                 {this.props.children}
               </Tab>
             ))

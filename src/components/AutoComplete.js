@@ -83,7 +83,6 @@ class C_AutoComplete extends Component {
   }
 
   onClickIcon() {
-    console.log('onClickIcon -> ', this.props.searchColumns)
     if (!Array.isArray(this.props.searchColumns)) return;
 
     confirmAlert({

@@ -23,11 +23,10 @@ export class C_Operations extends React.Component {
     }
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   render() {
 
-    console.log("C_Operations state", this.state)
 
     return (
 
@@ -66,13 +65,14 @@ export class C_Operations extends React.Component {
             <ViewOperations
               equipments={this.props.equipments}
               onUpdate={(index, orderEquipment) => this.props.saveEquipment(index, orderEquipment)}
-              isEditing={(index, item) => this.setState({ isEditing: true, viewOperations: false, operation : item, indexOperation: index})}
+              isEditing={(indexEquipment, indexOperation, operation) => this.setState({ isEditing: true, viewOperations: false, operation, indexOperation, indexEquipment })}
             />
             :
             <CrudOperation
-              showOperations={() => this.setState({viewOperations:true})}
+              showOperations={() => this.setState({ viewOperations: true })}
               equipments={this.props.equipments}
               edit={this.state.isEditing}
+              selectedEquipment={this.state.indexEquipment}
               operation={this.state.operation}
               save={(operation, equipmentIndex) => this.props.saveOperation(equipmentIndex, this.state.isEditing ? this.state.indexOperation : -1, operation)}
             />
@@ -93,7 +93,7 @@ export class ViewOperations extends React.Component {
       hasOperations: false,
       equipments: [],
     }
-    
+
     this.providerOperation = new HandlerProvider(new OrderOperationProvider(), "operação da ordem");
     this.delete = this.delete.bind(this);
   }
@@ -106,7 +106,7 @@ export class ViewOperations extends React.Component {
     const { orderEquipment } = this.state;
     let hasOperations = false;
 
-    
+
     const equipments = orderEquipment.reduce((acc, equipment, index) => {
       const operations = equipment.orderOperation || [];
       acc[index] = [...operations];
@@ -114,23 +114,24 @@ export class ViewOperations extends React.Component {
 
       return acc;
     }, {});
-    
+
     this.setState({ equipments, hasOperations });
   }
 
   async delete(seqEquipment, seqOperation, operation) {
     const { orderEquipment } = this.state;
+    console.log("ViewOperations -> delete 1 -> orderEquipment", orderEquipment)
 
-    if (operation.id){
+    if (operation.id) {
       const deleted = await this.providerOperation.deleteObject(operation.id)
 
       if (!deleted) {
-        MessageModal.information('Informativo',"Ocorreu um erro! se persistir fazer entrar em contato com o departamento de TI.",() => console.log('error!'))
         return;
       }
     }
 
     orderEquipment[seqEquipment].orderOperation.splice(seqOperation, 1);
+    console.log("ViewOperations -> delete 2 -> orderEquipment", orderEquipment)
 
     this.setState({ orderEquipment }, () => {
       this.props.onUpdate(seqEquipment, orderEquipment);
@@ -141,9 +142,8 @@ export class ViewOperations extends React.Component {
 
   render() {
     const { equipments, hasOperations, orderEquipment } = this.state;
-    const equipmentEntries = Object.entries(equipments || {});
-
     console.log("ViewOperations -> render -> this.state", this.state)
+    const equipmentEntries = Object.entries(equipments || {});
 
     return (
       <div>
@@ -157,7 +157,7 @@ export class ViewOperations extends React.Component {
         <div style={{ marginTop: 20 }}>
           {hasOperations && equipmentEntries.map(([seqEquipment, operations]) =>
             <div>
-              
+
               <C_Label
                 icon="info_outline"
                 iconDescription={orderEquipment[seqEquipment].equipment.description}
@@ -174,7 +174,7 @@ export class ViewOperations extends React.Component {
                   display: 'flex',
                 }}
               />
-              { operations.map((operation, seqOperation) => 
+              {operations.map((operation, seqOperation) =>
                 <div>
                   <div className="md-grid">
                     <div className="effectfront" style={{ marginRight: 20, cursor: "pointer", padding: 5, backgroundColor: "#A40003", color: "white", width: 30, height: 30, borderRadius: 22 }}>
@@ -187,14 +187,14 @@ export class ViewOperations extends React.Component {
                         icon="description" disabled={true}
                       />
                     </div>
-                    <div style={{ display: "flex", position:"absolute", right:0, margin:20, alignItems: "center" }}>
+                    <div style={{ display: "flex", position: "absolute", right: 0, margin: 20, alignItems: "center" }}>
                       <div>
                         <C_Icon style={{ cursor: "pointer", fontSize: 25, paddingRight: 20 }} icon="edit"
-                          action={() => this.props.isEditing(seqOperation, operation)}
+                          action={() => this.props.isEditing(seqEquipment, seqOperation, operation)}
                         />
                       </div>
                       <div>
-                        <C_Icon style={{ cursor: "pointer", fontSize: 25, }} icon="delete" 
+                        <C_Icon style={{ cursor: "pointer", fontSize: 25, }} icon="delete"
                           action={() => this.delete(seqEquipment, seqOperation, operation)}
                         />
                       </div>
@@ -234,13 +234,26 @@ export class CrudOperation extends React.Component {
     const { orderEquipments } = this.state;
 
     let selectedEquipment = undefined;
+    let listEquipments = [];
+    
+    if (this.props.edit && this.props.selectedEquipment) {
+     
+      selectedEquipment = this.props.selectedEquipment;
+      let orderEquipment = orderEquipments[selectedEquipment];
 
-    let listEquipments = orderEquipments.map((item, i) => ({
-      label: item.equipment.description,
-      value: i,
-    }))
+      listEquipments.push({
+        label: orderEquipment.equipment.description,
+        value: selectedEquipment,
+      })
+    }
+    else {
+      listEquipments = orderEquipments.map((item, i) => ({
+        label: item.equipment.description,
+        value: i,
+      }))
 
-    selectedEquipment = listEquipments[0] && listEquipments[0].value ? listEquipments[0].value : undefined
+      selectedEquipment = listEquipments[0] && listEquipments[0].value ? listEquipments[0].value : undefined
+    }
 
     this.setState({ listEquipments, selectedEquipment })
   }
@@ -256,7 +269,6 @@ export class CrudOperation extends React.Component {
 
   render() {
 
-    console.log("state CrudOperation", this.state);
 
     return (
       <div>

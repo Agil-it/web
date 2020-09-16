@@ -36,6 +36,7 @@ export default class CreateMaintenanceOrder extends React.Component {
       backgroundModal: StringHelper.backgroundModal(),
       styleMessage: StringHelper.styleMessage(),
       visible: true,
+      tabDisabled: true,
       completeOrder: '',
       completeWorkcenter: '',
       listWorkcenter: [],
@@ -57,12 +58,6 @@ export default class CreateMaintenanceOrder extends React.Component {
         { name: "Setor.", property: "installationArea.sector.description" },
         { name: "Excluir", icon: "delete", action: (index) => this.removeEquipment(index) },
       ],
-
-      tabs: [
-        { name: "Dados Gerais", value: "info_main" },
-        { name: "Equipamentos", value: "equipments" },
-        { name: "Operações", value: "operations" },
-      ]
     };
 
     this.provider = new HandlerProvider(new MaintenanceOrderProvider(), "ordem de manutenção")
@@ -127,12 +122,11 @@ export default class CreateMaintenanceOrder extends React.Component {
   }
 
   removeEquipment(index) {
-    // console.log("CreateMaintenanceOrder -> removeEquipment -> index", index)
     let { fields } = this.state
 
     fields.orderEquipment.splice(index, 1)
 
-    this.setState({ fields })
+    this.setState({ fields, tabDisabled: fields.orderEquipment.length == 0 })
   }
 
   delete() {
@@ -145,7 +139,6 @@ export default class CreateMaintenanceOrder extends React.Component {
     const errors = [];
 
     if (params) {
-      console.log("CreateMaintenanceOrder -> checkData -> params", params)
       if (!params.equipment) errors.push("Equipamento");
       if (params.equipment && !params.installationArea) errors.push("Local de Instalação");
     }
@@ -154,6 +147,7 @@ export default class CreateMaintenanceOrder extends React.Component {
       if (!fields.orderLayout) errors.push("Layout da Ordem");
       if (!fields.priority) errors.push("Prioridade da Ordem");
       if (!fields.solicitationUser) errors.push("Solicitante da Ordem");
+      if (fields && fields.orderEquipment.length == 0) errors.push("Equipamento");
       if (!workCenter) errors.push("Centro de Trabalho");
     }
 
@@ -186,6 +180,7 @@ export default class CreateMaintenanceOrder extends React.Component {
         id: fields.solicitationUser
       },
       priority: fields.priority,
+      priority: fields.priority,
       description: fields.description,
       openedDate: new Date(),
     }
@@ -194,8 +189,6 @@ export default class CreateMaintenanceOrder extends React.Component {
 
 
   onChange(e, name) {
-    console.log("CreateMaintenanceOrder -> onChange -> e", e)
-    console.log("CreateMaintenanceOrder -> onChange -> name", name)
 
     if (name === "id") this.setState({ completeOrder: e })
     else if (name === "workCenter") this.setState({ completeWorkcenter: e })
@@ -214,7 +207,6 @@ export default class CreateMaintenanceOrder extends React.Component {
       this.setState({ fields, layoutType })
     }
     else {
-      console.log("Entrou");
 
       let fields = this.state.fields;
 
@@ -230,7 +222,6 @@ export default class CreateMaintenanceOrder extends React.Component {
 
     if (response.success) {
       order = response.data
-      // console.log("CreateMaintenanceOrder -> getOrder -> order", order)
     }
 
     let fields = {
@@ -287,11 +278,15 @@ export default class CreateMaintenanceOrder extends React.Component {
 
     return layouts[index];
   }
-  
+
   saveEquipment(index, orderEquipment) {
+    console.log("CreateMaintenanceOrder -> saveEquipment -> index", index)
+    console.log("CreateMaintenanceOrder -> saveEquipment -> orderEquipment", orderEquipment)
     const { fields } = this.state;
 
+    console.log("CreateMaintenanceOrder -> saveEquipment -> fields 1", fields.orderEquipment)
     fields.orderEquipment.splice(index, 1, orderEquipment);
+    console.log("CreateMaintenanceOrder -> saveEquipment -> fields 2", fields.orderEquipment)
 
     this.setState({ fields });
   }
@@ -319,9 +314,14 @@ export default class CreateMaintenanceOrder extends React.Component {
 
   render() {
 
-    console.log("render -> STATE", this.state)
-    console.log("render -> STATE -> orderEquipment", this.state.fields.orderEquipment)
-    var {addOperation, addEquiment, showSuccess, layoutType, layouts, fields, tabs } = this.state;
+    var { addOperation, addEquiment, showSuccess, layoutType, layouts, fields } = this.state;
+    console.log("CreateMaintenanceOrder -> render -> this.state", this.state)
+
+    const tabs = [
+      { name: "Dados Gerais", value: "info_main" },
+      { name: "Equipamentos", value: "equipments" },
+      { name: "Operações", disabled: this.state.tabDisabled, value: "operations", labelStyle: this.state.tabDisabled ? { color: "#ccc" } : {} },
+    ]
 
     return (
       <div>
@@ -529,7 +529,7 @@ export default class CreateMaintenanceOrder extends React.Component {
                       />
                     </div>
                   </div>
-                : undefined}
+                  : undefined}
               </form>
             </C_Tabs>
           </section>
@@ -545,9 +545,8 @@ export default class CreateMaintenanceOrder extends React.Component {
               <div style={{ width: "100%", display: "flex", justifyContent: "center", position: "fixed", top: "15%", right: 0 }}>
                 <AddEquipments
                   pushEquipment={(equipment, showMessage) => {
-                    var showSuccess = showMessage
-                    console.log("CreateMaintenanceOrder -> render -> showMessage", showMessage)
                     console.log("CreateMaintenanceOrder -> render -> equipment", equipment)
+                    var showSuccess = showMessage
                     if (!equipment) return
 
                     const errors = this.checkData(equipment);
@@ -558,10 +557,9 @@ export default class CreateMaintenanceOrder extends React.Component {
                     }
 
                     const { fields } = this.state;
-                    console.log("CreateMaintenanceOrder -> render -> fields", fields)
                     fields.orderEquipment.push(equipment);
 
-                    this.setState({ fields, showSuccess })
+                    this.setState({ fields, showSuccess, tabDisabled: false })
 
                     if (showSuccess) {
                       setTimeout(() => {
@@ -569,20 +567,21 @@ export default class CreateMaintenanceOrder extends React.Component {
                       }, 1000);
                     }
                   }}
-                  
+                 
+
 
                   checkData={() => this.checkData()}
                   onCloseEquipment={() => this.setState({ addEquiment: false })}
                 />
               </div>
             </div>
-          : undefined}
+            : undefined}
 
-          { addOperation ? 
+          {addOperation ?
             <div style={this.state.backgroundModal}>
               <div style={{ width: "100%", display: "flex", justifyContent: "center", position: "fixed", top: "5%" }}>
                 <C_Operations
-                  style={{ width: "50%", maxHeight: '80vh', overflowY: 'scroll', marginTop:30, padding: 20, borderRadius: 5 }}
+                  style={{ width: "50%", maxHeight: '80vh', overflowY: 'scroll', marginTop: 30, padding: 20, borderRadius: 5 }}
                   equipments={fields.orderEquipment}
                   saveEquipment={(index, orderEquipment) => this.saveEquipment(index, orderEquipment)}
                   saveOperation={(indexEquipment, indexOperation, operation) => this.saveOperation(indexEquipment, indexOperation, operation)}
@@ -591,13 +590,13 @@ export default class CreateMaintenanceOrder extends React.Component {
                 />
               </div>
             </div>
-          : undefined }
+            : undefined}
 
           {showSuccess ?
             <div className="slideInLeft" style={this.state.styleMessage}>
               {"Equipamento adicionado com sucesso!"}
             </div>
-          : undefined}
+            : undefined}
         </DialogContainer>
       </div>
     );
@@ -669,9 +668,11 @@ export class AddEquipments extends React.Component {
 
 
   completeField(id, name) {
-    // console.log("AddEquipments -> completeField -> name", name)
+  console.log("AddEquipments -> completeField -> name", name)
+  console.log("AddEquipments -> completeField -> id", id)
 
     const { orderEquipment } = this.state
+    console.log("AddEquipments -> completeField -> this.state", this.state)
     if (id === undefined) {
       this.clean()
       return
@@ -711,9 +712,27 @@ export class AddEquipments extends React.Component {
     }
   }
 
-  clean() { }
+  clean() {
+    var orderEquipment = this.state.orderEquipment;
+
+    orderEquipment = {
+      needStopping: false,
+      isStopped: false
+    }
+
+    this.setState({
+      orderEquipment,
+      completeSymptom: '',
+      completeCause: '',
+      completeEquipment: '',
+      completeSuperiorEquipment: '',
+      completeArea: ''
+    }, () => this.loadingData());
+  }
 
   onChange(e, name) {
+  console.log("AddEquipments -> onChange -> name", name)
+  console.log("AddEquipments -> onChange -> e", e)
 
     if (name === "orderEquipmentId") this.setState({ completeEquipment: e })
     else if (name === "superiorEquipment") this.setState({ completeSuperiorEquipment: e })
@@ -730,7 +749,6 @@ export class AddEquipments extends React.Component {
 
   render() {
     const { orderEquipment, layoutType } = this.state
-    console.log("AddEquipments -> render -> this.state", this.state)
 
     return (
       <C_Modal style={{ maxHeight: "36vw", overflowX: "hidden", width: "90%", padding: 20, borderRadius: 5 }} titleSize={20} title="EQUIPAMENTOS" onClose={() => this.props.onCloseEquipment()}>
@@ -871,7 +889,7 @@ export class AddEquipments extends React.Component {
                   var orderEquipment = this.state.orderEquipment;
                   orderEquipment[e.target.name] = e.target.value == "true" ? true : false;
 
-                  this.setState({orderEquipment})
+                  this.setState({ orderEquipment })
                 }}
                 options={[{ label: "Sim", value: true }, { label: 'Não', value: false }]}
               />
@@ -896,10 +914,13 @@ export class AddEquipments extends React.Component {
           </div>
           <div className="md-cell md-cell--12 md-cell--bottom" style={{ marginTop: 30 }}>
             <C_Button className="md-cell md-cell--6 md-cell--bottom" label="FECHAR"
-              secondary={true}  action={() => this.props.onCloseEquipment()}
+              secondary={true} action={() => this.props.onCloseEquipment()}
             />
             <C_Button className="md-cell md-cell--6 md-cell--bottom" primary={true}
-              label="ADICIONAR" action={() => this.props.pushEquipment(orderEquipment, true)}
+              label="ADICIONAR" action={() => { 
+                this.props.pushEquipment(orderEquipment, true)
+                this.clean();
+              }}
             />
           </div>
         </div>

@@ -62,7 +62,9 @@ export class C_Table extends React.Component {
 
   filterField(field, filter) {
 
-    if(typeof field === "object") {
+    if (!field) return false
+
+    if (typeof field === "object" && field != null) {
 
       let isValid = false;
       const entries = Object.entries(field)

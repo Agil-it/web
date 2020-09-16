@@ -50,7 +50,8 @@ export class C_MaintenanceOrder extends React.Component {
     this.setState({ order })
   }
 
-  saveOperation(indexEquipment, indexOpeartion, operation) {
+  saveOperation(indexEquipment, indexOperation, operation) {
+    debugger;
     const { order } = this.state;
 
     var orderEquipment = order.orderEquipment[indexEquipment];
@@ -58,12 +59,16 @@ export class C_MaintenanceOrder extends React.Component {
 
     var component = this;
 
+    operation.orderEquipment = {
+      id: orderEquipment.id,
+    }
+
     this.providerOperation.save(operation, (newOperation) => {
 
       if (!Array.isArray(orderEquipment.orderOperation)) orderEquipment.orderOperation = [];
 
-      if (indexOpeartion >= 0) {
-        orderEquipment.orderOperation.splice(indexOpeartion, 1, newOperation);
+      if (indexOperation >= 0) {
+        orderEquipment.orderOperation.splice(indexOperation, 1, newOperation);
       } else {
         orderEquipment.orderOperation.push(newOperation);
       }
@@ -224,7 +229,7 @@ export class C_MaintenanceOrder extends React.Component {
                   saveOperation={(indexEquipment, indexOperation, operation) => this.saveOperation(indexEquipment, indexOperation, operation)}
                   equipments={order.orderEquipment}
                   title="OPERAÇÕES"
-                  onClose={() => this.setState({ itemSelected: "", showBackgroundColor: false })}
+                  onCloseOperation={() => this.setState({ itemSelected: "", showBackgroundColor: false })}
                 />
               </div>
             </div>
