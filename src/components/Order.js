@@ -10,6 +10,7 @@ import { MaintenanceOrderProvider } from '../providers/MaintenanceOrder';
 import { OrderOperationProvider } from '../providers/OrderOperation';
 import { C_Loading } from './Loading';
 import { C_Operations } from './Operations';
+import { C_Signature } from './Signature';
 import { C_ToolTip } from './ToolTip';
 import C_Header from './Header';
 import { C_Label } from './Label';
@@ -67,12 +68,9 @@ export class C_MaintenanceOrder extends React.Component {
 
       if (!Array.isArray(orderEquipment.orderOperation)) orderEquipment.orderOperation = [];
 
-      if (indexOperation >= 0) {
-        orderEquipment.orderOperation.splice(indexOperation, 1, newOperation);
-      } else {
-        orderEquipment.orderOperation.push(newOperation);
-      }
-
+      if (indexOperation >= 0) orderEquipment.orderOperation.splice(indexOperation, 1, newOperation);
+      else orderEquipment.orderOperation.push(newOperation);
+  
       order.orderEquipment.splice(indexEquipment, 1, orderEquipment);
 
       component.setState({ order })
@@ -103,7 +101,7 @@ export class C_MaintenanceOrder extends React.Component {
       { value: "status_equipment", name: "STATUS EQUIPAMENTO", icon: "swap_vert", disabled: true },
       { value: "check_list", name: "CHECK-LIST ORDEM", icon: "done_all", disabled: true },
       { value: "operations", name: "OPERAÇÕES", icon: "build", disabled: false },
-      { value: "sign", name: "ASSINATURA", icon: "fingerprint", disabled: true },
+      { value: "sign", name: "ASSINATURA", icon: "fingerprint", disabled: false },
     ]
 
     return (
@@ -234,6 +232,20 @@ export class C_MaintenanceOrder extends React.Component {
               </div>
             </div>
           : undefined}
+
+          {this.state.itemSelected == "sign" ?
+            <div style={this.state.backgroundModal}>
+              <div style={{ width: "100%", display: "flex", justifyContent: "center", position: "fixed", top: "5%" }}>
+                <C_Signature
+                  style={{ width: "50%", padding: 20, borderRadius: 5 }}
+                  title="ASSINATURA"
+                  orderId={this.state.orderId}
+                  onClose={() => this.setState({ itemSelected: "", showBackgroundColor: false })}
+                />
+              </div>
+            </div>
+          : undefined}
+
         </div>
     );
   }

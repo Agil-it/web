@@ -24,7 +24,7 @@ class C_Header extends Component {
           }}
           >
             {this.props.title}
-            <C_Icon action={() => this.props.onClick()} style={{ cursor: "pointer", fontSize: 25, color: "white", }} icon={this.props.icon}
+            <C_Icon action={() => this.props.onClick ? this.props.onClick() : undefined} style={{ cursor: "pointer", fontSize: 25, color: "white", }} icon={this.props.icon}
             />
           </div>
         </div>

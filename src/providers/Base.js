@@ -1,4 +1,5 @@
 import Cookies from 'universal-cookie';
+import * as jwt from 'jsonwebtoken';
 
 export class BaseProvider {
 
@@ -20,8 +21,12 @@ export class BaseProvider {
   }
 
   setToken(token) {
+    const user = jwt.decode(token);
+
     this.cookies.set('token', token, { path: '/' })
-  }
+    this.cookies.set('user', user, { path: '/' })
+  
+  } 
 
   updateToken(response) {
     return response.headers.token

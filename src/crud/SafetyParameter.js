@@ -113,7 +113,7 @@ class CreateSafetyParameter extends Component {
     var fields = this.state.fields;
     ObjectHelper.clearFields(fields);
 
-    this.setState({ fields });
+    this.setState({ fields }, () => this.loadList());
   }
 
   delete() {
@@ -191,7 +191,7 @@ class CreateSafetyParameter extends Component {
   clearEntityFields() {
     const fields = {
       ...this.state.fields,
-      entityId: '',
+      entityId: undefined,
       entityClass: '',
     }
 
@@ -199,6 +199,9 @@ class CreateSafetyParameter extends Component {
   }
 
   render() {
+
+    console.log("state", this.state);
+
     return (
       <DialogContainer
         id="simple-full-page-dialog"
@@ -239,7 +242,7 @@ class CreateSafetyParameter extends Component {
               onChange={this.onChange}
               label={<div style={{ fontSize: 15, color: "#616161d9" }}>Usar em todas as Ordens de Manutenção</div>}
               type="checkbox"
-              style={{}}
+              checked={this.state.fields.useAlways}
             />
             <C_SelectField
               id="entityClass"

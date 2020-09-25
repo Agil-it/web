@@ -1,4 +1,4 @@
-import { Card, CardTitle, CardText, Avatar } from 'react-md';
+import { Card } from 'react-md';
 import React, { PureComponent } from 'react';
 import '../index.css';
 import C_SelectField from './SelectField';
@@ -10,7 +10,6 @@ import { C_Label } from './Label';
 import { C_Switch } from './CheckBox'
 import { C_Button, C_ButtonFloat } from './Button'
 import { C_ToolTip } from './ToolTip'
-import { MessageModal } from './Message'
 
 export class C_Operations extends React.Component {
 

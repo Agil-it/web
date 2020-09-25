@@ -99,14 +99,19 @@ export class C_Table extends React.Component {
   }
 
   getValueProperty(object = {}, {property = "", defaultValue = "", format} = {}){
+  
     let value = ObjectHelper.getPropertys(object, property, defaultValue)
 
-    if(value == defaultValue) return value;
+    if(value === defaultValue) return value;
 
     if(typeof format == "function") value = format(value);
 
+    if (property == "exported")
+    console.log("C_Table -> getValueProperty -> typeof format", typeof format)
+    
     return value
   }
+   
 
   handlePagination = (start, rowsPerPage) => {
     this.setState({ pagination: start, currentRowsPerPage: rowsPerPage })
@@ -148,7 +153,7 @@ export class C_Table extends React.Component {
                   <TableColumn header={true} style={defaultStyleRows}>
                     {colum.icon ? 
                       <C_Icon icon={colum.icon} action={() => colum.action(i)}/>
-                      : this.getValueProperty(content, colum)
+                      : (colum.isIcon ? <C_Icon icon={content[colum.property]}/> : this.getValueProperty(content, colum))
                     }
                   </TableColumn>
                 ))}

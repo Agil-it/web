@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import C_Menu from './components/Menu';
 import Login from './login/Login';
 import Cookies from 'universal-cookie';
-import Dashboard from './Dashboard';
 
 class App extends Component {
   constructor() {
@@ -12,7 +11,10 @@ class App extends Component {
     this.onLogout = this.onLogout.bind(this)
     this.onLogin = this.onLogin.bind(this)
 
-    this.state = { token: this.cookies.get('token') || false}
+    this.state = { 
+      token: this.cookies.get('token') || false,
+      user: this.cookies.get('user') || false
+    }
   }
 
   onLogout() {
@@ -21,17 +23,21 @@ class App extends Component {
   }
 
   onLogin() {
-    this.setState({ token: this.cookies.get('token') })
+    this.setState({ 
+      token: this.cookies.get('token'),
+      user: this.cookies.get('user')
+    })
   }
 
   render() {
-    const { token } = this.state
+    const { token, user } = this.state
+    console.log("App -> render -> user", user)
 
     if (!token) {
       return <Login onSuccess={this.onLogin}/>
     }
 
-    return <C_Menu onLogout={this.onLogout}/>
+    return <C_Menu user={user} onLogout={this.onLogout}/>
   }
 }
 

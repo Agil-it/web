@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import { FontIcon } from 'react-md';
 import '../index.css';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
-import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
+import SideNav, {NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import { Route, BrowserRouter } from 'react-router-dom'
 import styled from 'styled-components';
 import Dashboard from '../Dashboard'
 import ShowCards from '../ShowCards'
 import Logout from '../login/Logout'
+import { C_ToolTip } from './ToolTip';
+import AdminDashboard from '../admin/AdminDashboard';
+import ProfileUser from '../ProfileUser';
 
 const Main = styled.main`
   position: relative;
@@ -43,10 +46,14 @@ class C_Menu extends Component {
 
     if (selected == 'home') {
       return (<Dashboard/>)
+    } else if (selected == 'user') {
+      return (<ProfileUser user={this.props.user}/>)
     } else if(selected == 'create') {
       return (<ShowCards/>)
     } else if(selected == 'logout') {
       return (<Logout logout={this.props.onLogout} />)
+    } else if (selected == 'manager') {
+      return (<AdminDashboard />)
     } else {
       return(<p>Item {selected} not found 🤔</p>)
     }
@@ -55,8 +62,14 @@ class C_Menu extends Component {
   render() {
 
     const { expanded, selected } = this.state;
+    const { user } = this.props;
 
     let menuItens = [
+      {
+        name: 'Perfil',
+        icon: 'account_circle',
+        key: 'user',
+      },
       {
         name: 'Monitor',
         icon: 'dvr',
@@ -89,10 +102,14 @@ class C_Menu extends Component {
       }
     ]
 
+    if (user && user.role == "administrator") menuItens.splice(1, 0, { name: "Análise", icon: "pending_actions", key: 'manager'})
+
     let menu = menuItens.map((menuItem, key) =>
       <NavItem key={key} eventKey={menuItem.key} style={{ marginTop: 40 }}>
         <NavIcon >
-          <FontIcon style={{ fontSize: 35, marginTop: "10%" }}>{menuItem.icon}</FontIcon>
+          <C_ToolTip position="right" tooltip={menuItem.name}>
+            <FontIcon style={{ color:"white", fontSize: 35, marginTop: "10%" }}>{menuItem.icon}</FontIcon>
+          </C_ToolTip>
         </NavIcon>
         <NavText style={{ fontSize: 20, float: "right", width: "75%" }}>
           {menuItem.name}

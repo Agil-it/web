@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import {
-  Button,
   DialogContainer,
-  Divider,
   Toolbar,
   FontIcon,
 } from 'react-md';
@@ -16,7 +14,6 @@ import {C_Calendar} from '../components/Calendar';
 import C_RadioGroup from '../components/RadioGroup';
 import { HandlerProvider } from '../providers/handler';
 import { UserProvider } from '../providers/User';
-import { ObjectHelper } from '../helpers/Object';
 import C_AutoComplete from '../components/AutoComplete';
 
 class CreateUser extends Component {
