@@ -20,7 +20,7 @@ class Dashboard extends Component {
         { label: "TODOS", value: "all" },
         { label: "ABERTA", value: "created" },
         { label: "ASSINADA", value: "signatured" },
-        { label: "ASSINATURA PENDENTE", value: "signature_pending" },
+        { label: "ASSINATURA PENDENTE", value: "signature-pending" },
         { label: "ASSUMIDA", value: "assumed" },
         { label: "CANCELADA", value: "canceled" },
         { label: "FINALIZADA", value: "finished" },
