@@ -12,6 +12,7 @@ export class C_Loading extends React.Component {
     return (
       <div>
         <CircularProgress
+          id={`CircularProgress-${new Date().getTime()}`}
           scale={this.props.scale ? this.props.scale : 2}
         />
         {this.props.footer ?

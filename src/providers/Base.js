@@ -1,11 +1,13 @@
 import Cookies from 'universal-cookie';
-import * as jwt from 'jsonwebtoken';
+import { JWTHelper } from '../helpers/JWT';
 
 export class BaseProvider {
 
   constructor(moduleAPI) {
     this.module = moduleAPI
-    this.baseUrl = `http://127.0.0.1:4000/api/v1/${this.module}`
+    this.apiVersion = 1;
+    this.apiUrl = `http://127.0.0.1:4000/api/v${this.apiVersion}`;
+    this.baseUrl = `${this.apiUrl}/${this.module}`;
     this.cookies = new Cookies();
   }
 
@@ -21,11 +23,10 @@ export class BaseProvider {
   }
 
   setToken(token) {
-    const user = jwt.decode(token);
+    const user = JWTHelper.decomposeJwt(token)
 
     this.cookies.set('token', token, { path: '/' })
     this.cookies.set('user', user, { path: '/' })
-  
   } 
 
   updateToken(response) {
@@ -47,7 +48,7 @@ export class BaseProvider {
       throw new Error(data.error.message? data.error.message : data.error)
     }
 
-    if (data.data.success == false) {
+    if (data.data.success === false) {
       // Retorno do request do server
       console.log('!data.data.success')
       console.log(data.data)
@@ -55,9 +56,9 @@ export class BaseProvider {
     }
   }
 
-  async handleRequest(callback) {
+  async handleRequest(request) {
     try {
-      const response = await callback;
+      const response = await this.executeRequest(request);
 
       this.checkResponse(response)
 
@@ -70,14 +71,21 @@ export class BaseProvider {
 
       return response;
     } catch (error) {
-      console.log("TCL: handleRequest -> error", error)
       return {
         success: false,
-        error: error
+        error: error.message || error.error || error.track || error
       }
     }
   }
 
+  // ? Por alguma razão o axios da reject quando status n for no range 2xx
+  async executeRequest(request) {
+    try {
+      return await request;
+    } catch (error) {
+      return error.response || error;
+    }
+  }
   mountBetweenDate(dateFrom,dateTo, keepValues = false) {
     let dateTimeFrom,dateTimeTo;
 

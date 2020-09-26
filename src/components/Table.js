@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import {DataTable,TableHeader,TableBody,TableRow,TableColumn,TablePagination} from 'react-md';
+import {DataTable,TableHeader,TableBody,TableRow,TableColumn,TablePagination,TableFooter} from 'react-md';
 import '../index.css';
 import { ObjectHelper } from "../helpers/Object"
 import {C_Icon} from "./Icon";
@@ -131,15 +131,15 @@ export class C_Table extends React.Component {
       <div style={{ border: "1px solid silver", borderRadius: 5 }}>
         <DataTable style={{}} baseId="simple-pagination">
           <TableHeader>
-            <TableRow selectable={false}>
-              {columns && columns.map((colum) => (
+            <TableRow selectable={false} key={'column-row'}>
+              {columns && columns.map((colum, columnIndex) => (
                 <TableColumn
                   style={{ 
                     color: "black", 
                     textAlign: this.state.textAlign ? this.state.textAlign : "left", 
                     fontSize: this.state.titleSize ? this.state.titleSize : 20
                   }}
-                  key={colum.name || ""}
+                  key={`column-row-${columnIndex}`}
                 >
                   {colum.name ? colum.name : ""}
                 </TableColumn>
@@ -149,8 +149,8 @@ export class C_Table extends React.Component {
           <TableBody>
             {content && content.map((content, i) => (
               <TableRow key={i} style={{ cursor: "pointer" }} onClick={() => this.props.onClick(content)} className={this.state.showEffect ? "effectfrontSmall" : ""} key={content.id} selectable={false}>
-                {columns && columns.map((colum) => (
-                  <TableColumn header={true} style={defaultStyleRows}>
+                {columns && columns.map((colum, rowIndex) => (
+                  <TableColumn header={true} style={defaultStyleRows} key={`row-${rowIndex}-column-${i}`}>
                     {colum.icon ? 
                       <C_Icon icon={colum.icon} action={() => colum.action(i)}/>
                       : (colum.isIcon ? <C_Icon icon={content[colum.property]}/> : this.getValueProperty(content, colum))
@@ -161,9 +161,10 @@ export class C_Table extends React.Component {
             ))}
           </TableBody>
           {this.state.showPagination
-            ? <div style={{ position: "relative", className: "md-grid" }}>
+            ? <TableFooter style={{ position: "relative", className: "md-grid" }}>
                 { this.state.hasFilter ?
-                  <div style={{ position: "absolute", bottom: 0, left: 10, width: 500 }}>
+                  <tr style={{ position: "absolute", bottom: 0, left: 10, width: 500 }}>
+                    <td>
                     <C_TextField
                       id="filter"
                       name="filter"
@@ -172,7 +173,8 @@ export class C_Table extends React.Component {
                       type="text"
                       placeholder="Filtrar tabela"
                     />
-                  </div>
+                    </td>
+                  </tr>
                 : undefined
                 }
                 <TablePagination
@@ -181,7 +183,7 @@ export class C_Table extends React.Component {
                   rowsPerPageLabel={'Linhas'}
                   onPagination={this.handlePagination}
                 />
-              </div>
+              </TableFooter>
             : undefined
           }
         </DataTable>

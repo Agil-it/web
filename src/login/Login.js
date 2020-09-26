@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {C_Button} from '../components/Button';
 import C_TextField from '../components/TextField';
 import {AuthProvider} from '../providers/Auth'
-import { SessionHelper } from '../helpers/Session';
+import { MessageModal } from '../components/Message';
 
 class Login extends Component {
 
@@ -28,10 +28,8 @@ class Login extends Component {
 
     let response = await authProvider.login(username, password);
 
-    let session = SessionHelper.getCookieData('user');
-
     if (!response.success) {
-      alert(response.error)
+      MessageModal.information('Erro', response.error)
       return
     }
 

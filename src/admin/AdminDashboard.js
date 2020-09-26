@@ -21,13 +21,16 @@ class AdminDashboard extends Component {
     this.calculateHeight = this.calculateHeight.bind(this);
     this.formatList = this.formatList.bind(this);
     this.provider = new HandlerProvider(new DashboardProvider(), "dashboard")
-    this.list()
   }
 
   calculateHeight() {
     const height = document.getElementById('searchTable').clientHeight;
     const rowsPerPage = Math.round(height / 60) - 2;
     return rowsPerPage;
+  }
+
+  componentDidMount() {
+    this.list();
   }
 
   async list() {

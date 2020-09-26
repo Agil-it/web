@@ -6,8 +6,10 @@ import C_TextField from './TextField';
 import {C_Button} from './Button';
 import { C_CheckBox } from './CheckBox';
 import { MaintenanceOrderProvider } from '../providers/MaintenanceOrder';
-import { HandlerProvider } from '../providers/handler';
+import { ProviderHelper } from '../helpers/Provider';
 import { SessionHelper } from '../helpers/Session';
+import { AuthProvider } from '../providers/Auth';
+import { MessageModal } from './Message'
 
 export class C_Signature extends React.Component {
   constructor(props) {
@@ -18,7 +20,8 @@ export class C_Signature extends React.Component {
       orderId: this.props.orderId
     }
 
-    this.provider = new HandlerProvider(new MaintenanceOrderProvider(), "assinatura")
+    this.provider = new MaintenanceOrderProvider();
+    this.authProvider = new AuthProvider();
 
   }
 
@@ -30,8 +33,28 @@ export class C_Signature extends React.Component {
     const orderId = this.state.orderId;
     const userId = this.state.user.userId;
 
-    let response = await this.provider.execute(this.provider.provider.signOrder(userId, orderId), "Assinar")
-    console.log("C_Signature -> signatureOrder -> response", response)
+    try {
+      if (!await this.validateUser()) return;
+
+      await ProviderHelper.execute(this.provider.signOrder(userId, orderId), "Assinar")
+    } catch(err) {
+      console.log('signatureOrder err -> ', err)
+      MessageModal.information('⚠ Erro', 'Algo deu errado. Tente novamente mais tarde');
+    }
+  }
+
+  async validateUser(showModalError = true) {
+    const { password } = this.state;
+
+    try {
+      await ProviderHelper.execute(this.authProvider.validateUser(password), "Autenticar",null,true);
+      return true;
+    } catch (err) {
+      if (showModalError)
+        MessageModal.information('⚠ Erro', 'Senha inválida')
+
+      return false;
+    }
   }
 
   render() {

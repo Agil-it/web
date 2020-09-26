@@ -13,14 +13,13 @@ export class C_Icon extends React.Component {
       <FontIcon 
         className={this.props.className}
         primary={this.props.primary}
-        forceIconFontSize={this.props.iconSize ? true : undefined}
+        forceFontSize={!!this.props.iconSize}
         secondary={this.props.secondary}
-        forceIconSize={this.props.iconSize}
+        forceSize={this.props.iconSize}
         label={this.props.label}
         style={this.props.style}
         onClick={this.props.action}
         disabled={this.props.disabled}
-        iconEl={this.props.icon}
         name={this.props.name}
       >{this.props.icon}</FontIcon>
     );
