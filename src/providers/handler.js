@@ -92,6 +92,6 @@ export class HandlerProvider {
   }
 
   async execute(functionToExecute, action, successCallBack, returnResult = false) {
-    return ProviderHelper.execute(functionToExecute, action, successCallBack);
+    return ProviderHelper.execute(functionToExecute, action, successCallBack, returnResult, this.entityName);
   }
 }

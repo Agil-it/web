@@ -4,7 +4,7 @@ import { StringHelper } from './String'
 export class ProviderHelper {
 
   
-  static async execute(functionToExecute, action, successCallBack, returnResult) {
+  static async execute(functionToExecute, action, successCallBack, returnResult, entityName) {
 
     if (action === "cadastrar") {
       action = "cadastrado"
@@ -12,8 +12,6 @@ export class ProviderHelper {
       action = "atualizado"
     } else if(action === "deletar") {
       action = "deletado"
-    } else {
-      action = ""
     }
 
     let response = null
@@ -50,7 +48,7 @@ export class ProviderHelper {
       if (returnResult === true) return response.data;
 
       title = '✔ Sucesso'
-      MessageModal.information(title, StringHelper.FirstLetterUpperCase(`${this.entityName} ${action} com sucesso!`), () => typeof successCallBack === 'function' ? successCallBack(response.data) : undefined)
+      MessageModal.information(title, StringHelper.FirstLetterUpperCase(`${entityName} ${action} com sucesso!`), () => typeof successCallBack === 'function' ? successCallBack(response.data) : undefined)
     }
   }
 }

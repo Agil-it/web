@@ -11,6 +11,7 @@ import Logout from '../login/Logout'
 import { C_ToolTip } from './ToolTip';
 import AdminDashboard from '../admin/AdminDashboard';
 import ProfileUser from '../ProfileUser';
+import Notification from './Notification';
 
 const Main = styled.main`
   position: relative;
@@ -54,6 +55,8 @@ class C_Menu extends Component {
       return (<Logout logout={this.props.onLogout} />)
     } else if (selected == 'manager') {
       return (<AdminDashboard />)
+    } else if (selected == 'notification') {
+      return (<Notification user={this.props.user}/>)
     } else {
       return(<p>Item {selected} not found 🤔</p>)
     }

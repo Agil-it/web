@@ -240,7 +240,7 @@ export class C_MaintenanceOrder extends React.Component {
                   style={{ width: "50%", padding: 20, borderRadius: 5 }}
                   title="ASSINATURA"
                   orderId={this.state.orderId}
-                  onClose={() => this.setState({ itemSelected: "", showBackgroundColor: false })}
+                  onClose={(cb) => this.setState({ itemSelected: "", showBackgroundColor: false }, cb ? this.getOrder : undefined )}
                 />
               </div>
             </div>

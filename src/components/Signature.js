@@ -36,7 +36,7 @@ export class C_Signature extends React.Component {
     try {
       if (!await this.validateUser()) return;
 
-      await ProviderHelper.execute(this.provider.signOrder(userId, orderId), "Assinar")
+      await ProviderHelper.execute(this.provider.signOrder(userId, orderId), "assinada", () => this.props.onClose(true), false, "Ordem")
     } catch(err) {
       console.log('signatureOrder err -> ', err)
       MessageModal.information('⚠ Erro', 'Algo deu errado. Tente novamente mais tarde');

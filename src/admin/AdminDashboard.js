@@ -57,7 +57,7 @@ class AdminDashboard extends Component {
         maintainer: "🔴",
         leader: "🔴",
         administrator: "🔴",
-        exported: order.exported,
+        exported: order.exported ? "🟢" : "🔴",
         id: order.id
       }
 
@@ -76,7 +76,7 @@ class AdminDashboard extends Component {
       { name: "Técnico", isIcon: false, property: "maintainer" },
       { name: "Solicitante", isIcon: false, property: "leader" },
       { name: "Administrador", isIcon: false, property: "administrator" },
-      { name: "Exportado", property: "exported", format: (value) => value ? "SIM" : "NÃO" },
+      { name: "Exportado", isIcon: false,  property: "exported" },
     ]
 
     return (
