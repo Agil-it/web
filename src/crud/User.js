@@ -14,6 +14,8 @@ import {C_Calendar} from '../components/Calendar';
 import C_RadioGroup from '../components/RadioGroup';
 import { HandlerProvider } from '../providers/handler';
 import { UserProvider } from '../providers/User';
+import { WorkCenterProvider } from '../providers/WorkCenter';
+import { SectorProvider } from '../providers/Sector';
 import C_AutoComplete from '../components/AutoComplete';
 
 class CreateUser extends Component {
@@ -24,8 +26,12 @@ class CreateUser extends Component {
     this.state = {
       visible: true,
       list: [],
+      listWorkCenter: [],
+      listSectors: [],
       fields: {},
       autocomplete: '',
+      completeSector: '',
+      completeWorkcenter: '',
       role: [{
         name: 'Líder de Setor',
         id: 'sector_leader',
@@ -41,7 +47,9 @@ class CreateUser extends Component {
     };
 
     this.provider = new HandlerProvider(new UserProvider(), "usuário")
-    this.loadList();
+    this.providerWorkCenter = new HandlerProvider(new WorkCenterProvider(), "centro de trabalho")
+    this.providerSector = new HandlerProvider(new SectorProvider(), "setor")
+    this.loadingData();
     this.loadDefaultValues();
 
     this.hideModal = this.hideModal.bind(this);
@@ -54,13 +62,19 @@ class CreateUser extends Component {
     this.generatePassword = this.generatePassword.bind(this);
   }
 
-  async loadList() {
-    let list = []
-    let response = await this.provider.getList();
-    if (response.success) {
-      list = response.data
-    }
-    this.setState({ list })
+  async loadingData() {
+    let { list, listWorkCenter, listSectors } = this.state;
+
+    let res1 = await this.provider.getList();
+    if (res1.success) list = res1.data
+
+    let res2 = await this.providerWorkCenter.getList();
+    if (res2.success) listWorkCenter = res2.data
+
+    let res3 = await this.providerSector.getList();
+    if (res3.success) listSectors = res3.data
+
+    this.setState({ list, listWorkCenter, listSectors })
   }
 
   loadDefaultValues() {
@@ -69,7 +83,9 @@ class CreateUser extends Component {
         password: undefined,
         gender: 'male'
       },
-      autocomplete: ''
+      autocomplete: '',
+      completeWorkcenter: '', 
+      completeSector: '',
     })
   }
 
@@ -81,7 +97,7 @@ class CreateUser extends Component {
   clean() {
 
     this.loadDefaultValues();
-    this.loadList();
+    this.loadingData();
   }
 
 
@@ -105,16 +121,16 @@ class CreateUser extends Component {
 
   onChange(e, name) {
 
-    if (name === "id") {
-      this.setState({ autocomplete: e })
-      return
+    if (name === "id") this.setState({ autocomplete: e })
+    else if (name === "workCenter") this.setState({ completeWorkcenter: e })
+    else if (name === "sector") this.setState({ completeSector: e })
+    else {
+      let fields = this.state.fields;
+
+      fields[e.target.name] = e.target.value;
+
+      this.setState({ fields })
     }
-
-    let fields = this.state.fields;
-
-    fields[e.target.name] = e.target.value;
-
-    this.setState({ fields })
   }
 
   formPreventDefault(event) {
@@ -127,25 +143,41 @@ class CreateUser extends Component {
       this.clean()
       return
     }
-
-    let item = this.state.list.find(element => element.id === id)
-
-    var displayBirthDate = this.getdisplayDate(item.birthDate);
-
-    let fields = {
-      id: item.id,
-      name: item.name,
-      role: item.role,
-      email: item.email,
-      birthDate: item.birthDate,
-      contact: item.contact,
-      gender: item.gender,
-      employeeBadge: item.employeeBadge,
-      forceChangePassword: item.forceChangePassword,
-      birthDate: displayBirthDate
+    else if (name == "workCenter") {
+      let workCenter = this.state.listWorkcenter.find(element => element.id === id)
+      this.setState({ workCenter })
     }
+    else if (name == "sector") {
+      let sector = this.state.listSectors.find(element => element.id === id)
+      this.setState({ sector })
+    }
+    else {
+      let item = this.state.list.find(element => element.id === id)
+      console.log("CreateUser -> autocompleteSelect -> item", item)
 
-    this.setState({ fields })
+      var displayBirthDate = this.getdisplayDate(item.birthDate);
+
+      let fields = {
+        id: item.id,
+        name: item.name,
+        role: item.role,
+        email: item.email,
+        birthDate: item.birthDate,
+        contact: item.contact,
+        gender: item.gender,
+        employeeBadge: item.employeeBadge,
+        forceChangePassword: item.forceChangePassword,
+        birthDate: displayBirthDate,
+        workCenter: item.workCenter,
+        sector: item.sector,
+      }
+
+      this.setState({ 
+        fields, 
+        completeWorkcenter: fields.workCenter,
+        completeSector: fields.sector
+      })
+    }
   }
 
   getdisplayDate(date) {
@@ -240,34 +272,37 @@ class CreateUser extends Component {
               </div>
               {this.state.fields.role == "sector_leader" ?
                 <div className="md-cell md-cell--6 md-cell--bottom">
-                  <C_TextField
+                  <C_AutoComplete
+                    id="sector"
                     name="sector"
-                    value={this.state.fields.sector}
+                    value={this.state.completeSector}
+                    dataSelected={this.autocompleteSelect}
+                    list={this.state.listSectors}
                     onChange={this.onChange}
                     type="search"
                     label="Setor"
                     placeholder="Setor"
-                    rightIcon={"search"}
-                    block paddedBlock
-                    required={true}
+                    style={{ width: "100%" }}
+                    rightIcon="search"
                   />
                 </div>
                 : (this.state.fields.role == "maintainer" ?
                   <div className="md-cell md-cell--6 md-cell--bottom">
-                    <C_TextField
+                    <C_AutoComplete
+                      id="workCenter"
                       name="workCenter"
-                      value={this.state.fields.workCenter}
+                      value={this.state.completeWorkcenter}
+                      dataSelected={this.autocompleteSelect}
+                      list={this.state.listWorkCenter}
                       onChange={this.onChange}
                       type="search"
                       label="Centro de Trabalho"
                       placeholder="Centro de Trabalho"
-                      rightIcon={"search"}
-                      block paddedBlock
-                      required={true}
-                      onChange={this.onChange}
+                      style={{ width: "100%" }}
+                      rightIcon="search"
                     />
                   </div>
-                  : undefined)
+                : undefined)
               }
             </div>
             <div className="md-grid">
@@ -331,7 +366,6 @@ class CreateUser extends Component {
                 <C_TextField
                   name="contact"
                   value={this.state.fields.contact}
-                  onChange={this.onChange}
                   label="Telefone de Contato"
                   placeholder="Telefone de Contato"
                   fullWidth={true}
