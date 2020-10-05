@@ -108,6 +108,11 @@ class CreateUser extends Component {
 
   save() {
     let user = this.state.fields;
+
+    if (this.state.completeSector) user.sector = this.state.completeSector;
+
+    if (this.state.completeWorkcenter) user.workCenter = this.state.completeWorkcenter;
+
     if (user.birthDate) {
       let arrayData = user.birthDate.split('/')
       user.birthDate = `${arrayData[2]}-${arrayData[1]}-${arrayData[0]}`
