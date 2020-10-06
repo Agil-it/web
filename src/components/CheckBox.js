@@ -29,6 +29,7 @@ export class C_CheckBox extends React.Component {
           onClick={this.props.action}
           style={this.props.style}
           id={this.props.name}
+          name={this.props.name}
           className={this.props.className}
           disabled={this.props.disabled}
           checked={this.props.checked}

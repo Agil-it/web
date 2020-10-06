@@ -15,7 +15,7 @@ export class C_Button extends React.Component {
         primary={this.props.primary}
         className={this.props.className}
         secondary={this.props.secondary}
-        label={this.props.label}
+        children={this.props.label}
         style={this.props.style}
         onClick={this.props.action}
         disabled={this.props.disabled}
@@ -34,7 +34,7 @@ export class C_ButtonFloat extends React.Component {
   render(){
     return (
       <Button floating
-        label={this.props.label}
+        children={this.props.label}
         tooltipLabel={this.props.tooltipLabel}
         tooltipPosition={this.props.tooltipPosition}
         primary={this.props.primary}

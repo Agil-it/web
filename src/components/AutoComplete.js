@@ -22,64 +22,39 @@ class C_AutoComplete extends Component {
 
     this.filter = this.filter.bind(this);
     this.onAutocomplete = this.onAutocomplete.bind(this);
-    this.onChangeAutoComplete = this.onChangeAutoComplete.bind(this);
-    this.onBlur = this.onBlur.bind(this);
     this.onClickIcon = this.onClickIcon.bind(this);
     this.tableSelected = this.tableSelected.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!nextProps.value) this.setState({ value: '' });
-  }
-
-  componentDidUpdate() {
-
-    this.state.description = this.props.description || "description";
-
-    let list = this.props.list.map((item => item[this.state.description] ))
-  
-    if (JSON.stringify(list) !== JSON.stringify(this.state.list)) {
-      this.setState({ list })
-    }
-      
+    const description = nextProps.description || 'description';
+    const list = (Array.isArray(nextProps.list) ? nextProps.list : []).map((item => item[description]));
 
     this.indexer = new Fuse(list.map((data) => ({ primaryText: data })), {
       keys: [{ name: 'primaryText', weight: 1 }],
     });
+
+    this.setState({ list })
   }
 
   filter = (data, filterText, dataLabel) => {
-    return this.indexer.search(filterText);
+    return this.indexer?.search(typeof filterText === 'string' ? filterText : '') || [];
   };
 
   onAutocomplete(suggestion, suggestionIndex, matches) {
-    let matched=matches[suggestionIndex]
-    let value = matched? matched.primaryText : ""
-    this.setState({ value })
-    this.props.onChange(value, this.props.name)
-  }
+    const matched = matches[suggestionIndex];
 
-  onChangeAutoComplete(value, event) {
-    this.setState({ value })
-    this.props.onChange(value, this.props.name)
-  }
+    const value = matched ? matched.primaryText : '';
 
-  onBlur() {
-    let value = this.state.value
-    let item = this.props.list.find(element => element[this.state.description] === value)
-    // console.log("onBlur -> item", item)
-    // console.log("onBlur -> this.props", this.props)
+    const item = this.props.list.find(element => element[this.props.description] === value);
 
-    if( item === undefined) {
-      value = ""
-      this.setState({ value })
-      this.props.onChange(value, this.props.name)
-      this.props.dataSelected(undefined, this.props.name)
-      return
+    if (item) {
+      this.props.dataSelected(item.id, this.props.name);
+    } else {
+      this.props.onChange(value, this.props.name);
     }
 
-    this.props.onChange(value, this.props.name)
-    this.props.dataSelected(item.id, this.props.name)
+    this.setState({ value });
   }
 
   onClickIcon() {
@@ -98,40 +73,60 @@ class C_AutoComplete extends Component {
   }
 
   tableSelected(objectValue) {
-    // console.log('tableSelected', objectValue);
 
     if (!objectValue) return
 
-    const value = objectValue[this.state.description]
+    const value = objectValue[this.props.description]
     this.setState({ value })
-    
-    this.props.onChange(value, this.props.name)
+
     this.props.dataSelected(objectValue.id, this.props.name)
 
     // this.onClickIcon();
   }
 
   render() {
-
     return (
       <div>
         <Autocomplete
+
+          id={this.props.name}
+          required={this.props.required}
+          label={this.props.label}
+          placeholder={this.props.placeholder}
+
+          data={this.state.list}
+          filter={this.filter}
+          onAutocomplete={this.onAutocomplete}
+
+          description={this.props.description}
+          style={this.props.style}
+
+          rightIcon={this.props.rightIcon &&
+            <FontIcon
+              style={{ fontSize: 30, cursor: "pointer" }}
+              onClick={this.onClickIcon}
+            >
+              {this.props.rightIcon}
+            </FontIcon>
+          }
+        />
+        {/* <Autocomplete
           id={this.props.name}
           required={this.props.required}
           name={this.props.name}
           disabled={this.props.disabled}
-          value={this.state.value}
+          value={this.props.value}
           label={this.props.label}
           placeholder={this.props.placeholder}
           dataLabel={this.props.dataLabel}
           className={this.props.className}
-          data={this.state.list}
+          data={this.props.list}
           filter={this.filter}
           onAutocomplete={this.onAutocomplete}
-          onChange={this.onChangeAutoComplete}
-          onBlur={this.onBlur}
+          // onChange={this.onChangeAutoComplete}
+          // onBlur={this.onBlur}
           style={this.props.style}
-          deleteKeys={this.props.deleteKeys}
+          // deleteKeys={this.props.deleteKeys}
           rightIcon={this.props.rightIcon &&
             <FontIcon
               style={{ fontSize: 30, cursor: "pointer" }}
@@ -141,7 +136,7 @@ class C_AutoComplete extends Component {
           </FontIcon>
           }
           description={this.props.description}
-        />
+        /> */}
       </div>
 
     );

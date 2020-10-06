@@ -28,7 +28,6 @@ class CreateUser extends Component {
       list: [],
       listWorkCenter: [],
       listSectors: [],
-      fields: {},
       autocomplete: '',
       completeSector: '',
       completeWorkcenter: '',
@@ -44,13 +43,12 @@ class CreateUser extends Component {
         name: 'Admin',
         id: 'administrator',
       }],
+      fields: this.getDefaultFields(),
     };
 
     this.provider = new HandlerProvider(new UserProvider(), "usuário")
     this.providerWorkCenter = new HandlerProvider(new WorkCenterProvider(), "centro de trabalho")
     this.providerSector = new HandlerProvider(new SectorProvider(), "setor")
-    this.loadingData();
-    this.loadDefaultValues();
 
     this.hideModal = this.hideModal.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -60,6 +58,11 @@ class CreateUser extends Component {
     this.autocompleteSelect = this.autocompleteSelect.bind(this);
     this.getdisplayDate = this.getdisplayDate.bind(this);
     this.generatePassword = this.generatePassword.bind(this);
+  }
+
+  componentDidMount() {
+    this.loadingData();
+    this.loadDefaultValues();
   }
 
   async loadingData() {
@@ -77,12 +80,29 @@ class CreateUser extends Component {
     this.setState({ list, listWorkCenter, listSectors })
   }
 
+  getDefaultFields() {
+    return {
+      id: '',
+      name: '',
+      role: '',
+      email: '',
+      birthDate: '',
+      contact: '',
+      gender: 'male',
+      employeeBadge: '',
+      password: '',
+      forceChangePassword: false,
+      birthDate: '',
+      workCenter: '',
+      sector: '',
+    };
+  }
+
   loadDefaultValues() {
+    const fields = this.getDefaultFields();
+
     this.setState({
-      fields: {
-        password: undefined,
-        gender: 'male'
-      },
+      fields,
       autocomplete: '',
       completeWorkcenter: '', 
       completeSector: '',
@@ -119,13 +139,11 @@ class CreateUser extends Component {
     }
 
     if (user.password) String(user.password);
-    console.log("CreateUser -> save -> user", user)
 
     this.provider.save(user, this.clean)
   }
 
   onChange(e, name) {
-
     if (name === "id") this.setState({ autocomplete: e })
     else if (name === "workCenter") this.setState({ completeWorkcenter: e })
     else if (name === "sector") this.setState({ completeSector: e })
@@ -144,9 +162,35 @@ class CreateUser extends Component {
 
   autocompleteSelect(id, name) {
 
-    if (id === undefined) {
-      this.clean()
-      return
+    if (name === 'id') {
+      const user = this.state.list.find(element => element.id === id)
+
+      if (!user || id === undefined) return this.clean();
+  
+      var displayBirthDate = this.getdisplayDate(user.birthDate);
+  
+      const fields = {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+        email: user.email,
+        birthDate: user.birthDate,
+        contact: user.contact,
+        gender: user.gender,
+        employeeBadge: user.employeeBadge,
+        forceChangePassword: user.forceChangePassword,
+        birthDate: displayBirthDate,
+        workCenter: user.workCenter,
+        sector: user.sector,
+        password: '',
+      }
+  
+      this.setState({ 
+        fields, 
+        completeWorkcenter: fields.workCenter,
+        completeSector: fields.sector
+      })
+
     }
     else if (name == "workCenter") {
       let workCenter = this.state.listWorkcenter.find(element => element.id === id)
@@ -155,33 +199,6 @@ class CreateUser extends Component {
     else if (name == "sector") {
       let sector = this.state.listSectors.find(element => element.id === id)
       this.setState({ sector })
-    }
-    else {
-      let item = this.state.list.find(element => element.id === id)
-      console.log("CreateUser -> autocompleteSelect -> item", item)
-
-      var displayBirthDate = this.getdisplayDate(item.birthDate);
-
-      let fields = {
-        id: item.id,
-        name: item.name,
-        role: item.role,
-        email: item.email,
-        birthDate: item.birthDate,
-        contact: item.contact,
-        gender: item.gender,
-        employeeBadge: item.employeeBadge,
-        forceChangePassword: item.forceChangePassword,
-        birthDate: displayBirthDate,
-        workCenter: item.workCenter,
-        sector: item.sector,
-      }
-
-      this.setState({ 
-        fields, 
-        completeWorkcenter: fields.workCenter,
-        completeSector: fields.sector
-      })
     }
   }
 
@@ -220,6 +237,7 @@ class CreateUser extends Component {
         visible={this.state.visible}
         width="60%"
         height="100%"
+        onHide={this.hideModal}
         dialogStyle={{ borderRadius: 5 }}
         aria-labelledby="simple-full-page-dialog-title"
       >
