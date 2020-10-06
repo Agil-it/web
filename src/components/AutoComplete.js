@@ -93,7 +93,7 @@ class C_AutoComplete extends Component {
           required={this.props.required}
           label={this.props.label}
           placeholder={this.props.placeholder}
-
+          value={this.state.value}
           data={this.state.list}
           filter={this.filter}
           onAutocomplete={this.onAutocomplete}

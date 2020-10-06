@@ -53,9 +53,9 @@ class ProfileUser extends Component {
                 <C_Label className="md-cell md-cell--6 md-cell--bottom" label="Nome" value={user.name} />
                 <C_Label className="md-cell md-cell--3 md-cell--bottom" label="Contato" value={user.contact} />
                 {user.sector ?
-                  <C_Label className="md-cell md-cell--3 md-cell--bottom" label="Setor" value={user.sector} />
+                  <C_Label className="md-cell md-cell--3 md-cell--bottom" label="Setor" value={user.sector.description} />
                 : (user.workCenter ? 
-                  <C_Label className="md-cell md-cell--3 md-cell--bottom" label="Centro de Trabalho" value={user.workCenter} />
+                  <C_Label className="md-cell md-cell--3 md-cell--bottom" label="Centro de Trabalho" value={user.workCenter.description} />
                 : undefined)
                 }
               </div>

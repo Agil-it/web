@@ -9,8 +9,8 @@ import C_TextField from '../components/TextField';
 import C_CrudButtons from '../components/CrudButtons';
 import { C_Button } from '../components/Button';
 import C_SelectField from '../components/SelectField';
-import {C_CheckBox} from '../components/CheckBox';
-import {C_Calendar} from '../components/Calendar';
+import { C_CheckBox } from '../components/CheckBox';
+import { C_Calendar } from '../components/Calendar';
 import C_RadioGroup from '../components/RadioGroup';
 import { HandlerProvider } from '../providers/handler';
 import { UserProvider } from '../providers/User';
@@ -104,7 +104,7 @@ class CreateUser extends Component {
     this.setState({
       fields,
       autocomplete: '',
-      completeWorkcenter: '', 
+      completeWorkcenter: '',
       completeSector: '',
     })
   }
@@ -129,9 +129,9 @@ class CreateUser extends Component {
   save() {
     let user = this.state.fields;
 
-    if (this.state.completeSector) user.sector = this.state.completeSector;
+    if (this.state.sector) user.sector = this.state.sector.id;
 
-    if (this.state.completeWorkcenter) user.workCenter = this.state.completeWorkcenter;
+    if (this.state.workCenter) user.workCenter = this.state.workCenter.id;
 
     if (user.birthDate) {
       let arrayData = user.birthDate.split('/')
@@ -144,9 +144,18 @@ class CreateUser extends Component {
   }
 
   onChange(e, name) {
+    console.log("CreateUser -> onChange -> name", name)
+    console.log("CreateUser -> onChange -> e", e)
+
     if (name === "id") this.setState({ autocomplete: e })
-    else if (name === "workCenter") this.setState({ completeWorkcenter: e })
-    else if (name === "sector") this.setState({ completeSector: e })
+    else if (name == "workCenter") {
+      let workCenter = this.state.listWorkCenter.find(element => element.description === e)
+      this.setState({ workCenter })
+    }
+    else if (name == "sector") {
+      let sector = this.state.listSectors.find(element => element.description === e)
+      this.setState({ sector })
+    }
     else {
       let fields = this.state.fields;
 
@@ -161,14 +170,16 @@ class CreateUser extends Component {
   }
 
   autocompleteSelect(id, name) {
+    console.log("CreateUser -> autocompleteSelect -> name", name)
+    console.log("CreateUser -> autocompleteSelect -> id", id)
 
     if (name === 'id') {
       const user = this.state.list.find(element => element.id === id)
 
       if (!user || id === undefined) return this.clean();
-  
+
       var displayBirthDate = this.getdisplayDate(user.birthDate);
-  
+
       const fields = {
         id: user.id,
         name: user.name,
@@ -180,25 +191,17 @@ class CreateUser extends Component {
         employeeBadge: user.employeeBadge,
         forceChangePassword: user.forceChangePassword,
         birthDate: displayBirthDate,
-        workCenter: user.workCenter,
-        sector: user.sector,
+        workCenter: user.workCenter ? user.workCenter.id : undefined,
+        sector: user.sector ? user.sector.id : undefined,
         password: '',
       }
-  
-      this.setState({ 
-        fields, 
-        completeWorkcenter: fields.workCenter,
-        completeSector: fields.sector
+
+      this.setState({
+        fields,
+        completeWorkcenter: user.workCenter ? user.workCenter.description : '',
+        completeSector: user.sector ? user.sector.description : '',
       })
 
-    }
-    else if (name == "workCenter") {
-      let workCenter = this.state.listWorkcenter.find(element => element.id === id)
-      this.setState({ workCenter })
-    }
-    else if (name == "sector") {
-      let sector = this.state.listSectors.find(element => element.id === id)
-      this.setState({ sector })
     }
   }
 
@@ -224,7 +227,7 @@ class CreateUser extends Component {
 
 
   render() {
-    console.log("CreateUser -> render -> this.state.fields", this.state.fields)
+    console.log("CreateUser -> render -> this.state", this.state)
 
     const genders = [
       { label: 'Feminino', value: 'female' },
@@ -325,7 +328,7 @@ class CreateUser extends Component {
                       rightIcon="search"
                     />
                   </div>
-                : undefined)
+                  : undefined)
               }
             </div>
             <div className="md-grid">
@@ -333,7 +336,7 @@ class CreateUser extends Component {
                 <C_Button
                   style={{ width: 180 }}
                   primary={true}
-                  label={<div style={{textAlign:"center"}}>Gerar senha</div>}
+                  label={<div style={{ textAlign: "center" }}>Gerar senha</div>}
                   icon={<FontIcon>lock</FontIcon>}
                   action={() => this.generatePassword()}
                 />
@@ -398,15 +401,15 @@ class CreateUser extends Component {
             </div>
             <div className="md-grid">
               <div className="md-cell md-cell--6 md-cell--bottom">
-                <fieldset style={{ borderRadius: 5, border: "1px solid silver", padding: 10}}>
-                  <legend style={{ width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, color: "#666666a6", fontSize: 16}}>Gênero</legend>
-                    <C_RadioGroup
-                      id="gender"
-                      name="gender"
-                      value={this.state.fields.gender}
-                      onChange={this.onChange}
-                      options={genders}
-                    />
+                <fieldset style={{ borderRadius: 5, border: "1px solid silver", padding: 10 }}>
+                  <legend style={{ width: "auto", border: "none", paddingRight: 5, paddingLeft: 5, marginLeft: 10, color: "#666666a6", fontSize: 16 }}>Gênero</legend>
+                  <C_RadioGroup
+                    id="gender"
+                    name="gender"
+                    value={this.state.fields.gender}
+                    onChange={this.onChange}
+                    options={genders}
+                  />
                 </fieldset>
               </div>
               <div className="md-cell md-cell--6 md-cell--bottom">
