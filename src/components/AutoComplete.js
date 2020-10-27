@@ -28,7 +28,7 @@ class C_AutoComplete extends Component {
 
   componentWillReceiveProps(nextProps) {
     const description = nextProps.description || 'description';
-    const list = (Array.isArray(nextProps.list) ? nextProps.list : []).map((item => item[description]));
+    const list = [...new Set((Array.isArray(nextProps.list) ? nextProps.list : []).map((item => item[description])))];
 
     this.indexer = new Fuse(list.map((data) => ({ primaryText: data })), {
       keys: [{ name: 'primaryText', weight: 1 }],
@@ -46,7 +46,7 @@ class C_AutoComplete extends Component {
 
     const value = matched ? matched.primaryText : '';
 
-    const item = this.props.list.find(element => element[this.props.description] === value);
+    const item = this.props.list.find(element => element[this.props.description] == value);
 
     if (item) {
       this.props.dataSelected(item.id, this.props.name);

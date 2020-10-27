@@ -776,6 +776,7 @@ export class AddEquipments extends React.Component {
               list={this.state.listEquipments}
               label="Equipamento"
               placeholder="Equipamento"
+              description="description"
               rightIcon={"search"}
               value={this.state.completeEquipment}
               dataSelected={this.completeField}
