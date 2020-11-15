@@ -163,7 +163,11 @@ export class C_Table extends React.Component {
           {this.state.showPagination
             ? <TableFooter style={{ position: "relative", className: "md-grid" }}>
                 { this.state.hasFilter ?
-                  <tr style={{ position: "absolute", bottom: 0, left: 10, width: 500 }}>
+                  <tr style={{
+                    position: "absolute",
+                    ...(this.props.filterPadding ? { paddingLeft: 10 } : { bottom: 0, left: 10 }),
+                    width: 500
+                  }}>
                     <td>
                     <C_TextField
                       id="filter"
