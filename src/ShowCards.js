@@ -4,7 +4,6 @@ import C_Card from './components/Card';
 import { FontIcon, Subheader, Divider } from 'react-md';
 import './index.css';
 import CreateMachineType from './crud/MachineType';
-import CreateMachineComponents from './crud/MachineComponents';
 import CreateSector from './crud/Sector';
 import CreateInstallationArea from './crud/InstallationArea';
 import CreateUnitMeasurement from './crud/UnitMeasurement';
@@ -55,9 +54,6 @@ class ShowCards extends Component {
 
     } else if (component === "unit measurement") {
       return ReactDOM.render(<CreateUnitMeasurement onClose={this.unmountModal}/>, this.getDOMToRender())
-
-    } else if (component === "machine components") {
-      return ReactDOM.render(<CreateMachineComponents onClose={this.unmountModal}/>, this.getDOMToRender())
 
     } else if (component === "parts") {
       return ReactDOM.render(<CreateParts onClose={this.unmountModal}/>, this.getDOMToRender())
@@ -186,16 +182,6 @@ class ShowCards extends Component {
           />
           <C_Card
             icon={<FontIcon>open_in_new</FontIcon>}
-            style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
-            title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
-            className={"effectfront"}
-            subtitle={"Componente de Máquina"}
-            onClick={() => this.renderComponent("machine components")}
-          />
-        </div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <C_Card
-            icon={<FontIcon>open_in_new</FontIcon>}
             avatarStyle={{ backgroundColor: "" }}
             style={{ marginLeft: 20, backgroundColor: "#79777745", marginTop: "3%", width: "20%", borderRadius: 10, cursor: "pointer" }}
             title={<div style={{ fontWeight: "bold" }}>CADASTRO</div>}
@@ -203,6 +189,8 @@ class ShowCards extends Component {
             subtitle={"Peças"}
             onClick={() => this.renderComponent("parts")}
           />
+        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
           <C_Card
             icon={<FontIcon>open_in_new</FontIcon>}
             avatarStyle={{ backgroundColor: "" }}
@@ -221,6 +209,7 @@ class ShowCards extends Component {
             subtitle={"Equipamento Superior"}
             onClick={() => this.renderComponent("superior machine")}
           />
+          <div style={{ marginLeft: 20, marginTop: "3%", width: "20%" }}></div>
         </div>
         <div style={{ marginTop: "4%", width: "50%" }}>
           <h2 style={{ color: "#A40003", fontWeight: "bold", textAlign: "left", marginLeft:"5%"}}>ORDEM DE MANUTENÇÃO</h2>
