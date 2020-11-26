@@ -45,6 +45,7 @@ class C_SearchTable extends Component {
           showPagination={true}
           rowsPerPage={this.state.rowsPerPage}
           hasFilter={true}
+          filterPadding={true}
         >
         </C_Table>
       </div>
