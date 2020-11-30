@@ -14,6 +14,7 @@ import { C_Signature } from './Signature';
 import { C_ToolTip } from './ToolTip';
 import C_Header from './Header';
 import { C_Label } from './Label';
+import { C_Appointments } from './Appointments';
 export class C_MaintenanceOrder extends React.Component {
   constructor(props) {
     super(props);
@@ -97,7 +98,7 @@ export class C_MaintenanceOrder extends React.Component {
       { value: "delegate", name: "DELEGAR ORDEM", icon: "person_add", disabled: false },
       { value: "invite", name: "CONVIDAR TÉCNICO", icon: "group", disabled: true },
       { value: "request", name: "SOLICITAR PARTICIPAÇÃO", icon: "group_add", disabled: true },
-      { value: "appointments", name: "APONTAMENTOS", icon: "assignment", disabled: true },
+      { value: "appointments", name: "APONTAMENTOS", icon: "assignment", disabled: false },
       { value: "status_equipment", name: "STATUS EQUIPAMENTO", icon: "swap_vert", disabled: true },
       { value: "check_list", name: "CHECK-LIST ORDEM", icon: "done_all", disabled: true },
       { value: "operations", name: "OPERAÇÕES", icon: "build", disabled: false },
@@ -246,6 +247,17 @@ export class C_MaintenanceOrder extends React.Component {
             </div>
           : undefined}
 
+          {this.state.itemSelected == "appointments" ?
+            <div style={this.state.backgroundModal}>
+              <div style={{ width: "100%", display: "flex", justifyContent: "center", position: "fixed", top: "5%" }}>
+                <C_Appointments
+                  orderId={this.state.orderId}
+                  orderNumber={this.state.order.orderNumber}
+                  onClose={() => this.setState({ itemSelected: "", showBackgroundColor: false })}
+                />
+              </div>
+            </div>
+          : undefined}
         </div>
     );
   }

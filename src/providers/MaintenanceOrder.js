@@ -12,6 +12,12 @@ export class MaintenanceOrderProvider extends CrudProvider {
       userId,
     }, {
       headers: this.getHeaders(),
-    }))
+    }));
+  }
+
+  async getWorkedTimes(orderId) {
+    return this.handleRequest(
+      axios.get(`${this.baseUrl}/${orderId}/worked-times`, { headers: this.getHeaders() })
+    );
   }
 }
