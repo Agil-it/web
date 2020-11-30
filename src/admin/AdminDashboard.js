@@ -7,6 +7,8 @@ import { C_MaintenanceOrder } from '../components/Order';
 import { C_Icon } from '../components/Icon';
 import { C_ToolTip } from '../components/ToolTip';
 import { C_Loading } from '../components/Loading';
+import { MaintenanceOrderHelper as HelperOM } from '../helpers/MaintenanceOrder';
+import { DateHelper } from '../helpers/Date';
 
 class AdminDashboard extends Component {
   constructor(props) {
@@ -16,6 +18,16 @@ class AdminDashboard extends Component {
       list: [],
       formattedList: [],
       isLoading: true,
+      columns: [
+        { name: "Ordem", property: "orderNumber", defaultValue: "Sem Identificação" },
+        { name: "Data de Abertura", property: "openedDate", format: value =>  DateHelper.formatDate(value)},
+        { name: "Classificação", property: "classification", defaultValue: "Sem Classificação" },
+        { name: "Prioridade", property: "priority", format: value =>  HelperOM.translate('priority', value)},
+        { name: "Técnico", isIcon: false, property: "maintainer" },
+        { name: "Solicitante", isIcon: false, property: "leader" },
+        { name: "Administrador", isIcon: false, property: "administrator" },
+        { name: "Exportado", isIcon: false,  property: "exported" },
+      ]
     }
 
     this.calculateHeight = this.calculateHeight.bind(this);
@@ -48,17 +60,17 @@ class AdminDashboard extends Component {
   }
 
   formatList(list) {
-    console.log("AdminDashboard -> formatList -> list", list)
-
     return list.map(order => {
       const tableOrder = {
-        orderNumber: order.orderNumber,
+        id: order.id,
         priority: order.priority,
-        maintainer: "🔴",
+        openedDate: order.openedDate,
         leader: "🔴",
+        maintainer: "🔴",
         administrator: "🔴",
         exported: order.exported ? "🟢" : "🔴",
-        id: order.id
+        orderNumber: `${order.hasAlerts ? '⚠ ' : ''}${order.orderNumber}`,
+        classification: order.orderLayout.classification || HelperOM.translate('layout', order.orderLayout.orderLayout),
       }
 
       order.orderSignature.forEach(sign => {
@@ -70,15 +82,6 @@ class AdminDashboard extends Component {
   }
 
   render() {
-    console.log("AdminDashboard -> render -> this.state", this.state)
-    const columns = [
-      { name: "Ordem", property: "orderNumber", defaultValue: "Sem Identificação" },
-      { name: "Técnico", isIcon: false, property: "maintainer" },
-      { name: "Solicitante", isIcon: false, property: "leader" },
-      { name: "Administrador", isIcon: false, property: "administrator" },
-      { name: "Exportado", isIcon: false,  property: "exported" },
-    ]
-
     return (
       <div>
         { this.state.openOrder ?
@@ -108,7 +111,7 @@ class AdminDashboard extends Component {
               </div>
               <div id="searchTable" style={{ marginTop: 40, width: "100%", boxShadow: "1px 3px 12px 1px #918f8e" }}>
                 <C_Table
-                  columns={columns}
+                  columns={this.state.columns}
                   content={this.state.formattedList}
                   onClick={(content) => this.setState({ openOrder: true, order: content })}
                   showEffect={true}
