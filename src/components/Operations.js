@@ -183,7 +183,7 @@ export class ViewOperations extends React.Component {
                       <C_TextField id="description" name="description"
                         value={operation.description} onChange={this.onChange}
                         type="text" label="Descrição" required={false}
-                        icon="description" disabled={true}
+                        icon={operation.isDisapproved ? "warning" : "description"} disabled={true}
                       />
                     </div>
                     <div style={{ display: "flex", position: "absolute", right: 0, margin: 20, alignItems: "center" }}>
