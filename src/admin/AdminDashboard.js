@@ -19,6 +19,7 @@ class AdminDashboard extends Component {
       formattedList: [],
       isLoading: true,
       columns: [
+        { name: "Alerta", property: "hasAlerts", isIcon: true },
         { name: "Ordem", property: "orderNumber", defaultValue: "Sem Identificação" },
         { name: "Data de Abertura", property: "openedDate", format: value =>  DateHelper.formatDate(value)},
         { name: "Classificação", property: "classification", defaultValue: "Sem Classificação" },
@@ -65,11 +66,12 @@ class AdminDashboard extends Component {
         id: order.id,
         priority: order.priority,
         openedDate: order.openedDate,
+        orderNumber: order.orderNumber,
         leader: "🔴",
         maintainer: "🔴",
         administrator: "🔴",
         exported: order.exported ? "🟢" : "🔴",
-        orderNumber: `${order.hasAlerts ? '⚠ ' : ''}${order.orderNumber}`,
+        hasAlerts: order.hasAlerts ? 'warning' : 'check',
         classification: order.orderLayout.classification || HelperOM.translate('layout', order.orderLayout.orderLayout),
       }
 
