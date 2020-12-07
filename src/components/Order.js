@@ -223,7 +223,7 @@ export class C_MaintenanceOrder extends React.Component {
             <div style={this.state.backgroundModal}>
               <div style={{ width: "100%", display: "flex", justifyContent: "center", position: "fixed", top: "5%"}}>
                 <C_Operations
-                  style={{ width: "50%", padding: 20, borderRadius:5 }}
+                  style={{ width: "50%", padding: 20, borderRadius:5, overflowX: 'hidden', maxHeight: '80vh' }}
                   saveEquipment={(index, orderEquipment) => this.saveEquipment(index, orderEquipment)}
                   saveOperation={(indexEquipment, indexOperation, operation) => this.saveOperation(indexEquipment, indexOperation, operation)}
                   equipments={order.orderEquipment}
