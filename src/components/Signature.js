@@ -32,11 +32,10 @@ export class C_Signature extends React.Component {
   async signatureOrder(){
     const orderId = this.state.orderId;
     const userId = this.state.user.userId;
+    const password = this.state.password;
 
     try {
-      if (!await this.validateUser()) return;
-
-      await ProviderHelper.execute(this.provider.signOrder(userId, orderId), "assinada", () => this.props.onClose(true), false, "Ordem")
+      await ProviderHelper.execute(this.provider.signOrder(userId, orderId, password), "assinada", () => this.props.onClose(true), false, "Ordem")
     } catch(err) {
       console.log('signatureOrder err -> ', err)
       MessageModal.information('⚠ Erro', 'Algo deu errado. Tente novamente mais tarde');

@@ -7,9 +7,10 @@ export class MaintenanceOrderProvider extends CrudProvider {
     super('maintenance-orders')
   }
 
-  async signOrder(userId, orderId) {
+  async signOrder(userId, orderId, password) {
     return this.handleRequest(axios.post(`${this.baseUrl}/${orderId}/signatures`, {
       userId,
+      password,
     }, {
       headers: this.getHeaders(),
     }));
